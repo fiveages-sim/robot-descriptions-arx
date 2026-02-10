@@ -26,6 +26,12 @@
         <param name="joint_commands_topic">/isaac/joint_command</param>
         <param name="joint_states_topic">/isaac/joint_states</param>
       </xacro:if>
+      <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
+        <plugin>arx_x5_ros2_control/ArxX5Hardware</plugin>
+        <param name="arm_config">LEFT</param>
+        <param name="robot_model">X5</param>
+        <param name="can_interface">can0</param>
+      </xacro:if>
     </hardware>
 
     <!-- 基座接口 -->
