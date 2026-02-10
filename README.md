@@ -1,0 +1,8 @@
+## ARX Robots
+
+| Brand | Model                                      | Repaint | Images                                                                                                                                                                                                          |
+|-------|--------------------------------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ARX   | [LIFT](arx_lift_description/)              | Yes     | <img src=".images/arx_lift.png" width="150" style="object-fit: cover; object-position: center;">     <img src=".images/arx_lift2.png" width="150" style="object-fit: cover; object-position: center;">          |
+| ARX   | [X7S](arx_x7s_description/)                | Yes     | <img src=".images/arx_x7s.png" width="150">                                                                                                                                                                     |
+| ARX   | [X5/R5](arx5_description/)                 | Yes     | <img src=".images/arx_x5.png" width="200">    <img src=".images/arx_r5.png" width="200">                                                                                                                        |
+| ARX   | [LIFT2S](arx_lift2s_description/)          | Yes     | <img src=".images/arx_lift2s_x5.png" width="150" style="object-fit: cover; object-position: center;">     <img src=".images/arx_lift2s_r5.png" width="150" style="object-fit: cover; object-position: center;"> |
