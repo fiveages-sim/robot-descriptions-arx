@@ -3,15 +3,14 @@
 <!-- |    Complete Robot Description for ARX LIFT2S                                     | -->
 <!-- |    This file includes the base robot structure and both arms                    | -->
 <!-- =================================================================================== -->
-<robot name="ARX_Lift2S" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="AC One" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:property name="PI" value="3.1415926535897931"/>
 	<xacro:arg name="type" default="chassis"/>
 
 	<xacro:if value="${'$(arg type)' == 'chassis'}">
 		<!-- Include Chassis -->
 		<xacro:include filename="$(find arx_lift2s_description)/xacro/components/chassis.xacro"/>
-		<xacro:chassis/>
-
+		<xacro:chassis enable_wheel_joints="true"/>
 	</xacro:if>
 
 	<xacro:if value="${'$(arg type)' == 'ac_one'}">
@@ -22,7 +21,6 @@
 		</joint>
 		<xacro:include filename="$(find arx_lift2s_description)/xacro/components/ac_one.xacro"/>
 		<xacro:ac_one />
-
 	</xacro:if>
 
 

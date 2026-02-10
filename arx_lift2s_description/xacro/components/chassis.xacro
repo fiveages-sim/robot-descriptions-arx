@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s_base">
 	<xacro:arg name="robot_name" default="arx_lift2s_base"/>
-	<xacro:include filename="$(find arx_lift2s_description)/xacro/components/wheel.xacro"/>
 
 	<xacro:macro name="chassis" params="enable_wheel_joints:='false'">
 
@@ -51,11 +50,24 @@
 			<limit lower="0" upper="0.46" effort="400" velocity="0.15"/>
 		</joint>
 
-		<xacro:wheel wheel_name="wheel_1" enable_passive_wheels="false"/>
-		<xacro:wheel wheel_name="wheel_2" enable_passive_wheels="false"/>
-		<xacro:wheel wheel_name="wheel_3" enable_passive_wheels="false"/>
+		<xacro:property name="wheel_joint_type" value="fixed"/>
+		<xacro:if value="${enable_wheel_joints}">
+			<xacro:property name="wheel_joint_type" value="continuous"/>
+		</xacro:if>
 
-		<joint name="wheel1_joint" type="fixed">
+		<xacro:if value="${enable_wheel_joints}">
+			<link name="wheel_1"/>
+			<link name="wheel_2"/>
+			<link name="wheel_3"/>
+		</xacro:if>
+		<xacro:unless value="${enable_wheel_joints}">
+			<xacro:include filename="$(find arx_lift2s_description)/xacro/components/wheel.xacro"/>
+			<xacro:wheel wheel_name="wheel_1" enable_passive_wheels="false"/>
+			<xacro:wheel wheel_name="wheel_2" enable_passive_wheels="false"/>
+			<xacro:wheel wheel_name="wheel_3" enable_passive_wheels="false"/>
+		</xacro:unless>
+
+		<joint name="wheel1_joint" type="${wheel_joint_type}">
 			<origin xyz="0.15361 0.29246 -0.093" rpy="0.0 0.0 1.0472"/>
 			<parent link="base_link"/>
 			<child link="wheel_1"/>
@@ -64,7 +76,7 @@
 			</xacro:if>
 		</joint>
 
-		<joint name="wheel2_joint" type="fixed">
+		<joint name="wheel2_joint" type="${wheel_joint_type}">
 			<origin xyz="0.15361 -0.29245 -0.093" rpy="0.0 0.0 -1.0472"/>
 			<parent link="base_link"/>
 			<child link="wheel_2"/>
@@ -73,7 +85,7 @@
 			</xacro:if>
 		</joint>
 
-		<joint name="wheel3_joint" type="fixed">
+		<joint name="wheel3_joint" type="${wheel_joint_type}">
 			<origin xyz="-0.35293 0 -0.093" rpy="0.0 0.0 3.1415"/>
 			<parent link="base_link"/>
 			<child link="wheel_3"/>
