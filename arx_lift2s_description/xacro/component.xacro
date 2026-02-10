@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<!-- =================================================================================== -->
+<!-- |    Complete Robot Description for ARX LIFT2S                                     | -->
+<!-- |    This file includes the base robot structure and both arms                    | -->
+<!-- =================================================================================== -->
+<robot name="ARX_Lift2S" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:arg name="type" default="base"/>
+
+    <xacro:if value="${'$(arg type)' == 'base'}">
+        <!-- Include Chassis -->
+        <xacro:include filename="$(find arx_lift2s_description)/xacro/components/base.xacro"/>
+        <xacro:Base/>
+
+    </xacro:if>
+
+
+    <xacro:if value="${'$(arg type)' == 'wheel'}">
+        <!-- Include Wheel -->
+        <xacro:include filename="$(find arx_lift2s_description)/xacro/components/wheel.xacro"/>
+        <xacro:wheel wheel_name="wheel" enable_passive_wheels="true"/>
+    </xacro:if>
+</robot>
