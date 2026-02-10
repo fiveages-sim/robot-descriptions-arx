@@ -13,6 +13,7 @@
 
   <license>BSD</license>
 
+  <build_depend>arx5_description</build_depend>
   <exec_depend>robot_common_launch</exec_depend>
   <exec_depend>arx5_lift2s_description</exec_depend>
 
