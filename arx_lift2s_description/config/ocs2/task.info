@@ -4,11 +4,8 @@ model_information {
 
   ; motion joints in the URDF to consider fixed
   removeJoints {
-      [0]  "wheel1_joint"
-      [1]  "wheel2_joint"
-      [2]  "wheel3_joint"
-      [3]  "left_gripper_joint"
-      [4]  "right_gripper_joint"
+      [0]  "left_gripper_joint"
+      [1]  "right_gripper_joint"
     }
 
   ; base frame of the robot (from URDF)

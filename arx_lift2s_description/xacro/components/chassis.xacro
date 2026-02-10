@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s_base">
+	<xacro:arg name="robot_name" default="arx_lift2s_base"/>
+	<xacro:include filename="$(find arx_lift2s_description)/xacro/components/wheel.xacro"/>
+
+	<xacro:macro name="chassis" params="enable_wheel_joints:='false'">
+
+		<link name="base_link">
+			<inertial>
+				<origin xyz="-0.010039 0.0013761 0.04956"/>
+				<mass value="21.045"/>
+				<inertia ixx="1.70029164" ixy="-0.00073232" ixz="-0.03255532" iyy="1.70804910" iyz="-0.00688370"
+								 izz="0.97173287"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/base_link.glb"/>
+				</geometry>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/base_link.glb"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<link name="lift_link">
+			<inertial>
+				<origin xyz="-0.053315 -0.00061422 -0.0086454"/>
+				<mass value="14.181"/>
+				<inertia ixx="0.32744849" ixy="-0.00306617" ixz="0.05920163" iyy="0.36541112" iyz="0.00117932"
+								 izz="0.49616592"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/lift.glb"/>
+				</geometry>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/lift.glb"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<joint name="lift_joint" type="prismatic">
+			<origin xyz="0.040103 0.0007607 0.221608"/>
+			<parent link="base_link"/>
+			<child link="lift_link"/>
+			<axis xyz="0 0 1"/>
+			<limit lower="0" upper="0.46" effort="400" velocity="0.15"/>
+		</joint>
+
+		<xacro:wheel wheel_name="wheel_1" enable_passive_wheels="false"/>
+		<xacro:wheel wheel_name="wheel_2" enable_passive_wheels="false"/>
+		<xacro:wheel wheel_name="wheel_3" enable_passive_wheels="false"/>
+
+		<joint name="wheel1_joint" type="fixed">
+			<origin xyz="0.15361 0.29246 -0.093" rpy="0.0 0.0 1.0472"/>
+			<parent link="base_link"/>
+			<child link="wheel_1"/>
+			<xacro:if value="${enable_wheel_joints}">
+				<axis xyz="1 0 0"/>
+			</xacro:if>
+		</joint>
+
+		<joint name="wheel2_joint" type="fixed">
+			<origin xyz="0.15361 -0.29245 -0.093" rpy="0.0 0.0 -1.0472"/>
+			<parent link="base_link"/>
+			<child link="wheel_2"/>
+			<xacro:if value="${enable_wheel_joints}">
+				<axis xyz="1 0 0"/>
+			</xacro:if>
+		</joint>
+
+		<joint name="wheel3_joint" type="fixed">
+			<origin xyz="-0.35293 0 -0.093" rpy="0.0 0.0 3.1415"/>
+			<parent link="base_link"/>
+			<child link="wheel_3"/>
+			<xacro:if value="${enable_wheel_joints}">
+				<axis xyz="1 0 0"/>
+			</xacro:if>
+		</joint>
+
+	</xacro:macro>
+</robot>

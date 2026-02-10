@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
     <xacro:arg name="type" default="x5"/>
-    <xacro:arg name="enable_wheel_joints" default="false"/>
+    <xacro:arg name="enable_wheel_joints" default="true"/>
     <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 
 

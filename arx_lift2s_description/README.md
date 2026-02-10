@@ -11,7 +11,7 @@ colcon build --packages-up-to arx_lift2s_description --symlink-install
 
 ## 2. Visualize the robot
 
-### 2.1 Full Robot
+### 2.1 Full Lift 2S
 
 * Lift with X5 Arm
   ```bash
@@ -25,15 +25,34 @@ colcon build --packages-up-to arx_lift2s_description --symlink-install
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:="r5"
   ```
 
+### 2.1 AC One Config
+
+* AC One with X5 Arm
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:="acone_x5"
+  ```
+
+* AC One with R5 Arm
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:="acone_r5"
+  ```
+
 
 ## 2.2 Components
 
-1. Base
+* chassis
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch component.launch.py robot:=arx_lift2s
   ```
-2. Wheel
+* AC One Base
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch component.launch.py robot:=arx_lift2s type:=ac_one
+  ```
+* Wheel
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch component.launch.py robot:=arx_lift2s type:=wheel

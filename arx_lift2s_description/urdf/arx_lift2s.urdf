@@ -12,12 +12,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/base_link.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/base_link.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/base_link.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/base_link.glb"/>
       </geometry>
     </collision>
   </link>
@@ -29,12 +29,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/body4_1.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/body4_1.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/body4_1.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/body4_1.glb"/>
       </geometry>
     </collision>
   </link>
@@ -53,12 +53,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/body4_2.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/body4_2.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/body4_2.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/body4_2.glb"/>
       </geometry>
     </collision>
   </link>
@@ -77,13 +77,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/wheel.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/wheel.glb"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/wheel.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/wheel.glb"/>
       </geometry>
     </collision>
   </link>
@@ -96,13 +96,13 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/wheel.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/wheel.glb"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/wheel.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/wheel.glb"/>
       </geometry>
     </collision>
   </link>
@@ -115,29 +115,29 @@
     <visual>
       <origin rpy="0 0 3.141592653589793" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/wheel.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/wheel.glb"/>
       </geometry>
     </visual>
     <collision>
       <origin rpy="0 0 3.141592653589793" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://arx_lift2s_description/meshes/wheel.glb"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx_lift2s_description/share/arx_lift2s_description/meshes/wheel.glb"/>
       </geometry>
     </collision>
   </link>
-  <joint name="wheel1_joint" type="continuous">
+  <joint name="wheel1_joint" type="fixed">
     <origin rpy="0.0 0.0 1.0472" xyz="0.15361 0.29246 -0.093"/>
     <parent link="base_link"/>
     <child link="wheel_1"/>
     <axis xyz="1 0 0"/>
   </joint>
-  <joint name="wheel2_joint" type="continuous">
+  <joint name="wheel2_joint" type="fixed">
     <origin rpy="0.0 0.0 -1.0472" xyz="0.15361 -0.29245 -0.093"/>
     <parent link="base_link"/>
     <child link="wheel_2"/>
     <axis xyz="1 0 0"/>
   </joint>
-  <joint name="wheel3_joint" type="continuous">
+  <joint name="wheel3_joint" type="fixed">
     <origin rpy="0.0 0.0 0" xyz="-0.35293 0 -0.093"/>
     <parent link="base_link"/>
     <child link="wheel_3"/>
@@ -151,12 +151,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/base_link.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/base_link.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/base_link.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/base_link.obj"/>
       </geometry>
     </collision>
   </link>
@@ -168,12 +168,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link1.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link1.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link1.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link1.obj"/>
       </geometry>
     </collision>
   </link>
@@ -192,12 +192,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link2.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link2.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link2.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link2.obj"/>
       </geometry>
     </collision>
   </link>
@@ -216,12 +216,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link3.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link3.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link3.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link3.obj"/>
       </geometry>
     </collision>
   </link>
@@ -240,12 +240,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link4.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link4.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link4.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link4.obj"/>
       </geometry>
     </collision>
   </link>
@@ -265,12 +265,12 @@
     <visual>
       <origin xyz="0.0037 0 0"/>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link5.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link5.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link5.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link5.obj"/>
       </geometry>
     </collision>
   </link>
@@ -289,12 +289,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link6.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link6.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link6.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link6.obj"/>
       </geometry>
     </collision>
   </link>
@@ -313,12 +313,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link7.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link7.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link7.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link7.obj"/>
       </geometry>
     </collision>
   </link>
@@ -337,12 +337,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link8.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link8.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link8.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link8.obj"/>
       </geometry>
     </collision>
   </link>
@@ -375,7 +375,7 @@
   <link name="left_camera_support">
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/camera_stand/stand_d405.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/camera_stand/stand_d405.obj"/>
       </geometry>
     </visual>
   </link>
@@ -387,7 +387,7 @@
   <link name="left_camera">
     <visual>
       <geometry>
-        <mesh filename="package://sensor_models/meshes/d405/d405.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/sensor_models/share/sensor_models/meshes/d405/d405.obj"/>
       </geometry>
     </visual>
   </link>
@@ -404,12 +404,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/base_link.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/base_link.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/base_link.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/base_link.obj"/>
       </geometry>
     </collision>
   </link>
@@ -421,12 +421,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link1.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link1.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link1.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link1.obj"/>
       </geometry>
     </collision>
   </link>
@@ -445,12 +445,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link2.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link2.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link2.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link2.obj"/>
       </geometry>
     </collision>
   </link>
@@ -469,12 +469,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link3.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link3.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link3.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link3.obj"/>
       </geometry>
     </collision>
   </link>
@@ -493,12 +493,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link4.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link4.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link4.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link4.obj"/>
       </geometry>
     </collision>
   </link>
@@ -518,12 +518,12 @@
     <visual>
       <origin xyz="0.0037 0 0"/>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link5.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link5.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link5.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link5.obj"/>
       </geometry>
     </collision>
   </link>
@@ -542,12 +542,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link6.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link6.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link6.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link6.obj"/>
       </geometry>
     </collision>
   </link>
@@ -566,12 +566,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link7.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link7.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link7.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link7.obj"/>
       </geometry>
     </collision>
   </link>
@@ -590,12 +590,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link8.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link8.obj"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link8.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/x5/link8.obj"/>
       </geometry>
     </collision>
   </link>
@@ -628,7 +628,7 @@
   <link name="right_camera_support">
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/camera_stand/stand_d405.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/arx5_description/share/arx5_description/meshes/camera_stand/stand_d405.obj"/>
       </geometry>
     </visual>
   </link>
@@ -640,7 +640,7 @@
   <link name="right_camera">
     <visual>
       <geometry>
-        <mesh filename="package://sensor_models/meshes/d405/d405.obj"/>
+        <mesh filename="file:///home/shimanliang/ros2_ws/install/sensor_models/share/sensor_models/meshes/d405/d405.obj"/>
       </geometry>
     </visual>
   </link>

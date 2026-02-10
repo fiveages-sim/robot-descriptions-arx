@@ -1,53 +1,67 @@
 <robot name="arx_lift2s" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:arg name="type" default="x5"/>
-    <xacro:arg name="enable_wheel_joints" default="true"/>
-    <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
+	<xacro:arg name="type" default="x5"/>
+	<xacro:arg name="enable_wheel_joints" default="true"/>
+	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 
-    <xacro:unless value="${'$(arg type)' == 'wheel'}">
-        <xacro:include filename="$(find arx_lift2s_description)/xacro/components/base.xacro"/>
+	<xacro:property name="type_arg" value="$(arg type)"/>
+	<xacro:property name="selected_arm_type" value="x5"/>
+	<xacro:property name="selected_base_type" value="lift2s"/>
 
+	<xacro:if value="${type_arg == 'r5'}">
+		<xacro:property name="selected_arm_type" value="r5"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'acone_x5'}">
+		<xacro:property name="selected_base_type" value="acone"/>
+	</xacro:if>
+	<xacro:if value="${type_arg == 'acone_r5'}">
+		<xacro:property name="selected_arm_type" value="r5"/>
+		<xacro:property name="selected_base_type" value="acone"/>
+	</xacro:if>
 
-        <xacro:Base enable_wheel_joints="$(arg enable_wheel_joints)"/>
+	<xacro:if value="${selected_base_type == 'lift2s'}">
+		<xacro:include filename="$(find arx_lift2s_description)/xacro/components/chassis.xacro"/>
+		<xacro:chassis enable_wheel_joints="$(arg enable_wheel_joints)"/>
+		<joint name="body_joint" type="fixed">
+			<origin xyz="0.13 0.001801 0.0529" rpy="0 0 0"/>
+			<parent link="lift_link"/>
+			<child link="body_link"/>
+			<axis xyz="0 0 1"/>
+		</joint>
+	</xacro:if>
+	<xacro:unless value="${selected_base_type == 'lift2s'}">
+		<link name="base_link"/>
+		<joint name="base_joint" type="fixed">
+			<parent link="base_link"/>
+			<child link="body_link"/>
+		</joint>
+	</xacro:unless>
 
-        <xacro:if value="${'$(arg type)' == 'x5'}">
-            <xacro:include filename="$(find arx5_description)/xacro/X5.xacro"/>
-            <xacro:X5 name="left"/>
-            <xacro:X5 name="right"/>
-        </xacro:if>
+	<xacro:include filename="$(find arx_lift2s_description)/xacro/components/ac_one.xacro"/>
+	<xacro:ac_one/>
 
-        <xacro:if value="${'$(arg type)' == 'r5'}">
-            <xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
-            <xacro:R5 name="left"/>
-            <xacro:R5 name="right"/>
+	<xacro:if value="${selected_arm_type == 'x5'}">
+		<xacro:include filename="$(find arx5_description)/xacro/X5.xacro"/>
+		<xacro:X5 name="left"/>
+		<xacro:X5 name="right"/>
+	</xacro:if>
 
-        </xacro:if>
+	<xacro:if value="${selected_arm_type == 'r5'}">
+		<xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
+		<xacro:R5 name="left"/>
+		<xacro:R5 name="right"/>
+	</xacro:if>
 
-        <joint name="arm_left_fixed" type="fixed">
-            <parent link="lift_link"/>
-            <child link="left_base_link"/>
-            <origin xyz="0.113964 0.253848 0.012392" rpy="0 0 0"/>
-        </joint>
+	<joint name="arm_left_fixed" type="fixed">
+		<parent link="body_link"/>
+		<child link="left_base_link"/>
+		<origin xyz="-0.01602 0.25 -0.035"/>
+	</joint>
 
-        <joint name="arm_right_fixed" type="fixed">
-            <parent link="lift_link"/>
-            <child link="right_base_link"/>
-            <origin xyz="0.113964 -0.246152 0.012392" rpy="0 0 0"/>
-        </joint>
-    </xacro:unless>
-
-    <xacro:if value="${'$(arg type)' == 'wheel'}">
-        <xacro:include filename="$(find arx_lift2s_description)/xacro/components/wheel.xacro"/>
-
-        <link name="world"/>
-
-        <xacro:wheel wheel_name="wheel_test" enable_passive_wheels="false"/>
-
-        <joint name="world_to_wheel" type="fixed">
-            <parent link="world"/>
-            <child link="wheel_test"/>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </joint>
-    </xacro:if>
+	<joint name="arm_right_fixed" type="fixed">
+		<parent link="body_link"/>
+		<child link="right_base_link"/>
+		<origin xyz="-0.01602 -0.25 -0.035"/>
+	</joint>
 
 </robot>

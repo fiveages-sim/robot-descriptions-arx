@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- 包含轮子模块 -->
-  <xacro:include filename="$(find arx_lift_description)/xacro/components/wheel.xacro"/>
+  <xacro:include filename="$(find component_models)/xacro/angellun_omniwheel.xacro"/>
   
   <xacro:property name="PI" value="3.1415926535897931"/>
   <xacro:macro name="MobileBase" params="enable_wheel_joints:='true'">

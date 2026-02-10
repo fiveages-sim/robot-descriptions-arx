@@ -4,11 +4,8 @@ model_information {
   
   ; motion joints in the URDF to consider fixed
   removeJoints {
-    [0]  "wheel1_joint"
-    [1]  "wheel2_joint"
-    [2]  "wheel3_joint"
-    [3]  "left_gripper_joint"
-    [4]  "right_gripper_joint"
+      [0]  "left_gripper_joint"
+      [1]  "right_gripper_joint"
   }
 
   ; base frame of the robot (from URDF)
@@ -109,16 +106,16 @@ initialState
     (0,0)   0.3     ; lift_joint
 
     (1,0)   0.0      ; left_joint1
-    (2,0)   0.0    ; left_joint2
-    (3,0)   0.0    ; left_joint3
-    (4,0)   0.0    ; left_joint4
+    (2,0)   0.594    ; left_joint2
+    (3,0)   0.306    ; left_joint3
+    (4,0)   0.331    ; left_joint4
     (5,0)   0.0      ; left_joint5
     (6,0)   0.0      ; left_joint6
 
     (7,0)   0.0      ; right_joint1
-    (8,0)   0.0    ; right_joint2
-    (9,0)   0.0    ; right_joint3
-    (10,0)   0.0   ; right_joint4
+    (8,0)   0.594    ; right_joint2
+    (9,0)   0.306    ; right_joint3
+    (10,0)   0.331   ; right_joint4
     (11,0)   0.0     ; right_joint5
     (12,0)   0.0     ; right_joint6
   }
