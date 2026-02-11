@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     <xacro:property name="PI" value="3.1415926535897931"/>
-    <xacro:macro name="X5" params="name camera:=d405">
+    <xacro:macro name="X5" params="name camera:=d405 collider:=convex">
         <xacro:property name="prefix" value="${name + '_' if name else ''}"/>
 
         <link name="${prefix}base_link">

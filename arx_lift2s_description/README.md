@@ -30,7 +30,7 @@ colcon build --packages-up-to arx_lift2s_description --symlink-install
 * AC One with X5 Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:="acone_x5"
+  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:="acone_x5" collider:=simple
   ```
 
 * AC One with R5 Arm

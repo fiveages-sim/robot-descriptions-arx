@@ -11,7 +11,7 @@
 
   <xacro:if value="${'$(arg type)' == 'x5'}">
     <xacro:include filename="$(find arx5_description)/xacro/X5.xacro"/>
-    <xacro:X5 name=""/>
+    <xacro:X5 name="" collider="$(arg collider)"/>
   </xacro:if>
 
   <xacro:if value="${'$(arg type)' == 'agilex'}">
