@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
-    <xacro:arg name="type" default="x5"/>
-    <xacro:arg name="enable_wheel_joints" default="true"/>
     <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
-
-
     <xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
     <xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
     <xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
@@ -32,11 +28,12 @@
             </xacro:if>
         </hardware>
 
-        <xacro:arx_lift2s_base_interfaces/>
-        <xacro:unless value="${'$(arg type)' == 'wheel'}">
-            <xacro:arx5_interfaces name="left"/>
-            <xacro:arx5_interfaces name="right"/>
-        </xacro:unless>
+        <xacro:if value="${selected_base_type == 'lift2s'}">
+            <xacro:arx_lift2s_base_interfaces/>
+        </xacro:if>
+
+        <xacro:arx5_interfaces name="left"/>
+        <xacro:arx5_interfaces name="right"/>
     </ros2_control>
 
     <xacro:if value="$(arg gazebo)">

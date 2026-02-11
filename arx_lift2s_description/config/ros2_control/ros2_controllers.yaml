@@ -20,7 +20,6 @@ ocs2_arm_controller:
     update_rate: 100
     info_file_name: fixed_base
     robot_name: arx_lift2s
-    use_sim_time: true
 
     # 必须与 URDF 中实际存在的非固定关节完全匹配
     joints:

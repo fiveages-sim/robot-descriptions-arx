@@ -18,9 +18,7 @@ controller_manager:
 ocs2_arm_controller:
   ros__parameters:
     update_rate: 100
-    info_file_name: fixed_base
-    robot_name: arx_lift2s
-    use_sim_time: true
+    info_file_name: acone_fixed_base
 
     # 必须与 URDF 中实际存在的非固定关节完全匹配
     joints:
@@ -42,10 +40,14 @@ ocs2_arm_controller:
     state_interfaces:
       - position
 
+    future_time_offset: 1.0
+    robot_name: arx_lift2s
+    mpc_frequency: 50
+
     # 数组长度必须严格等于上面的 joints 数量（6 + 6 = 12）
     # 对应：left(1-6), right(1-6)
-    home_pos: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
-    rest_pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    home_1: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
+    home_2: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 left_hand_controller:
   ros__parameters:
