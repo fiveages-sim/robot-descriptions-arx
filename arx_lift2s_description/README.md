@@ -90,7 +90,7 @@ colcon build --packages-up-to arx_lift2s_description --symlink-install
 * Lift with AC-one and X5 Arm
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:="acone_x5"
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=acone_x5
   ```
 
 * Isaac Sim Launch
