@@ -3,6 +3,7 @@
 	<xacro:arg name="type" default="x5"/>
 	<xacro:arg name="enable_wheel_joints" default="false"/>
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
+<!--	<xacro:arg name="collider" defa ="convex"/>-->
 
 	<xacro:property name="type_arg" value="$(arg type)"/>
 	<xacro:property name="selected_arm_type" value="x5"/>
