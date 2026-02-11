@@ -322,11 +322,15 @@
                     <mesh filename="file://$(find arx5_description)/meshes/x5/link7.obj"/>
                 </geometry>
             </visual>
-            <collision>
-                <geometry>
-                    <mesh filename="file://$(find arx5_description)/meshes/x5/link7.obj"/>
-                </geometry>
-            </collision>
+            <xacro:if value="${collider == 'convex'}">
+                <collision>
+                    <geometry>
+                        <mesh filename="file://$(find arx5_description)/meshes/x5/link7.obj"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collider == 'simple'}">
+
         </link>
 
         <joint name="${prefix}gripper_joint" type="prismatic">
