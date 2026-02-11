@@ -25,7 +25,7 @@ To visualize and check the configuration of the robot in rviz, simply launch:
 * ARX R5
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=arx5 type:="r5"
+  ros2 launch robot_common_launch manipulator.launch.py robot:=arx5 type:="r5" collider:=simple
   ```
 
   ![arx r5](../../.images/arx_r5.png)
