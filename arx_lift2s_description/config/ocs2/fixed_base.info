@@ -227,7 +227,7 @@ selfCollision
      [4] "right_link7, body_link"
   }
 
-    activationDistance 0.1
+    activationDistance 0.5
 
   ; minimum distance allowed between the pairs
     minimumDistance  0.02
