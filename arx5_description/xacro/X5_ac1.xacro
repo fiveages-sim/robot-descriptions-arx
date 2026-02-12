@@ -1,301 +1,313 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-	<xacro:macro name="R5" params="name camera:=d405 style:=default">
+	<xacro:property name="PI" value="3.1415926535897931"/>
+	<xacro:macro name="X5" params="name camera:=d405">
 		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
 
 		<link name="${prefix}base_link">
 			<inertial>
-				<origin xyz="-0.00013359 6.672E-05 0.031672"/>
-				<mass value="0.42272"/>
+				<origin xyz="-3.0001E-05 3.0589E-05 0.027324"/>
+				<mass value="0.43995"/>
 				<inertia
-						ixx="0.00019"
+						ixx="0.00017"
 						ixy="0.00000"
 						ixz="0.00000"
-						iyy="0.00019"
+						iyy="0.00017"
 						iyz="0.00000"
-						izz="0.00020"/>
+						izz="0.00016"/>
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/base_link.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/base_link.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/base_link.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/base_link.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<link name="${prefix}link1">
 			<inertial>
-				<origin xyz="0.0050395 -0.0077407 0.020897"/>
-				<mass value="0.096804"/>
+				<origin xyz="0.0054231 -0.0080289 0.017086"/>
+				<mass value="0.066982"/>
 				<inertia
-						ixx="0.00011"
-						ixy="-0.00001"
-						ixz="0.00001"
-						iyy="0.00005"
-						iyz="-0.00001"
-						izz="0.00010"/>
+						ixx="0.00008086"
+						ixy="0.00000207"
+						ixz="-0.00000876"
+						iyy="0.00003211"
+						iyz="0.00000440"
+						izz="0.00007702"/>
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link1.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/link1.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link1.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/link1.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<joint name="${prefix}joint1" type="revolute">
-			<origin xyz="0 0 0.0565"/>
+			<origin xyz="0 0 0.0605"/>
 			<parent link="${prefix}base_link"/>
 			<child link="${prefix}link1"/>
 			<axis xyz="0 0 1"/>
-			<limit lower="-2.618" upper="2.168" effort="100" velocity="5"/>
+			<limit lower="-2.094" upper="${PI}" effort="27" velocity="5.5"/>
 		</joint>
+
 		<link name="${prefix}link2">
 			<inertial>
-				<origin xyz="-0.12992 -0.0011822 -2.6366E-05"/>
-				<mass value="1.1988"/>
+				<origin xyz="-0.13234 -0.0040166 0.00010941"/>
+				<mass value="1.1068"/>
 				<inertia
-						ixx="0.00065"
-						ixy="0.00008"
-						ixz="0.00000"
-						iyy="0.01647"
-						iyz="0.00000"
-						izz="0.01646"/>
+						ixx="0.00054299"
+						ixy="-0.00000184"
+						ixz="0.00003884"
+						iyy="0.01652639"
+						iyz="-0.00000035"
+						izz="0.01654931"/>
 			</inertial>
 			<visual>
 				<geometry>
-					<xacro:if value="${style == 'agilex'}">
-						<mesh filename="file://$(find arx5_description)/meshes/r5/link2_agilex.glb"/>
-					</xacro:if>
-					<xacro:if value="${style == 'default'}">
-						<mesh filename="file://$(find arx5_description)/meshes/r5/link2.glb"/>
-					</xacro:if>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/link2.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link2.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/link2.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<joint name="${prefix}joint2" type="revolute">
-			<origin xyz="0.02 0 0.047"/>
+			<origin xyz="0.02 0 0.04"/>
 			<parent link="${prefix}link1"/>
 			<child link="${prefix}link2"/>
 			<axis xyz="0 1 0"/>
-			<limit lower="0" upper="3.66" effort="100" velocity="5"/>
+			<limit lower="0" upper="3.665" effort="27" velocity="5.5"/>
 		</joint>
+
 		<link name="${prefix}link3">
 			<inertial>
-				<origin xyz="0.16181 0.0011723 -0.05455"/>
-				<mass value="0.84082"/>
+				<origin xyz="0.18544 -0.00071369 0.051628"/>
+				<mass value="0.54316" />
 				<inertia
-						ixx="0.00082"
-						ixy="0.00008"
-						ixz="-0.00074"
-						iyy="0.00849"
-						iyz="0.00001"
-						izz="0.00834"/>
+						ixx="0.00036398"
+						ixy="-0.00002814"
+						ixz="-0.00039418"
+						iyy="0.00422770"
+						iyz="-0.00001179"
+						izz="0.00419421" />
 			</inertial>
 			<visual>
+				<origin rpy="${PI} 0 0"/>
 				<geometry>
-					<xacro:if value="${style == 'agilex'}">
-						<mesh filename="file://$(find arx5_description)/meshes/r5/link3_agilex.glb"/>
-					</xacro:if>
-					<xacro:if value="${style == 'default'}">
-						<mesh filename="file://$(find arx5_description)/meshes/r5/link3.glb"/>
-					</xacro:if>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/link3.glb"/>
 				</geometry>
 			</visual>
 			<collision>
+				<origin rpy="${PI} 0 0"/>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link3.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/link3.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<joint name="${prefix}joint3" type="revolute">
-			<origin xyz="-0.264 0 0" rpy="-3.1416 0 0"/>
+			<origin xyz="-0.264 0 0" rpy="0 0 0"/>
 			<parent link="${prefix}link2"/>
 			<child link="${prefix}link3"/>
-			<axis xyz="0 1 0"/>
-			<limit lower="0" upper="3.14" effort="100" velocity="5"/>
+			<axis xyz="0 -1 0"/>
+			<limit lower="0" upper="3.24" effort="27" velocity="5.5"/>
 		</joint>
+
 		<link name="${prefix}link4">
 			<inertial>
-				<origin xyz="0.041751 0.0054236 -0.03337"/>
-				<mass value="0.12432"/>
+				<origin xyz="0.039966 -0.0043045 0.035006"/>
+				<mass value="0.11827"/>
 				<inertia
-						ixx="0.00022"
-						ixy="-0.00002"
-						ixz="-0.00009"
-						iyy="0.00025"
-						iyz="0.00002"
-						izz="0.00017"/>
+						ixx="0.00019329"
+						ixy="-0.00001619"
+						ixz="-0.00008654"
+						iyy="0.00023401"
+						iyz="-0.00001744"
+						izz="0.00014391"/>
 			</inertial>
 			<visual>
+				<origin rpy="${PI} 0 0"/>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link4.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/link4.glb"/>
 				</geometry>
 			</visual>
 			<collision>
+				<origin rpy="${PI} 0 0"/>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link4.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/x5/link4.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<joint name="${prefix}joint4" type="revolute">
-			<origin xyz="0.245 -5E-05 -0.06"/>
+			<origin xyz="0.245 0 0.056"/>
 			<parent link="${prefix}link3"/>
 			<child link="${prefix}link4"/>
-			<axis xyz="0 1 0"/>
-			<limit lower="-1.57" upper="1.57" effort="100" velocity="5"/>
+			<axis xyz="0 -1 0"/>
+			<limit lower="-1.671" upper="1.671" effort="7" velocity="20"/>
 		</joint>
+
 		<link name="${prefix}link5">
 			<inertial>
-				<origin xyz="-8.3435E-05 -1.5428E-05 0.052216"/>
-				<mass value="0.63601"/>
+				<origin xyz="0.0029491 8.4086E-05 -0.054795"/>
+				<mass value="0.67398" />
 				<inertia
-						ixx="0.00084"
-						ixy="0.00000"
-						ixz="0.00007"
-						iyy="0.00082"
-						iyz="0.00000"
-						izz="0.00026"/>
+						ixx="0.00092704"
+						ixy="0.00000049"
+						ixz="0.00004559"
+						iyy="0.00091568"
+						iyz="0.00000053"
+						izz="0.00028327" />
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link5.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/ac1/link5.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link5.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/ac1/link5.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<joint name="${prefix}joint5" type="revolute">
-			<origin xyz="0.0702 5E-05 -0.083391"/>
+			<origin xyz="0.06775 0 0.0845"/>
 			<parent link="${prefix}link4"/>
 			<child link="${prefix}link5"/>
-			<axis xyz="0 0 1"/>
-			<limit lower="-1.57" upper="1.57" effort="100" velocity="5"/>
+			<axis xyz="0 0 -1"/>
+			<limit lower="-1.671" upper="1.671" effort="7" velocity="20" />
 		</joint>
+
 		<link name="${prefix}link6">
 			<inertial>
-				<origin xyz="0.041697 2.4368E-05 0.00014464"/>
-				<mass value="0.44089"/>
+				<origin xyz="0.040212 3.4542E-05 -0.010225"/>
+				<mass value="0.34667" />
 				<inertia
-						ixx="0.00038"
-						ixy="0.00000"
-						ixz="0.00000"
-						iyy="0.00028"
-						iyz="0.00000"
-						izz="0.00050"/>
+						ixx="0.00047210"
+						ixy="-0.00000041"
+						ixz="-0.00002976"
+						iyy="0.00049011"
+						iyz="-0.00003393"
+						izz="0.00018496" />
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link6.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/ac1/link6.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link6.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/ac1/link6.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<joint name="${prefix}joint6" type="revolute">
-			<origin xyz="0.025286 0 0.083391" rpy="3.1416 0 0"/>
+			<origin xyz="0.02895 0 -0.0845" />
 			<parent link="${prefix}link5"/>
 			<child link="${prefix}link6"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="-1.57" upper="1.57" effort="100" velocity="5"/>
+			<limit lower="-2.094" upper="2.094" effort="7" velocity="20" />
 		</joint>
+
 		<link name="${prefix}link7">
 			<inertial>
-				<origin xyz="-0.00035522 -0.007827 -0.0029883"/>
-				<mass value="0.064798"/>
+				<origin xyz="-0.0060354 -0.015602 0.013499"/>
+				<mass value="0.08924" />
 				<inertia
-						ixx="0.00002"
-						ixy="0.00000"
-						ixz="0.00000"
-						iyy="0.00003"
-						iyz="0.00000"
-						izz="0.00003"/>
+						ixx="0.00009869"
+						ixy="-0.00000394"
+						ixz="0.00001011"
+						iyy="0.00009021"
+						iyz="0.00001113"
+						izz="0.00006849" />
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link7.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/ac1/link7.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link7.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/ac1/link7.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<joint name="${prefix}gripper_joint" type="prismatic">
-			<origin xyz="0.08657 0.024896 -0.0002436"/>
+			<origin xyz="0.08397 0.02721 -0.0062702"/>
 			<parent link="${prefix}link6"/>
 			<child link="${prefix}link7"/>
 			<axis xyz="0 1 0"/>
 			<limit lower="0" upper="0.044" effort="100" velocity="5"/>
 		</joint>
+
 		<link name="${prefix}link8">
 			<inertial>
-				<origin xyz="-0.000355223470270755 0.00782768751820277 0.00242005642879778"/>
-				<mass value="0.0647981725781684"/>
+				<origin xyz="-0.00581 0.015593 -0.012255"/>
+				<mass value="0.089402" />
 				<inertia
-						ixx="0.00002"
-						ixy="0.00000"
-						ixz="0.00000"
-						iyy="0.00003"
-						iyz="0.00000"
-						izz="0.00003"/>
+						ixx="0.00007306"
+						ixy="0.00000404"
+						ixz="-0.00001526"
+						iyy="0.00006428"
+						iyz="0.00000327"
+						izz="0.00006822" />
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link8.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/ac1/link8.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link8.glb"/>
+					<mesh filename="file://$(find arx5_description)/meshes/ac1/link8.glb"/>
 				</geometry>
 			</collision>
 		</link>
+
 		<joint name="${prefix}joint8" type="prismatic">
-			<origin xyz="0.08657 -0.0249 -0.00024366"/>
+			<origin xyz="0.08397 -0.023638 -0.0062703"/>
 			<parent link="${prefix}link6"/>
 			<child link="${prefix}link8"/>
 			<axis xyz="0 -1 0"/>
 			<limit lower="0" upper="0.044" effort="100" velocity="5"/>
 			<mimic joint="${prefix}gripper_joint" multiplier="1" offset="0"/>
 		</joint>
+
 		<link name="${prefix}gripper_center"/>
 		<joint name="${prefix}gripper_center_fixed" type="fixed">
 			<parent link="${prefix}link6"/>
 			<child link="${prefix}gripper_center"/>
-			<origin xyz="0.08657 0 0"/>
+			<origin xyz="0.1424 0 0.0001057"/>
 		</joint>
 
 		<link name="${prefix}left_pad"/>
 		<joint name="${prefix}left_pad_joint" type="fixed">
 			<parent link="${prefix}link7"/>
 			<child link="${prefix}left_pad"/>
-			<origin xyz="0.05843 -0.0249 0"/>
+			<origin xyz="0.05843 -0.0249 0.006376"/>
 		</joint>
 
 		<link name="${prefix}right_pad"/>
 		<joint name="${prefix}right_pad_joint" type="fixed">
 			<parent link="${prefix}link8"/>
 			<child link="${prefix}right_pad"/>
-			<origin xyz="0.05843 0.0249 0"/>
+			<origin xyz="0.05843 0.0249 0.006376"/>
 		</joint>
 
 		<xacro:if value="${camera == 'd405'}">
@@ -353,5 +365,7 @@
 				<child link="${prefix}camera"/>
 			</joint>
 		</xacro:if>
+
+
 	</xacro:macro>
 </robot>

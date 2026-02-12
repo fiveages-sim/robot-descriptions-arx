@@ -14,6 +14,12 @@
     <xacro:X5 name="" collider="$(arg collider)"/>
   </xacro:if>
 
+
+  <xacro:if value="${'$(arg type)' == 'ac1'}">
+    <xacro:include filename="$(find arx5_description)/xacro/X5_ac1.xacro"/>
+    <xacro:X5 name=""/>
+  </xacro:if>
+
   <xacro:if value="${'$(arg type)' == 'agilex'}">
     <xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
     <xacro:R5 name="" style="agilex"/>

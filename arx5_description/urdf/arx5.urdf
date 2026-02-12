@@ -12,12 +12,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/base_link.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/base_link.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/base_link.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/base_link.glb"/>
       </geometry>
     </collision>
   </link>
@@ -29,12 +29,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link1.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link1.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link1.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link1.glb"/>
       </geometry>
     </collision>
   </link>
@@ -53,12 +53,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link2.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link2.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link2.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link2.glb"/>
       </geometry>
     </collision>
   </link>
@@ -77,12 +77,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link3.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link3.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link3.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link3.glb"/>
       </geometry>
     </collision>
   </link>
@@ -101,12 +101,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link4.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link4.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link4.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link4.glb"/>
       </geometry>
     </collision>
   </link>
@@ -126,12 +126,12 @@
     <visual>
       <origin xyz="0.0037 0 0"/>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link5.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link5.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link5.obj"/>
+        <mesh filename="package://arx5_description/meshes/x5/link5.glb"/>
       </geometry>
     </collision>
   </link>
@@ -150,12 +150,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link6.obj"/>
+        <mesh filename="package://arx5_description/meshes/r5/link6.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link6.obj"/>
+        <mesh filename="package://arx5_description/meshes/r5/link6.glb"/>
       </geometry>
     </collision>
   </link>
@@ -174,12 +174,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link7.obj"/>
+        <mesh filename="package://arx5_description/meshes/r5/link7.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link7.obj"/>
+        <mesh filename="package://arx5_description/meshes/r5/link7.glb"/>
       </geometry>
     </collision>
   </link>
@@ -198,12 +198,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link8.obj"/>
+        <mesh filename="package://arx5_description/meshes/r5/link8.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/x5/link8.obj"/>
+        <mesh filename="package://arx5_description/meshes/r5/link8.glb"/>
       </geometry>
     </collision>
   </link>
@@ -236,7 +236,7 @@
   <link name="camera_support">
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/camera_stand/stand_d405.obj"/>
+        <mesh filename="package://arx5_description/meshes/camera_stand/stand_d405.glb"/>
       </geometry>
     </visual>
   </link>
@@ -248,7 +248,7 @@
   <link name="camera">
     <visual>
       <geometry>
-        <mesh filename="package://sensor_models/meshes/d405/d405.obj"/>
+        <mesh filename="file:///home/fiveages/ros2_ws/install/sensor_models/share/sensor_models/meshes/d405.glb"/>
       </geometry>
     </visual>
   </link>
