@@ -17,12 +17,12 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/base_link.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/base_link.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/base_link.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/base_link.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -40,12 +40,12 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link1.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link1.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link1.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link1.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -71,16 +71,16 @@
 			<visual>
 				<geometry>
 					<xacro:if value="${style == 'agilex'}">
-						<mesh filename="file://$(find arx5_description)/meshes/r5/link2_agilex.obj"/>
+						<mesh filename="file://$(find arx5_description)/meshes/r5/link2_agilex.glb"/>
 					</xacro:if>
 					<xacro:if value="${style == 'default'}">
-						<mesh filename="file://$(find arx5_description)/meshes/r5/link2.obj"/>
+						<mesh filename="file://$(find arx5_description)/meshes/r5/link2.glb"/>
 					</xacro:if>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link2.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link2.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -106,16 +106,16 @@
 			<visual>
 				<geometry>
 					<xacro:if value="${style == 'agilex'}">
-						<mesh filename="file://$(find arx5_description)/meshes/r5/link3_agilex.obj"/>
+						<mesh filename="file://$(find arx5_description)/meshes/r5/link3_agilex.glb"/>
 					</xacro:if>
 					<xacro:if value="${style == 'default'}">
-						<mesh filename="file://$(find arx5_description)/meshes/r5/link3.obj"/>
+						<mesh filename="file://$(find arx5_description)/meshes/r5/link3.glb"/>
 					</xacro:if>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link3.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link3.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -140,12 +140,12 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link4.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link4.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link4.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link4.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -170,12 +170,12 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link5.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link5.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link5.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link5.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -200,12 +200,12 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link6.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link6.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link6.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link6.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -230,12 +230,12 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link7.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link7.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link7.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link7.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -260,12 +260,12 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link8.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link8.glb"/>
 				</geometry>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/r5/link8.obj"/>
+					<mesh filename="file://$(find arx5_description)/meshes/r5/link8.glb"/>
 				</geometry>
 			</collision>
 		</link>
@@ -302,7 +302,7 @@
 			<link name="${prefix}camera_support">
 				<visual>
 					<geometry>
-						<mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d405.obj"/>
+						<mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d405.glb"/>
 					</geometry>
 				</visual>
 			</link>
@@ -315,7 +315,7 @@
 			<link name="${prefix}camera">
 				<visual>
 					<geometry>
-						<mesh filename="file://$(find sensor_models)/meshes/d405/d405.obj"/>
+						<mesh filename="file://$(find sensor_models)/meshes/d405.glb"/>
 					</geometry>
 				</visual>
 			</link>
@@ -330,7 +330,7 @@
 			<link name="${prefix}camera_support">
 				<visual>
 					<geometry>
-						<mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d435.obj"/>
+						<mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d435.glb"/>
 					</geometry>
 				</visual>
 			</link>
@@ -343,7 +343,7 @@
 			<link name="${prefix}camera">
 				<visual>
 					<geometry>
-						<mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
+						<mesh filename="file://$(find sensor_models)/meshes/d435.glb"/>
 					</geometry>
 				</visual>
 			</link>

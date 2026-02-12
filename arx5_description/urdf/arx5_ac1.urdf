@@ -6,64 +6,64 @@
 <robot name="ARX 5">
   <link name="base_link">
     <inertial>
-      <origin xyz="-0.00013359 6.672E-05 0.031672"/>
-      <mass value="0.42272"/>
-      <inertia ixx="0.00019" ixy="0.00000" ixz="0.00000" iyy="0.00019" iyz="0.00000" izz="0.00020"/>
+      <origin xyz="-3.0001E-05 3.0589E-05 0.027324"/>
+      <mass value="0.43995"/>
+      <inertia ixx="0.00017" ixy="0.00000" ixz="0.00000" iyy="0.00017" iyz="0.00000" izz="0.00016"/>
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/base_link.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/base_link.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/base_link.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/base_link.glb"/>
       </geometry>
     </collision>
   </link>
   <link name="link1">
     <inertial>
-      <origin xyz="0.0050395 -0.0077407 0.020897"/>
-      <mass value="0.096804"/>
-      <inertia ixx="0.00011" ixy="-0.00001" ixz="0.00001" iyy="0.00005" iyz="-0.00001" izz="0.00010"/>
+      <origin xyz="0.0054231 -0.0080289 0.017086"/>
+      <mass value="0.066982"/>
+      <inertia ixx="0.00008086" ixy="0.00000207" ixz="-0.00000876" iyy="0.00003211" iyz="0.00000440" izz="0.00007702"/>
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link1.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link1.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link1.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link1.glb"/>
       </geometry>
     </collision>
   </link>
   <joint name="joint1" type="revolute">
-    <origin xyz="0 0 0.0565"/>
+    <origin xyz="0 0 0.0605"/>
     <parent link="base_link"/>
     <child link="link1"/>
     <axis xyz="0 0 1"/>
-    <limit effort="100" lower="-2.618" upper="2.168" velocity="5"/>
+    <limit effort="27" lower="-2.094" upper="3.1416" velocity="5.5"/>
   </joint>
   <link name="link2">
     <inertial>
-      <origin xyz="-0.12992 -0.0011822 -2.6366E-05"/>
-      <mass value="1.1988"/>
-      <inertia ixx="0.00065" ixy="0.00008" ixz="0.00000" iyy="0.01647" iyz="0.00000" izz="0.01646"/>
+      <origin xyz="-0.13234 -0.0040166 0.00010941"/>
+      <mass value="1.1068"/>
+      <inertia ixx="0.00054299" ixy="-0.00000184" ixz="0.00003884" iyy="0.01652639" iyz="-0.00000035" izz="0.01654931"/>
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link2_agilex.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link2.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link2.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link2.glb"/>
       </geometry>
     </collision>
   </link>
   <joint name="joint2" type="revolute">
-    <origin xyz="0.02 0 0.047"/>
+    <origin xyz="0.02 0 0.04"/>
     <parent link="link1"/>
     <child link="link2"/>
     <axis xyz="0 1 0"/>
@@ -71,23 +71,23 @@
   </joint>
   <link name="link3">
     <inertial>
-      <origin xyz="0.16181 0.0011723 -0.05455"/>
-      <mass value="0.84082"/>
-      <inertia ixx="0.00082" ixy="0.00008" ixz="-0.00074" iyy="0.00849" iyz="0.00001" izz="0.00834"/>
+      <origin xyz="0.18531 0.00068376 -0.051638"/>
+      <mass value="0.54534"/>
+      <inertia ixx="0.00036" ixy="-0.00003" ixz="-0.00039" iyy="0.00423" iyz="0.00001" izz="0.00420"/>
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link3_agilex.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link3.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link3.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link3.glb"/>
       </geometry>
     </collision>
   </link>
   <joint name="joint3" type="revolute">
-    <origin rpy="-3.1416 0 0" xyz="-0.264 0 0"/>
+    <origin rpy="3.1416 0 0" xyz="-0.264 0 0"/>
     <parent link="link2"/>
     <child link="link3"/>
     <axis xyz="0 1 0"/>
@@ -95,23 +95,23 @@
   </joint>
   <link name="link4">
     <inertial>
-      <origin xyz="0.041751 0.0054236 -0.03337"/>
-      <mass value="0.12432"/>
-      <inertia ixx="0.00022" ixy="-0.00002" ixz="-0.00009" iyy="0.00025" iyz="0.00002" izz="0.00017"/>
+      <origin xyz="0.040231 0.0044807 -0.035335"/>
+      <mass value="0.11714"/>
+      <inertia ixx="0.00019" ixy="-0.00002" ixz="-0.00009" iyy="0.00023" iyz="0.00002" izz="0.00014"/>
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link4.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link4.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link4.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link4.glb"/>
       </geometry>
     </collision>
   </link>
   <joint name="joint4" type="revolute">
-    <origin xyz="0.245 -5E-05 -0.06"/>
+    <origin xyz="0.245 0 -0.056"/>
     <parent link="link3"/>
     <child link="link4"/>
     <axis xyz="0 1 0"/>
@@ -119,23 +119,24 @@
   </joint>
   <link name="link5">
     <inertial>
-      <origin xyz="-8.3435E-05 -1.5428E-05 0.052216"/>
-      <mass value="0.63601"/>
-      <inertia ixx="0.00084" ixy="0.00000" ixz="0.00007" iyy="0.00082" iyz="0.00000" izz="0.00026"/>
+      <origin xyz="0.003612 -1.5455E-05 0.055214"/>
+      <mass value="0.63488"/>
+      <inertia ixx="0.00083" ixy="0.00000" ixz="0.00007" iyy="0.00082" iyz="0.00000" izz="0.00026"/>
     </inertial>
     <visual>
+      <origin xyz="0.0037 0 0"/>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link5.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link5.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link5.glb"/>
+        <mesh filename="package://arx5_description/meshes/x5/link5.glb"/>
       </geometry>
     </collision>
   </link>
   <joint name="joint5" type="revolute">
-    <origin xyz="0.0702 5E-05 -0.083391"/>
+    <origin xyz="0.06775 0.0005 -0.0865"/>
     <parent link="link4"/>
     <child link="link5"/>
     <axis xyz="0 0 1"/>
@@ -149,17 +150,17 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link6.glb"/>
+        <mesh filename="package://arx5_description/meshes/ac1/link6.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link6.glb"/>
+        <mesh filename="package://arx5_description/meshes/ac1/link6.glb"/>
       </geometry>
     </collision>
   </link>
   <joint name="joint6" type="revolute">
-    <origin rpy="3.1416 0 0" xyz="0.025286 0 0.083391"/>
+    <origin rpy="-3.1416 0 0" xyz="0.02895 0 0.0865"/>
     <parent link="link5"/>
     <child link="link6"/>
     <axis xyz="1 0 0"/>
@@ -173,12 +174,12 @@
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link7.glb"/>
+        <mesh filename="package://arx5_description/meshes/ac1/link7.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link7.glb"/>
+        <mesh filename="package://arx5_description/meshes/ac1/link7.glb"/>
       </geometry>
     </collision>
   </link>
@@ -191,18 +192,18 @@
   </joint>
   <link name="link8">
     <inertial>
-      <origin xyz="-0.000355223470270755 0.00782768751820277 0.00242005642879778"/>
-      <mass value="0.0647981725781684"/>
+      <origin xyz="-0.00035522 0.0078277 0.0024201"/>
+      <mass value="0.064798"/>
       <inertia ixx="0.00002" ixy="0.00000" ixz="0.00000" iyy="0.00003" iyz="0.00000" izz="0.00003"/>
     </inertial>
     <visual>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link8.glb"/>
+        <mesh filename="package://arx5_description/meshes/ac1/link8.glb"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://arx5_description/meshes/r5/link8.glb"/>
+        <mesh filename="package://arx5_description/meshes/ac1/link8.glb"/>
       </geometry>
     </collision>
   </link>
@@ -218,19 +219,19 @@
   <joint name="gripper_center_fixed" type="fixed">
     <parent link="link6"/>
     <child link="gripper_center"/>
-    <origin xyz="0.08657 0 0"/>
+    <origin xyz="0.145 0 0.006376"/>
   </joint>
   <link name="left_pad"/>
   <joint name="left_pad_joint" type="fixed">
     <parent link="link7"/>
     <child link="left_pad"/>
-    <origin xyz="0.05843 -0.0249 0"/>
+    <origin xyz="0.05843 -0.0249 0.006376"/>
   </joint>
   <link name="right_pad"/>
   <joint name="right_pad_joint" type="fixed">
     <parent link="link8"/>
     <child link="right_pad"/>
-    <origin xyz="0.05843 0.0249 0"/>
+    <origin xyz="0.05843 0.0249 0.006376"/>
   </joint>
   <link name="camera_support">
     <visual>
@@ -247,7 +248,7 @@
   <link name="camera">
     <visual>
       <geometry>
-        <mesh filename="package://sensor_models/meshes/d405/d405.glb"/>
+        <mesh filename="file:///home/fiveages/ros2_ws/install/sensor_models/share/sensor_models/meshes/d405.glb"/>
       </geometry>
     </visual>
   </link>

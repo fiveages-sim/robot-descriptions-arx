@@ -30,14 +30,14 @@
     <link name="${prefix}link1">
       <inertial>
         <origin xyz="0.0054231 -0.0080289 0.017086"/>
-        <mass value="0.066982"/>
+        <mass value="0.066982" />
         <inertia
-            ixx="0.00008"
-            ixy="0.00000"
-            ixz="0.00001"
-            iyy="0.00003"
-            iyz="0.00000"
-            izz="0.00008"/>
+            ixx="0.00008086"
+            ixy="0.00000207"
+            ixz="-0.00000876"
+            iyy="0.00003211"
+            iyz="0.00000440"
+            izz="0.00007702" />
       </inertial>
       <visual>
         <geometry>
@@ -56,20 +56,20 @@
       <parent link="${prefix}base_link"/>
       <child link="${prefix}link1"/>
       <axis xyz="0 0 1"/>
-      <limit lower="-2.87" upper="3.14" effort="100" velocity="5"/>
+      <limit lower="-2.094" upper="3.1416" effort="27" velocity="5.5" />
     </joint>
 
     <link name="${prefix}link2">
       <inertial>
-        <origin xyz="-0.13237 0.0020852 0.00010549"/>
-        <mass value="1.0795"/>
+        <origin xyz="-0.13234 -0.0040166 0.00010941" />
+        <mass value="1.1068" />
         <inertia
-            ixx="0.00051"
-            ixy="0.00001"
-            ixz="-0.00004"
-            iyy="0.01599"
-            iyz="0.00000"
-            izz="0.01605"/>
+            ixx="0.00054299"
+            ixy="-0.00000184"
+            ixz="0.00003884"
+            iyy="0.01652639"
+            iyz="-0.00000035"
+            izz="0.01654931" />
       </inertial>
       <visual>
         <geometry>
@@ -202,12 +202,12 @@
       </inertial>
       <visual>
         <geometry>
-          <mesh filename="file://$(find arx5_description)/meshes/r5/link6.glb"/>
+          <mesh filename="file://$(find arx5_description)/meshes/ac1/link6.glb"/>
         </geometry>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find arx5_description)/meshes/r5/link6.glb"/>
+          <mesh filename="file://$(find arx5_description)/meshes/ac1/link6.glb"/>
         </geometry>
       </collision>
     </link>
@@ -234,12 +234,12 @@
       </inertial>
       <visual>
         <geometry>
-          <mesh filename="file://$(find arx5_description)/meshes/r5/link7.glb"/>
+          <mesh filename="file://$(find arx5_description)/meshes/ac1/link7.glb"/>
         </geometry>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find arx5_description)/meshes/r5/link7.glb"/>
+          <mesh filename="file://$(find arx5_description)/meshes/ac1/link7.glb"/>
         </geometry>
       </collision>
     </link>
@@ -266,12 +266,12 @@
       </inertial>
       <visual>
         <geometry>
-          <mesh filename="file://$(find arx5_description)/meshes/r5/link8.glb"/>
+          <mesh filename="file://$(find arx5_description)/meshes/ac1/link8.glb"/>
         </geometry>
       </visual>
       <collision>
         <geometry>
-          <mesh filename="file://$(find arx5_description)/meshes/r5/link8.glb"/>
+          <mesh filename="file://$(find arx5_description)/meshes/ac1/link8.glb"/>
         </geometry>
       </collision>
     </link>
@@ -289,21 +289,21 @@
     <joint name="${prefix}gripper_center_fixed" type="fixed">
       <parent link="${prefix}link6"/>
       <child link="${prefix}gripper_center"/>
-      <origin xyz="0.145 0 0" />
+      <origin xyz="0.145 0 0.006376" />
     </joint>
 
     <link name="${prefix}left_pad"/>
     <joint name="${prefix}left_pad_joint" type="fixed">
       <parent link="${prefix}link7"/>
       <child link="${prefix}left_pad"/>
-      <origin xyz="0.05843 -0.0249 0" />
+      <origin xyz="0.05843 -0.0249 0.006376" />
     </joint>
 
     <link name="${prefix}right_pad"/>
     <joint name="${prefix}right_pad_joint" type="fixed">
       <parent link="${prefix}link8"/>
       <child link="${prefix}right_pad"/>
-      <origin xyz="0.05843 0.0249 0" />
+      <origin xyz="0.05843 0.0249 0.006376" />
     </joint>
 
     <xacro:if value="${camera == 'd405'}">
@@ -351,7 +351,7 @@
       <link name="${prefix}camera">
         <visual>
           <geometry>
-            <mesh filename="file://$(find sensor_models)/meshes/d435/d435.glb"/>
+            <mesh filename="file://$(find sensor_models)/meshes/d435.glb"/>
           </geometry>
         </visual>
       </link>
