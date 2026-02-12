@@ -25,6 +25,16 @@
                 <param name="right_robot_model">X5</param>
                 <param name="left_can_interface">can1</param>
                 <param name="right_can_interface">can3</param>
+                <!-- 双臂初始增益：可为左右臂设置不同的 kp/kd，不写则两臂使用相同默认值 -->
+                <param name="left_joint_k_gains">[80.0, 70.0, 65.0, 22.0, 22.0, 14.0]</param>
+                <param name="left_joint_d_gains">[2.6, 2.6, 2.3, 0.85, 0.85, 0.6]</param>
+                <param name="right_joint_k_gains">[80.0, 70.0, 65.0, 22.0, 22.0, 14.0]</param>
+                <param name="right_joint_d_gains">[2.6, 2.6, 2.3, 0.85, 0.85, 0.6]</param>
+                <!-- 可选：左右夹爪增益，不写则用默认 -->
+                <!-- <param name="left_gripper_kp">5.0</param> -->
+                <!-- <param name="left_gripper_kd">0.2</param> -->
+                <!-- <param name="right_gripper_kp">5.0</param> -->
+                <!-- <param name="right_gripper_kd">0.2</param> -->
             </xacro:if>
         </hardware>
 
