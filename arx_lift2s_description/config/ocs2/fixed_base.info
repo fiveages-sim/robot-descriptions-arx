@@ -77,13 +77,13 @@ rollout
 mpc
 {
   timeHorizon                     1.0   ; [s]
-  solutionTimeWindow              0.2   ; [s]
+  solutionTimeWindow              0.3   ; [s]
   coldStart                       false
   
   debugPrint                      false
 
-  mpcDesiredFrequency             100   ; [Hz]
-  mrtDesiredFrequency             400   ; [Hz]
+  mpcDesiredFrequency             30   ; [Hz]
+  mrtDesiredFrequency             100   ; [Hz]
 }
 
 ; initial state
@@ -215,8 +215,28 @@ finalEndEffector
 selfCollision
 { 
   ; activate self-collision constraint
-  activate  false
+  activate  true
 
+  ; Self Collision pairs
+  collisionLinkPairs
+  {
+     [0] "left_link8, right_link7",
+     [1] "left_link8, head_camera",
+     [2] "right_link7, head_camera",
+     [3] "left_link8, body_link",
+     [4] "right_link7, body_link"
+  }
+
+    activationDistance 0.1
+
+  ; minimum distance allowed between the pairs
+    minimumDistance  0.02
+
+    ; relaxed log barrier mu
+    mu      1e-3
+
+    ; relaxed log barrier delta
+    delta   1e-2
   ; TODO: Replace the collision meshes of the arm with primitive shapes.
 }
 

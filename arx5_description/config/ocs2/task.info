@@ -200,7 +200,7 @@ finalEndEffector
 selfCollision
 { 
   ; activate self-collision constraint
-  activate  false
+  activate  true
 
   ; Self Collision raw object pairs
   collisionObjectPairs
@@ -210,12 +210,13 @@ selfCollision
   ; Self Collision pairs
   collisionLinkPairs
   {
-    [0] "link2, link8",
-    [0] "link2, link7"
+    [0] "base_link, link8",
+    [1] "base_link, link7"
   }
 
   ; minimum distance allowed between the pairs
-  minimumDistance  0.05
+  minimumDistance  0.01
+  activationDistance 0.1
 
   ; relaxed log barrier mu
   mu      1e-2

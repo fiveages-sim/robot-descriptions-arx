@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:arg name="collider" default="simple"/>
     <xacro:property name="PI" value="3.1415926535897931"/>
-    <xacro:macro name="R5" params="name camera:=d405 style:=default collider:=convex">
+    <xacro:property name="collider_type" value="$(arg collider)"/>
+    <xacro:macro name="R5" params="name camera:=d405 style:=default collider:=simple">
         <xacro:property name="prefix" value="${name + '_' if name else ''}"/>
 
         <link name="${prefix}base_link">

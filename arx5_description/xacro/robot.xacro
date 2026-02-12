@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <robot name="ARX 5" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:arg name="collider" default="convex"/>
+  <xacro:arg name="collider" default="simple"/>
   <xacro:arg name="type" default="x5"/>
 
   <xacro:if value="${'$(arg type)' == 'r5'}">
