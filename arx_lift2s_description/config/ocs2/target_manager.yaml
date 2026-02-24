@@ -1,0 +1,5 @@
+/**:
+  ros__parameters:
+
+    # 是否启用VR输入处理
+    enable_vr: true
