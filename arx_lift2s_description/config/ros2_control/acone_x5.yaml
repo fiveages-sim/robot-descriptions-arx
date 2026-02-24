@@ -52,13 +52,13 @@ ocs2_arm_controller:
 left_gripper_controller:
   ros__parameters:
     joint: left_gripper_joint
-    use_effort_interface: false  # 禁用力反馈，使用纯位置控制模式
-    # force_feedback_ratio: 0.1  # 禁用力反馈后这些参数不再需要
-    # force_threshold: 0.5
+    use_effort_interface: true  # 禁用力反馈，使用纯位置控制模式
+    force_feedback_ratio: 0.75  # 禁用力反馈后这些参数不再需要
+    force_threshold: 0.0
 
 right_gripper_controller:
   ros__parameters:
     joint: right_gripper_joint
-    use_effort_interface: false  # 禁用力反馈，使用纯位置控制模式
-    # force_feedback_ratio: 0.1  # 禁用力反馈后这些参数不再需要
-    # force_threshold: 0.5
+    use_effort_interface: true  # 禁用力反馈，使用纯位置控制模式
+    force_feedback_ratio: 0.75  # 禁用力反馈后这些参数不再需要
+    force_threshold: 0.0
