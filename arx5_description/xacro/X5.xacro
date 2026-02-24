@@ -451,13 +451,13 @@
             <link name="${prefix}camera">
                 <visual>
                     <geometry>
-                        <mesh filename="file://$(find sensor_models)/meshes/d405.glb"/>
+                        <mesh filename="file://$(find sensor_models)/meshes/d405/d405.obj"/>
                     </geometry>
                 </visual>
                 <xacro:if value="${collider == 'convex'}">
                     <collision>
                         <geometry>
-                            <mesh filename="file://$(find sensor_models)/meshes/d405.glb"/>
+                            <mesh filename="file://$(find sensor_models)/meshes/d405/d405.obj"/>
                         </geometry>
                     </collision>
                 </xacro:if>
@@ -509,12 +509,12 @@
             <link name="${prefix}camera">
                 <visual>
                     <geometry>
-                        <mesh filename="file://$(find sensor_models)/meshes/d435.glb"/>
+                        <mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
                     </geometry>
                 </visual>
                 <xacro:if value="${collider == 'convex'}">
                     <geometry>
-                        <mesh filename="file://$(find sensor_models)/meshes/d435.glb"/>
+                        <mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
                     </geometry>
                 </xacro:if>
                 <xacro:if value="${collider == 'simple'}">
