@@ -27,10 +27,15 @@
         <param name="joint_states_topic">/isaac/joint_states</param>
       </xacro:if>
       <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
-        <plugin>arx_x5_ros2_control/ArxX5Hardware</plugin>
+        <plugin>arx_ros2_control/ArxX5Hardware</plugin>
         <param name="arm_config">LEFT</param>
         <param name="robot_model">X5</param>
-        <param name="can_interface">can0</param>
+        <param name="can_interface">can1</param>
+        <!-- 单臂默认增益，可按需修改 -->
+        <param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
+        <param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
+        <param name="gripper_kp">5.0</param>
+        <param name="gripper_kd">0.2</param>
       </xacro:if>
     </hardware>
 
