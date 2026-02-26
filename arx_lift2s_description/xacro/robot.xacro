@@ -3,6 +3,7 @@
 	<xacro:arg name="type" default="x5"/>
 	<xacro:arg name="enable_wheel_joints" default="false"/>
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
+	<xacro:arg name="collider" default ="simple"/>
 
 	<xacro:property name="type_arg" value="$(arg type)"/>
 	<xacro:property name="selected_arm_type" value="x5"/>
@@ -38,18 +39,18 @@
 	</xacro:unless>
 
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/components/ac_one.xacro"/>
-	<xacro:ac_one/>
+	<xacro:ac_one collider="$(arg collider)"/>
 
 	<xacro:if value="${selected_arm_type == 'x5'}">
 		<xacro:include filename="$(find arx5_description)/xacro/X5_ac1.xacro"/>
-		<xacro:X5 name="left"/>
-		<xacro:X5 name="right"/>
+		<xacro:X5 name="left" collider="$(arg collider)"/>
+		<xacro:X5 name="right" collider="$(arg collider)"/>
 	</xacro:if>
 
 	<xacro:if value="${selected_arm_type == 'r5'}">
 		<xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
-		<xacro:R5 name="left"/>
-		<xacro:R5 name="right"/>
+		<xacro:R5 name="left" collider="$(arg collider)"/>
+		<xacro:R5 name="right" collider="$(arg collider)"/>
 	</xacro:if>
 
 	<joint name="arm_left_fixed" type="fixed">

@@ -75,27 +75,39 @@ colcon build --packages-up-to arx_lift2s_description --symlink-install
 
 ### 3.2 OCS2 Arm Controller Demo
 
-* Lift with X5 Arm
+* Mock Components
   ```bash
+  # Lift with X5 Arm
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s
   ```
-
-* Lift2S with R5 Arm
   ```bash
+  # Lift with R5 Arm
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=r5 hardware:=gz world:=dart
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=r5
   ```
-
-* AC-one and X5 Arm
   ```bash
+  # AC-one and X5 Arm
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=acone_x5
   ```
 
+* Gazebo
+  ```bash
+  # Lift2S with R5 Arm
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=r5 hardware:=gz world:=dart
+  ```
+
 * Isaac Sim Launch
   ```bash
+  # Lift2S with X5 Arm
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s hardware:=isaac
+  ```
+  ```bash
+  # AC-one and X5 Arm
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=acone_x5 hardware:=isaac
   ```
   
