@@ -52,13 +52,14 @@
 		<link name="head_camera">
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find sensor_models)/meshes/d405/d405.obj"/>
+					<mesh filename="file://$(find sensor_models)/meshes/realsense/d405.glb"/>
 				</geometry>
 			</visual>
 		</link>
 
 		<joint name="head_camera_joint" type="fixed">
-			<origin xyz="0.090415 0.002 0.2285" rpy="0 1.0472 0"/>
+<!--			<origin xyz="0.090415 0.002 0.2285" rpy="0 1.0472 0"/>-->
+			<origin xyz="0.090415 0.002 0.2285" rpy="-2.618 0 -1.5708"/>
 			<parent link="body_link"/>
 			<child link="head_camera"/>
 		</joint>
