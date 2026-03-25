@@ -129,14 +129,14 @@
 		<link name="${prefix}link3">
 			<inertial>
 				<origin xyz="0.18544 -0.00071369 0.051628"/>
-				<mass value="0.54316" />
+				<mass value="0.54316"/>
 				<inertia
 						ixx="0.00036398"
 						ixy="-0.00002814"
 						ixz="-0.00039418"
 						iyy="0.00422770"
 						iyz="-0.00001179"
-						izz="0.00419421" />
+						izz="0.00419421"/>
 			</inertial>
 			<visual>
 				<origin rpy="${PI} 0 0"/>
@@ -169,7 +169,7 @@
 		</link>
 
 		<joint name="${prefix}joint3" type="revolute">
-			<origin xyz="-0.264 0 0" rpy="0 0 0"/>
+			<origin xyz="-0.264 0 0"/>
 			<parent link="${prefix}link2"/>
 			<child link="${prefix}link3"/>
 			<axis xyz="0 -1 0"/>
@@ -204,7 +204,7 @@
 			</xacro:if>
 			<xacro:if value="${collider == 'simple'}">
 				<collision name="simple_link4">
-					<origin xyz="0.0685 0.0001 0.065" rpy="0 0 0"/>
+					<origin xyz="0.0685 0.0001 0.065"/>
 					<geometry>
 						<cylinder length="0.04" radius="0.0315"/>
 					</geometry>
@@ -223,14 +223,14 @@
 		<link name="${prefix}link5">
 			<inertial>
 				<origin xyz="0.0029491 8.4086E-05 -0.054795"/>
-				<mass value="0.67398" />
+				<mass value="0.67398"/>
 				<inertia
 						ixx="0.00092704"
 						ixy="0.00000049"
 						ixz="0.00004559"
 						iyy="0.00091568"
 						iyz="0.00000053"
-						izz="0.00028327" />
+						izz="0.00028327"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -252,7 +252,7 @@
 					</geometry>
 				</collision>
 				<collision name="simple_link5_2">
-					<origin xyz="0.0035 0 -0.05" rpy="0 0 0"/>
+					<origin xyz="0.0035 0 -0.05"/>
 					<geometry>
 						<cylinder length="0.013" radius="0.03145"/>
 					</geometry>
@@ -265,20 +265,20 @@
 			<parent link="${prefix}link4"/>
 			<child link="${prefix}link5"/>
 			<axis xyz="0 0 -1"/>
-			<limit lower="-1.671" upper="1.671" effort="7" velocity="20" />
+			<limit lower="-1.671" upper="1.671" effort="7" velocity="20"/>
 		</joint>
 
 		<link name="${prefix}link6">
 			<inertial>
 				<origin xyz="0.040212 3.4542E-05 -0.010225"/>
-				<mass value="0.34667" />
+				<mass value="0.34667"/>
 				<inertia
 						ixx="0.00047210"
 						ixy="-0.00000041"
 						ixz="-0.00002976"
 						iyy="0.00049011"
 						iyz="-0.00003393"
-						izz="0.00018496" />
+						izz="0.00018496"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -303,24 +303,24 @@
 		</link>
 
 		<joint name="${prefix}joint6" type="revolute">
-			<origin xyz="0.02895 0 -0.0845" />
+			<origin xyz="0.02895 0 -0.0845"/>
 			<parent link="${prefix}link5"/>
 			<child link="${prefix}link6"/>
 			<axis xyz="1 0 0"/>
-			<limit lower="-2.094" upper="2.094" effort="7" velocity="20" />
+			<limit lower="-2.094" upper="2.094" effort="7" velocity="20"/>
 		</joint>
 
 		<link name="${prefix}link7">
 			<inertial>
 				<origin xyz="-0.0060354 -0.015602 0.013499"/>
-				<mass value="0.08924" />
+				<mass value="0.08924"/>
 				<inertia
 						ixx="0.00009869"
 						ixy="-0.00000394"
 						ixz="0.00001011"
 						iyy="0.00009021"
 						iyz="0.00001113"
-						izz="0.00006849" />
+						izz="0.00006849"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -336,7 +336,7 @@
 			</xacro:if>
 			<xacro:if value="${collider == 'simple'}">
 				<collision name="simple_link7">
-					<origin xyz="0.0262 0 0.0002" rpy="0 0 0"/>
+					<origin xyz="0.0262 0 0.0002"/>
 					<geometry>
 						<box size="0.08 0.04 0.0640"/>
 					</geometry>
@@ -355,14 +355,14 @@
 		<link name="${prefix}link8">
 			<inertial>
 				<origin xyz="-0.00581 0.015593 -0.012255"/>
-				<mass value="0.089402" />
+				<mass value="0.089402"/>
 				<inertia
 						ixx="0.00007306"
 						ixy="0.00000404"
 						ixz="-0.00001526"
 						iyy="0.00006428"
 						iyz="0.00000327"
-						izz="0.00006822" />
+						izz="0.00006822"/>
 			</inertial>
 			<visual>
 				<geometry>
@@ -378,7 +378,7 @@
 			</xacro:if>
 			<xacro:if value="${collider == 'simple'}">
 				<collision name="simple_link8">
-					<origin xyz="0.0262 0 0.0002" rpy="0 0 0"/>
+					<origin xyz="0.0262 0 0.0002"/>
 					<geometry>
 						<box size="0.08 0.04 0.0640"/>
 					</geometry>
@@ -438,7 +438,7 @@
 						</geometry>
 					</collision>
 					<collision name="simple_d405_2">
-						<origin xyz="0.001 0 0.014" rpy="0 0 0"/>
+						<origin xyz="0.001 0 0.014"/>
 						<geometry>
 							<box size="0.01 0.05 0.03"/>
 						</geometry>
@@ -448,7 +448,7 @@
 			<joint name="${prefix}camera_support_fixed" type="fixed">
 				<parent link="${prefix}link6"/>
 				<child link="${prefix}camera_support"/>
-				<origin xyz="0.045 0 0.021"/>
+				<origin xyz="0.0344 0 0.0208"/>
 			</joint>
 
 			<link name="${prefix}camera">
@@ -466,7 +466,7 @@
 				</xacro:if>
 				<xacro:if value="${collider == 'simple'}">
 					<collision name="simple_d405camera">
-						<origin xyz="-0.0115 0 0" rpy="0 0 0"/>
+						<origin xyz="-0.0115 0 0"/>
 						<geometry>
 							<box size="0.0231 0.0421 0.042"/>
 						</geometry>
@@ -496,7 +496,7 @@
 				</xacro:if>
 				<xacro:if value="${collider == 'simple'}">
 					<collision name="simple_d435">
-						<origin xyz="0.001 0 0.014" rpy="0 0 0"/>
+						<origin xyz="0.001 0 0.014"/>
 						<geometry>
 							<box size="0.01 0.05 0.03"/>
 						</geometry>
@@ -522,7 +522,7 @@
 				</xacro:if>
 				<xacro:if value="${collider == 'simple'}">
 					<collision name="simple_d435camera">
-						<origin xyz="-0.0125 0 0" rpy="0 0 0"/>
+						<origin xyz="-0.0125 0 0"/>
 						<geometry>
 							<box size="0.0251 0.0899 0.025"/>
 						</geometry>
