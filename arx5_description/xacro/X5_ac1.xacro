@@ -3,7 +3,8 @@
 	<xacro:arg name="collider" default="simple"/>
 	<xacro:property name="PI" value="3.1415926535897931"/>
 	<xacro:property name="collider_type" value="$(arg collider)"/>
-	<xacro:macro name="X5" params="name collider:=simple camera:=d405">
+	<xacro:include filename="$(find arx5_description)/xacro/components/gripper_2025.xacro"/>
+	<xacro:macro name="X5" params="name collider:=simple camera:=d405 with_gripper:='true'">
 		<xacro:property name="prefix" value="${name + '_' if name else ''}"/>
 
 		<link name="${prefix}base_link">
@@ -268,272 +269,21 @@
 			<limit lower="-1.671" upper="1.671" effort="7" velocity="20"/>
 		</joint>
 
-		<link name="${prefix}link6">
-			<inertial>
-				<origin xyz="0.040212 3.4542E-05 -0.010225"/>
-				<mass value="0.34667"/>
-				<inertia
-						ixx="0.00047210"
-						ixy="-0.00000041"
-						ixz="-0.00002976"
-						iyy="0.00049011"
-						iyz="-0.00003393"
-						izz="0.00018496"/>
-			</inertial>
-			<visual>
-				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/ac1/link6.glb"/>
-				</geometry>
-			</visual>
-			<xacro:if value="${collider == 'convex'}">
-				<collision>
-					<geometry>
-						<mesh filename="file://$(find arx5_description)/meshes/ac1/link6.glb"/>
-					</geometry>
-				</collision>
-			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
-				<collision name="simple_link6">
-					<origin xyz="0.038 0 0.0002" rpy="0 ${PI/2} 0"/>
-					<geometry>
-						<cylinder length="0.064" radius="0.03015"/>
-					</geometry>
-				</collision>
-			</xacro:if>
-		</link>
-
+		<link name="${prefix}ee"/>
 		<joint name="${prefix}joint6" type="revolute">
 			<origin xyz="0.02895 0 -0.0845"/>
 			<parent link="${prefix}link5"/>
-			<child link="${prefix}link6"/>
+			<child link="${prefix}ee"/>
 			<axis xyz="1 0 0"/>
 			<limit lower="-2.094" upper="2.094" effort="7" velocity="20"/>
 		</joint>
 
-		<link name="${prefix}link7">
-			<inertial>
-				<origin xyz="-0.0060354 -0.015602 0.013499"/>
-				<mass value="0.08924"/>
-				<inertia
-						ixx="0.00009869"
-						ixy="-0.00000394"
-						ixz="0.00001011"
-						iyy="0.00009021"
-						iyz="0.00001113"
-						izz="0.00006849"/>
-			</inertial>
-			<visual>
-				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/ac1/link7.glb"/>
-				</geometry>
-			</visual>
-			<xacro:if value="${collider == 'convex'}">
-				<collision>
-					<geometry>
-						<mesh filename="file://$(find arx5_description)/meshes/ac1/link7.glb"/>
-					</geometry>
-				</collision>
-			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
-				<collision name="simple_link7">
-					<origin xyz="0.0262 0 0.0002"/>
-					<geometry>
-						<box size="0.08 0.04 0.0640"/>
-					</geometry>
-				</collision>
-			</xacro:if>
-		</link>
-
-		<joint name="${prefix}gripper_joint" type="prismatic">
-			<origin xyz="0.08397 0.02721 -0.0062702"/>
-			<parent link="${prefix}link6"/>
-			<child link="${prefix}link7"/>
-			<axis xyz="0 1 0"/>
-			<limit lower="0" upper="0.044" effort="100" velocity="5"/>
-		</joint>
-
-		<link name="${prefix}link8">
-			<inertial>
-				<origin xyz="-0.00581 0.015593 -0.012255"/>
-				<mass value="0.089402"/>
-				<inertia
-						ixx="0.00007306"
-						ixy="0.00000404"
-						ixz="-0.00001526"
-						iyy="0.00006428"
-						iyz="0.00000327"
-						izz="0.00006822"/>
-			</inertial>
-			<visual>
-				<geometry>
-					<mesh filename="file://$(find arx5_description)/meshes/ac1/link8.glb"/>
-				</geometry>
-			</visual>
-			<xacro:if value="${collider == 'convex'}">
-				<collision>
-					<geometry>
-						<mesh filename="file://$(find arx5_description)/meshes/ac1/link8.glb"/>
-					</geometry>
-				</collision>
-			</xacro:if>
-			<xacro:if value="${collider == 'simple'}">
-				<collision name="simple_link8">
-					<origin xyz="0.0262 0 0.0002"/>
-					<geometry>
-						<box size="0.08 0.04 0.0640"/>
-					</geometry>
-				</collision>
-			</xacro:if>
-		</link>
-
-		<joint name="${prefix}joint8" type="prismatic">
-			<origin xyz="0.08397 -0.023638 -0.0062703"/>
-			<parent link="${prefix}link6"/>
-			<child link="${prefix}link8"/>
-			<axis xyz="0 -1 0"/>
-			<limit lower="0" upper="0.044" effort="100" velocity="5"/>
-			<mimic joint="${prefix}gripper_joint" multiplier="1" offset="0"/>
-		</joint>
-
-		<link name="${prefix}gripper_center"/>
-		<joint name="${prefix}gripper_center_fixed" type="fixed">
-			<parent link="${prefix}link6"/>
-			<child link="${prefix}gripper_center"/>
-			<origin xyz="0.1424 0 0.0001057"/>
-		</joint>
-
-		<link name="${prefix}left_pad"/>
-		<joint name="${prefix}left_pad_joint" type="fixed">
-			<parent link="${prefix}link7"/>
-			<child link="${prefix}left_pad"/>
-			<origin xyz="0.05843 -0.0249 0.006376"/>
-		</joint>
-
-		<link name="${prefix}right_pad"/>
-		<joint name="${prefix}right_pad_joint" type="fixed">
-			<parent link="${prefix}link8"/>
-			<child link="${prefix}right_pad"/>
-			<origin xyz="0.05843 0.0249 0.006376"/>
-		</joint>
-
-		<xacro:if value="${camera == 'd405'}">
-			<link name="${prefix}camera_support">
-				<visual>
-					<geometry>
-						<mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d405.glb"/>
-					</geometry>
-				</visual>
-				<xacro:if value="${collider == 'convex'}">
-					<collision>
-						<geometry>
-							<mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d405.glb"/>
-						</geometry>
-					</collision>
-				</xacro:if>
-				<xacro:if value="${collider == 'simple'}">
-					<collision name="simple_d405_1">
-						<origin xyz="0.0142 0 0.055" rpy="0 ${PI/6} 0"/>
-						<geometry>
-							<box size="0.01 0.05 0.06"/>
-						</geometry>
-					</collision>
-					<collision name="simple_d405_2">
-						<origin xyz="0.001 0 0.014"/>
-						<geometry>
-							<box size="0.01 0.05 0.03"/>
-						</geometry>
-					</collision>
-				</xacro:if>
-			</link>
-			<joint name="${prefix}camera_support_fixed" type="fixed">
-				<parent link="${prefix}link6"/>
-				<child link="${prefix}camera_support"/>
-				<origin xyz="0.0344 0 0.0208"/>
-			</joint>
-
-			<link name="${prefix}camera">
-				<visual>
-					<geometry>
-						<mesh filename="file://$(find sensor_models)/meshes/realsense/d405.glb"/>
-					</geometry>
-				</visual>
-				<xacro:if value="${collider == 'convex'}">
-					<collision>
-						<geometry>
-							<mesh filename="file://$(find sensor_models)/meshes/realsense/d405.glb"/>
-						</geometry>
-					</collision>
-				</xacro:if>
-				<xacro:if value="${collider == 'simple'}">
-					<collision name="simple_d405camera">
-						<origin xyz="-0.0115 0 0"/>
-						<geometry>
-							<box size="0.0231 0.0421 0.042"/>
-						</geometry>
-					</collision>
-				</xacro:if>
-			</link>
-			<joint name="${prefix}camera_fixed" type="fixed">
-				<origin xyz="0.0385 0 0.0475" rpy="-2.093 0 -1.5708"/>
-				<parent link="${prefix}camera_support"/>
-				<child link="${prefix}camera"/>
-			</joint>
-		</xacro:if>
-
-		<xacro:if value="${camera == 'd435'}">
-			<link name="${prefix}camera_support">
-				<visual>
-					<geometry>
-						<mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d435.glb"/>
-					</geometry>
-				</visual>
-				<xacro:if value="${collider == 'convex'}">
-					<collision>
-						<geometry>
-							<mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d435.glb"/>
-						</geometry>
-					</collision>
-				</xacro:if>
-				<xacro:if value="${collider == 'simple'}">
-					<collision name="simple_d435">
-						<origin xyz="0.001 0 0.014"/>
-						<geometry>
-							<box size="0.01 0.05 0.03"/>
-						</geometry>
-					</collision>
-				</xacro:if>
-			</link>
-			<joint name="${prefix}camera_support_fixed" type="fixed">
-				<parent link="${prefix}link6"/>
-				<child link="${prefix}camera_support"/>
-				<origin xyz="0.045 0 0.021"/>
-			</joint>
-
-			<link name="${prefix}camera">
-				<visual>
-					<geometry>
-						<mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
-					</geometry>
-				</visual>
-				<xacro:if value="${collider == 'convex'}">
-					<geometry>
-						<mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
-					</geometry>
-				</xacro:if>
-				<xacro:if value="${collider == 'simple'}">
-					<collision name="simple_d435camera">
-						<origin xyz="-0.0125 0 0"/>
-						<geometry>
-							<box size="0.0251 0.0899 0.025"/>
-						</geometry>
-					</collision>
-				</xacro:if>
-			</link>
-			<joint name="${prefix}camera_fixed" type="fixed">
-				<origin xyz="0.03 0 0.034113"/>
-				<parent link="${prefix}camera_support"/>
-				<child link="${prefix}camera"/>
-			</joint>
+		<xacro:if value="${str(with_gripper).lower() in ['1', 'true', 'yes', 'on']}">
+			<xacro:arx_gripper_2025
+				prefix="${prefix}"
+				parent_link="${prefix}ee"
+				collider="${collider}"
+				camera="${camera}"/>
 		</xacro:if>
 
 

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<robot name="ARX5 Component $(arg type)" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:arg name="type" default="d405"/>
+	<xacro:arg name="name" default=""/>
+	<xacro:arg name="collider" default="simple"/>
+	<xacro:property name="PI" value="3.1415926535897931"/>
+	<xacro:property name="prefix" value="${'$(arg name)' + '_' if '$(arg name)' else ''}"/>
+
+	<xacro:if value="${'$(arg type)' == 'd405'}">
+		<xacro:include filename="$(find arx5_description)/xacro/components/camera.xacro"/>
+		<link name="${prefix}base_link"/>
+		<xacro:arx_camera_component prefix="${prefix}" camera="d405" collider="$(arg collider)"/>
+		<joint name="${prefix}camera_support_fixed" type="fixed">
+			<parent link="${prefix}base_link"/>
+			<child link="${prefix}camera_support"/>
+		</joint>
+	</xacro:if>
+
+	<xacro:if value="${'$(arg type)' == 'd435'}">
+		<xacro:include filename="$(find arx5_description)/xacro/components/camera.xacro"/>
+		<link name="${prefix}base_link"/>
+		<xacro:arx_camera_component prefix="${prefix}" camera="d435" collider="$(arg collider)"/>
+		<joint name="${prefix}camera_support_fixed" type="fixed">
+			<parent link="${prefix}base_link"/>
+			<child link="${prefix}camera_support"/>
+		</joint>
+	</xacro:if>
+
+	<xacro:if value="${'$(arg type)' == 'r5_ee'}">
+		<xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
+		<xacro:R5 name="$(arg name)" collider="$(arg collider)" with_gripper="false"/>
+	</xacro:if>
+
+	<xacro:if value="${'$(arg type)' == 'x5_ee'}">
+		<xacro:include filename="$(find arx5_description)/xacro/X5.xacro"/>
+		<xacro:X5 name="$(arg name)" collider="$(arg collider)" with_gripper="false"/>
+	</xacro:if>
+
+	<xacro:if value="${'$(arg type)' == 'ac1_ee'}">
+		<xacro:include filename="$(find arx5_description)/xacro/X5_ac1.xacro"/>
+		<xacro:X5 name="$(arg name)" collider="$(arg collider)" with_gripper="false"/>
+	</xacro:if>
+
+	<xacro:if value="${'$(arg type)' == 'agilex_ee'}">
+		<xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
+		<xacro:R5 name="$(arg name)" style="agilex" collider="$(arg collider)" with_gripper="false"/>
+	</xacro:if>
+</robot>

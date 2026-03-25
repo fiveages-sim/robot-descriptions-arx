@@ -46,6 +46,26 @@ To visualize and check the configuration of the robot in rviz, simply launch:
 
   ![arx r5](../.images/arx_r5.png)
 
+* ARX Gripper Component Only
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch gripper.launch.py gripper:=arx5
+  ```
+  - 2023 夹爪：`xacro_arg:=type:=2023`
+  - 2025(AC1) 夹爪：`xacro_arg:=type:=2025`
+
+* ARX Camera Support Component (`component.xacro`)
+  ```bash
+  source ~/ros2_ws/install/setup.bash
+  ros2 launch robot_common_launch component.launch.py robot:=arx5 xacro_arg:=type:=d405
+  ```
+  - d405 支架：`xacro_arg:=type:=d405`
+  - d435 支架：`xacro_arg:=type:=d435`
+  - R5 到 ee：`xacro_arg:=type:=r5_ee`
+  - X5 到 ee：`xacro_arg:=type:=x5_ee`
+  - AC1 到 ee：`xacro_arg:=type:=ac1_ee`
+  - Agilex 到 ee：`xacro_arg:=type:=agilex_ee`
+
 ## 3. OCS2 Demo
 
 ### 3.1 Official OCS2 Mobile Manipulator Demo

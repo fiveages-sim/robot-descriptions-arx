@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="arx_camera_component" params="prefix camera:=d405 collider:=simple">
+        <xacro:if value="${camera == 'none'}">
+            <link name="${prefix}camera_support"/>
+        </xacro:if>
+
+        <xacro:if value="${camera == 'd405'}">
+            <link name="${prefix}camera_support">
+                <visual>
+                    <geometry>
+                        <mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d405.glb"/>
+                    </geometry>
+                </visual>
+                <xacro:if value="${collider == 'convex'}">
+                    <collision>
+                        <geometry>
+                            <mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d405.glb"/>
+                        </geometry>
+                    </collision>
+                </xacro:if>
+                <xacro:if value="${collider == 'simple'}">
+                    <collision name="simple_d405_1">
+                        <origin xyz="0.0142 0 0.055" rpy="0 ${PI/6} 0"/>
+                        <geometry>
+                            <box size="0.01 0.05 0.06"/>
+                        </geometry>
+                    </collision>
+                    <collision name="simple_d405_2">
+                        <origin xyz="0.001 0 0.014" rpy="0 0 0"/>
+                        <geometry>
+                            <box size="0.01 0.05 0.03"/>
+                        </geometry>
+                    </collision>
+                </xacro:if>
+            </link>
+            <link name="${prefix}camera">
+                <visual>
+                    <geometry>
+                        <mesh filename="file://$(find sensor_models)/meshes/realsense/d405.glb"/>
+                    </geometry>
+                </visual>
+                <xacro:if value="${collider == 'convex'}">
+                    <collision>
+                        <geometry>
+                            <mesh filename="file://$(find sensor_models)/meshes/realsense/d405.glb"/>
+                        </geometry>
+                    </collision>
+                </xacro:if>
+                <xacro:if value="${collider == 'simple'}">
+                    <collision name="simple_d405camera">
+                        <origin xyz="-0.0115 0 0" rpy="0 0 0"/>
+                        <geometry>
+                            <box size="0.0231 0.0421 0.042"/>
+                        </geometry>
+                    </collision>
+                </xacro:if>
+            </link>
+            <joint name="${prefix}camera_fixed" type="fixed">
+                <origin xyz="0.0385 0 0.0475" rpy="-2.093 0 -1.5708"/>
+                <parent link="${prefix}camera_support"/>
+                <child link="${prefix}camera"/>
+            </joint>
+        </xacro:if>
+
+        <xacro:if value="${camera == 'd435'}">
+            <link name="${prefix}camera_support">
+                <visual>
+                    <geometry>
+                        <mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d435.glb"/>
+                    </geometry>
+                </visual>
+                <xacro:if value="${collider == 'convex'}">
+                    <collision>
+                        <geometry>
+                            <mesh filename="file://$(find arx5_description)/meshes/camera_stand/stand_d435.glb"/>
+                        </geometry>
+                    </collision>
+                </xacro:if>
+                <xacro:if value="${collider == 'simple'}">
+                    <collision name="simple_d435">
+                        <origin xyz="0.001 0 0.014" rpy="0 0 0"/>
+                        <geometry>
+                            <box size="0.01 0.05 0.03"/>
+                        </geometry>
+                    </collision>
+                </xacro:if>
+            </link>
+            <link name="${prefix}camera">
+                <visual>
+                    <geometry>
+                        <mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
+                    </geometry>
+                </visual>
+                <xacro:if value="${collider == 'convex'}">
+                    <collision>
+                        <geometry>
+                            <mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
+                        </geometry>
+                    </collision>
+                </xacro:if>
+                <xacro:if value="${collider == 'simple'}">
+                    <collision name="simple_d435camera">
+                        <origin xyz="-0.0125 0 0" rpy="0 0 0"/>
+                        <geometry>
+                            <box size="0.0251 0.0899 0.025"/>
+                        </geometry>
+                    </collision>
+                </xacro:if>
+            </link>
+            <joint name="${prefix}camera_fixed" type="fixed">
+                <origin xyz="0.03 0 0.034113"/>
+                <parent link="${prefix}camera_support"/>
+                <child link="${prefix}camera"/>
+            </joint>
+        </xacro:if>
+    </xacro:macro>
+</robot>

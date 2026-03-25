@@ -24,4 +24,5 @@
     <xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
     <xacro:R5 name="" style="agilex"/>
   </xacro:if>
+
 </robot>

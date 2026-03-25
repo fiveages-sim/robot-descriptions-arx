@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<robot name="ARX5 Gripper $(arg type)" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="collider" default="convex"/>
+  <xacro:arg name="camera" default="none"/>
+  <xacro:arg name="type" default="2023"/>
+  <xacro:property name="PI" value="3.1415926535897931"/>
+
+  <link name="gripper_base"/>
+
+  <xacro:include filename="$(find arx5_description)/xacro/components/gripper_2023.xacro"/>
+  <xacro:include filename="$(find arx5_description)/xacro/components/gripper_2025.xacro"/>
+  <xacro:if value="${'$(arg type)' == '2023'}">
+    <xacro:arx_gripper_2023
+        prefix=""
+        parent_link="gripper_base"
+        collider="$(arg collider)"
+        camera="$(arg camera)"/>
+  </xacro:if>
+  <xacro:if value="${'$(arg type)' == '2025'}">
+    <xacro:arx_gripper_2025
+        prefix=""
+        parent_link="gripper_base"
+        collider="$(arg collider)"
+        camera="$(arg camera)"/>
+  </xacro:if>
+</robot>
