@@ -21,10 +21,16 @@
                 </collision>
             </xacro:if>
             <xacro:if value="${collider == 'simple'}">
-                <collision name="simple_link6">
+                <collision name="simple_link6_1">
                     <origin xyz="0.038 0 0.0002" rpy="0 ${PI/2} 0"/>
                     <geometry>
                         <cylinder length="0.064" radius="0.03015"/>
+                    </geometry>
+                </collision>
+                <collision name="simple_link6_2">
+                    <origin xyz="0.0705 0 -0.0012" rpy="0 0 0"/>
+                    <geometry>
+                        <box size="0.01 0.178 0.015"/>
                     </geometry>
                 </collision>
             </xacro:if>
@@ -53,6 +59,14 @@
                     </geometry>
                 </collision>
             </xacro:if>
+            <xacro:if value="${collider == 'simple'}">
+                <collision name="simple_link7">
+                    <origin xyz="0.038 -0.0125 0.0002" rpy="0 0 ${PI/2}"/>
+                    <geometry>
+                        <box size="0.0231 0.07 0.042"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
         </link>
 
         <joint name="${prefix}gripper_joint" type="prismatic">
@@ -78,6 +92,14 @@
                 <collision>
                     <geometry>
                         <mesh filename="file://$(find arx5_description)/meshes/r5/link8.glb"/>
+                    </geometry>
+                </collision>
+            </xacro:if>
+            <xacro:if value="${collider == 'simple'}">
+                <collision name="simple_link8">
+                    <origin xyz="0.038 0.0125 0.0002" rpy="0 0 ${PI/2}"/>
+                    <geometry>
+                        <box size="0.0231 0.07 0.042"/>
                     </geometry>
                 </collision>
             </xacro:if>

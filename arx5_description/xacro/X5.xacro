@@ -201,7 +201,7 @@
             </xacro:if>
             <xacro:if value="${collider == 'simple'}">
                 <collision name="simple_link4">
-                    <origin xyz="0.0685 0.0001 -0.065" />
+                    <origin xyz="0.068 0.00022 -0.067" />
                     <geometry>
                         <cylinder length="0.04" radius="0.0315"/>
                     </geometry>
@@ -243,15 +243,15 @@
             </xacro:if>
             <xacro:if value="${collider == 'simple'}">
                 <collision name="simple_link5_1">
-                    <origin xyz="0.01 0 0.086" rpy="${PI/2} 0 ${PI/2}"/>
+                    <origin xyz="0.006 0 0.086" rpy="${PI/2} 0 ${PI/2}"/>
                     <geometry>
-                        <cylinder length="0.045" radius="0.03145"/>
+                        <cylinder length="0.047" radius="0.03145"/>
                     </geometry>
                 </collision>
                 <collision name="simple_link5_2">
-                    <origin xyz="0.0035 0 0.05" />
+                    <origin xyz="0.00038 -0.0003 0.048" />
                     <geometry>
-                        <cylinder length="0.013" radius="0.03145"/>
+                        <cylinder length="0.014" radius="0.03145"/>
                     </geometry>
                 </collision>
             </xacro:if>
