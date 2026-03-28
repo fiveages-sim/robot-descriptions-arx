@@ -20,7 +20,7 @@ To visualize and check the configuration of the robot in rviz, simply launch:
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx5
   ```
 
-  ![arx x5](../.images/arx_x5.png)
+  ![arx x5 2023](../.images/arx_x5_2023.png)
 
 * ARX X5 2025 (AC1)
   ```bash
@@ -28,7 +28,7 @@ To visualize and check the configuration of the robot in rviz, simply launch:
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx5 type:=ac1
   ```
 
-  ![arx x5](../.images/arx_x5.png)
+  ![arx x5 2025](../.images/arx_x5_2025.png)
 
 * ARX R5
   ```bash
@@ -44,7 +44,7 @@ To visualize and check the configuration of the robot in rviz, simply launch:
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx5 type:="agilex"
   ```
 
-  ![arx r5](../.images/arx_r5.png)
+  ![arx r5](../.images/arx_r5_agilex.png)
 
 * ARX Gripper Component Only
   ```bash
