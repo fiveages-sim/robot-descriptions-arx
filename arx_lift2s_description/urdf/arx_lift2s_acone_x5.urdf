@@ -42,7 +42,7 @@
   <link name="head_camera">
     <visual>
       <geometry>
-        <mesh filename="package://sensor_models/meshes/d405/d405.obj"/>
+        <mesh filename="package://sensor_models/meshes/realsense/d405.glb"/>
       </geometry>
     </visual>
   </link>
@@ -340,7 +340,7 @@
   <link name="left_camera">
     <visual>
       <geometry>
-        <mesh filename="package://sensor_models/meshes/d405/d405.obj"/>
+        <mesh filename="package://sensor_models/meshes/realsense/d405.glb"/>
       </geometry>
     </visual>
     <collision name="simple_d405camera">
@@ -644,7 +644,7 @@
   <link name="right_camera">
     <visual>
       <geometry>
-        <mesh filename="package://sensor_models/meshes/d405/d405.obj"/>
+        <mesh filename="package://sensor_models/meshes/realsense/d405.glb"/>
       </geometry>
     </visual>
     <collision name="simple_d405camera">

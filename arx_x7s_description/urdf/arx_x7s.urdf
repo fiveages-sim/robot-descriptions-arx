@@ -213,7 +213,7 @@
   <link name="head_camera">
     <visual>
       <geometry>
-        <mesh filename="package://sensor_models/meshes/d405/d405.obj"/>
+        <mesh filename="package://sensor_models/meshes/realsense/d405.glb"/>
       </geometry>
     </visual>
   </link>
