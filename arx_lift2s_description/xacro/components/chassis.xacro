@@ -61,7 +61,7 @@
 			<link name="wheel_3"/>
 		</xacro:if>
 		<xacro:unless value="${enable_wheel_joints}">
-			<xacro:include filename="$(find arx_lift2s_description)/xacro/components/wheel.xacro"/>
+			<xacro:include filename="$(find component_models)/xacro/omnia_150.xacro"/>
 			<xacro:wheel wheel_name="wheel_1" enable_passive_wheels="false"/>
 			<xacro:wheel wheel_name="wheel_2" enable_passive_wheels="false"/>
 			<xacro:wheel wheel_name="wheel_3" enable_passive_wheels="false"/>

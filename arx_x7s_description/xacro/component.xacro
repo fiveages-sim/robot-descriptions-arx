@@ -18,7 +18,7 @@
 
 	<xacro:if value="${'$(arg type)' == 'wheel'}">
 		<!-- Include Wheel -->
-		<xacro:include filename="$(find component_models)/xacro/angellun_omniwheel.xacro"/>
+		<xacro:include filename="$(find component_models)/xacro/angellun_160.xacro"/>
 		<xacro:wheel wheel_name="wheel" enable_passive_wheels="true"/>
 	</xacro:if>
 </robot>

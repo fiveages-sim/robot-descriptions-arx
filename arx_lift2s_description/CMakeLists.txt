@@ -5,7 +5,7 @@ project(arx_lift2s_description)
 find_package(ament_cmake REQUIRED)
 
 install(
-		DIRECTORY config meshes urdf xacro
+		DIRECTORY config meshes xacro
 		DESTINATION share/${PROJECT_NAME}/
 )
 
