@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- ARX LIFT 2S 基座关节接口宏定义 -->
+    <!-- ARX LIFT 2S 基座关节接口宏定义（仿真用） -->
     <xacro:macro name="arx_lift2s_base_interfaces">
 
         <!-- 升降关节接口定义 (仅 lift2s 底盘需要) -->
@@ -14,6 +14,79 @@
             </joint>
         </xacro:if>
 
+    </xacro:macro>
+
+    <!-- Lift column: ArxLiftHardware setHeight (meters). -->
+    <xacro:macro name="arx_lift2s_lift_interfaces">
+        <joint name="lift_joint">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- Single X5 arm (+ gripper): used by ArxX5Hardware or mock/gz/isaac. -->
+    <xacro:macro name="arx_lift2s_arm_interfaces" params="name">
+        <xacro:property name="prefix" value="${name + '_' if name else ''}"/>
+        <xacro:arg name="gazebo" default="false"/>
+
+        <joint name="${prefix}joint1">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="${prefix}joint2">
+            <command_interface name="position"/>
+            <state_interface name="position">
+                <param name="initial_value">0.4</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="${prefix}joint3">
+            <command_interface name="position"/>
+            <state_interface name="position">
+                <param name="initial_value">0.12</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="${prefix}joint4">
+            <command_interface name="position"/>
+            <state_interface name="position">
+                <param name="initial_value">0.26</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="${prefix}joint5">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="${prefix}joint6">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="${prefix}gripper_joint">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+
+        <xacro:if value="$(arg gazebo)">
+            <joint name="${prefix}joint8">
+                <state_interface name="position"/>
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </joint>
+        </xacro:if>
     </xacro:macro>
 
 </robot>

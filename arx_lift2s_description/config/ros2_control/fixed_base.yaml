@@ -1,5 +1,7 @@
-# LIFT2S AC One + X5 (type:=acone_x5)
-# Same split as default: OCS2 dual arms, body_lift for lift_joint (no chassis)
+# LIFT2S Phase-2 whole-body A — OCS2 owns lift + dual arms (no chassis)
+#
+# Launch: type:=fixed_base
+# Pair with config/ocs2/fixed_base.info (manipulatorModelType=0)
 
 controller_manager:
   ros__parameters:
@@ -10,9 +12,6 @@ controller_manager:
 
     ocs2_arm_controller:
       type: ocs2_arm_controller/Ocs2ArmController
-
-    body_lift_controller:
-      type: basic_joint_controller/BasicJointController
 
     left_gripper_controller:
       type: adaptive_gripper_controller/AdaptiveGripperController
@@ -27,10 +26,11 @@ ocs2_arm_controller:
     future_time_offset: 1.0
 
     robot_name: arx_lift2s
-    robot_type: acone_x5
-    info_file_name: task_arm
+    info_file_name: fixed_base
 
+    # Order must match fixed_base.info: lift + left×6 + right×6
     joints:
+      - lift_joint
       - left_joint1
       - left_joint2
       - left_joint3
@@ -49,8 +49,9 @@ ocs2_arm_controller:
     state_interfaces:
       - position
 
-    home_1: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
-    home_2: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    home_1: [0.3, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
+    home_2: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    rest_pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
     home_duration: 5.0
     movej_duration: 3.0
@@ -58,22 +59,6 @@ ocs2_arm_controller:
     home_interpolation_type: "linear"
     movej_interpolation_type: "linear"
     movel_trajectory_duration: 2.0
-
-body_lift_controller:
-  ros__parameters:
-    update_rate: 100
-    joints:
-      - lift_joint
-    command_interfaces:
-      - position
-    state_interfaces:
-      - position
-      - velocity
-    home_1: [0.0]
-    home_2: [0.3]
-    home_duration: 3.0
-    movej_duration: 3.0
-    hold_position_threshold: 0.01
 
 left_gripper_controller:
   ros__parameters:

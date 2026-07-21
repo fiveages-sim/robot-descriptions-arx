@@ -1,4 +1,9 @@
 <?xml version="1.0"?>
+<!--
+  LIFT2S ros2_control wiring.
+  - mock_components / gz / isaac: single system (arx5_interfaces + base lift)
+  - real: left can1, right can3, lift can5 via arxlift2s_ros2_control
+-->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
     <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
     <xacro:arg name="gazebo" default="false"/>
@@ -7,31 +12,34 @@
     <xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
 
     <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
+        <!-- Left arm -->
         <ros2_control name="arx_lift2s_left_system" type="system">
             <hardware>
-                <plugin>arx_ros2_control/ArxX5Hardware</plugin>
-                <param name="robot_model">X5</param>
-                <param name="can_interface">can1</param>
-                <param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-                <param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
-                <!-- 可选：夹爪增益，不写则用默认 -->
-                <!-- <param name="gripper_kp">5.0</param> -->
-                <!-- <param name="gripper_kd">0.2</param> -->
+                <plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
+                <param name="can_name">can1</param>
+                <param name="urdf_path">$(find arx_lift2s_description)/urdf/x5_sdk.urdf</param>
+                <param name="end_type">2</param>
             </hardware>
-            <xacro:arx5_interfaces name="left"/>
+            <xacro:arx_lift2s_arm_interfaces name="left"/>
         </ros2_control>
+        <!-- Right arm -->
         <ros2_control name="arx_lift2s_right_system" type="system">
             <hardware>
-                <plugin>arx_ros2_control/ArxX5Hardware</plugin>
-                <param name="robot_model">X5</param>
-                <param name="can_interface">can3</param>
-                <param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-                <param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
-                <!-- 可选：夹爪增益，不写则用默认 -->
-                <!-- <param name="gripper_kp">5.0</param> -->
-                <!-- <param name="gripper_kd">0.2</param> -->
+                <plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
+                <param name="can_name">can3</param>
+                <param name="urdf_path">$(find arx_lift2s_description)/urdf/x5_sdk.urdf</param>
+                <param name="end_type">2</param>
             </hardware>
-            <xacro:arx5_interfaces name="right"/>
+            <xacro:arx_lift2s_arm_interfaces name="right"/>
+        </ros2_control>
+        <!-- Lift column only (ArxLiftHardware; robot_type 2 = LIFTS) -->
+        <ros2_control name="arx_lift2s_lift_system" type="system">
+            <hardware>
+                <plugin>arxlift2s_ros2_control/ArxLiftHardware</plugin>
+                <param name="can_name">can5</param>
+                <param name="robot_type">2</param>
+            </hardware>
+            <xacro:arx_lift2s_lift_interfaces/>
         </ros2_control>
     </xacro:if>
 

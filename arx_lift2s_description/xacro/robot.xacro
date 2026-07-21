@@ -12,12 +12,9 @@
 	<xacro:if value="${type_arg == 'r5'}">
 		<xacro:property name="selected_arm_type" value="r5"/>
 	</xacro:if>
-	<xacro:if value="${type_arg == 'acone_x5'}">
-		<xacro:property name="selected_base_type" value="acone"/>
-	</xacro:if>
+	<!-- acone_x5 / acone_r5: arm config variant only; keep lift2s chassis (lift_joint) for body bridge -->
 	<xacro:if value="${type_arg == 'acone_r5'}">
 		<xacro:property name="selected_arm_type" value="r5"/>
-		<xacro:property name="selected_base_type" value="acone"/>
 	</xacro:if>
 
 	<xacro:if value="${selected_base_type == 'lift2s'}">

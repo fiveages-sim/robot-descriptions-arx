@@ -1,5 +1,12 @@
 /**:
   ros__parameters:
+    # 手柄/键盘笛卡尔增量缩放
+    linear_scale: 0.01
+    angular_scale: 0.025
 
-    # 是否启用VR输入处理
+    # Marker 固定坐标系（与 OCS2 baseFrame 一致）
+    marker_fixed_frame: base_link
+
+    # VR 遥操
     enable_vr: true
+    enable_head_control: false
