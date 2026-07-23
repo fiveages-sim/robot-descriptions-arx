@@ -1,4 +1,5 @@
-# This config file is used by ros2_control (AC One + X5)
+# Common controller defaults for ARX AC One (dual-arm torso).
+
 controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
@@ -18,9 +19,10 @@ controller_manager:
 ocs2_arm_controller:
   ros__parameters:
     update_rate: 100
-    info_file_name: acone_fixed_base
+    mpc_frequency: 50
+    info_file_name: task
+    robot_name: arx_acone
 
-    # 必须与 URDF 中实际存在的非固定关节完全匹配
     joints:
       - left_joint1
       - left_joint2
@@ -41,24 +43,32 @@ ocs2_arm_controller:
       - position
 
     future_time_offset: 1.0
-    robot_name: arx_lift2s
-    mpc_frequency: 50
+    home_duration: 5.0
 
-    # 数组长度必须严格等于上面的 joints 数量（6 + 6 = 12）
-    # 对应：left(1-6), right(1-6)
+    cartesian_defaults:
+      frame_id: arm_base
+      ik_type: AUTO
+      max_linear_velocity: 0.3
+      max_linear_acceleration: 1.0
+      max_linear_jerk: 5.0
+      max_angular_velocity: 0.5
+      max_angular_acceleration: 1.0
+      max_angular_jerk: 5.0
+
+    # left(1-6), right(1-6)
     home_1: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
     home_2: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 left_gripper_controller:
   ros__parameters:
     joint: left_gripper_joint
-    use_effort_interface: true  # 禁用力反馈，使用纯位置控制模式
-    force_feedback_ratio: 0.0  # 禁用力反馈后这些参数不再需要
+    use_effort_interface: true
+    force_feedback_ratio: 0.0
     force_threshold: 1.0
 
 right_gripper_controller:
   ros__parameters:
     joint: right_gripper_joint
-    use_effort_interface: true  # 禁用力反馈，使用纯位置控制模式
-    force_feedback_ratio: 0.0  # 禁用力反馈后这些参数不再需要
+    use_effort_interface: true
+    force_feedback_ratio: 0.0
     force_threshold: 1.0

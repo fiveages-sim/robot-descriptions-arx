@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- Dual-arm control / mount frame (same role as m6_ccs arm_base). -->
+	<xacro:macro name="ArmBase" params="parent:=body_link xyz:='0 0 0' rpy:='0 0 0'">
+		<link name="arm_base"/>
+		<joint name="arm_base_joint" type="fixed">
+			<origin xyz="${xyz}" rpy="${rpy}"/>
+			<parent link="${parent}"/>
+			<child link="arm_base"/>
+		</joint>
+	</xacro:macro>
+
+	<!-- Mount dual arms onto an existing parent link (typically arm_base). -->
+	<xacro:macro name="DualArmMount" params="parent:=arm_base">
+		<joint name="arm_left_fixed" type="fixed">
+			<parent link="${parent}"/>
+			<child link="left_base_link"/>
+			<origin xyz="-0.01602 0.25 -0.035"/>
+		</joint>
+
+		<joint name="arm_right_fixed" type="fixed">
+			<parent link="${parent}"/>
+			<child link="right_base_link"/>
+			<origin xyz="-0.01602 -0.25 -0.035"/>
+		</joint>
+	</xacro:macro>
+
+	<!-- Standalone base + torso + arm_base for component visualization. -->
+	<xacro:macro name="DualArmBase" params="collider:=simple">
+		<link name="base_link"/>
+		<joint name="base_joint" type="fixed">
+			<parent link="base_link"/>
+			<child link="body_link"/>
+		</joint>
+		<xacro:include filename="$(find arx_acone_description)/xacro/components/ac_one.xacro"/>
+		<xacro:ac_one collider="${collider}"/>
+		<xacro:ArmBase parent="body_link"/>
+		<xacro:DualArmMount parent="arm_base"/>
+	</xacro:macro>
+
+</robot>

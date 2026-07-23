@@ -1,9 +1,9 @@
-<robot name="arx_lift2s" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<?xml version="1.0"?>
+<robot name="arx_acone" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 	<xacro:arg name="type" default="x5"/>
-	<xacro:arg name="enable_wheel_joints" default="false"/>
-	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="collider" default="simple"/>
+	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 
 	<xacro:property name="type_arg" value="$(arg type)"/>
 	<xacro:property name="selected_arm_type" value="x5"/>
@@ -11,16 +11,13 @@
 		<xacro:property name="selected_arm_type" value="r5"/>
 	</xacro:if>
 
-	<!-- Lift chassis + prismatic lift_joint -->
-	<xacro:include filename="$(find arx_lift2s_description)/xacro/components/chassis.xacro"/>
-	<xacro:chassis enable_wheel_joints="$(arg enable_wheel_joints)"/>
-	<joint name="body_joint" type="fixed">
-		<origin xyz="0.13 0.001801 0.0529"/>
-		<parent link="lift_link"/>
+	<!-- Fixed-base dual-arm torso (no lift chassis) -->
+	<link name="base_link"/>
+	<joint name="base_joint" type="fixed">
+		<parent link="base_link"/>
 		<child link="body_link"/>
 	</joint>
 
-	<!-- AC One torso + dual arms from arx_acone_description -->
 	<xacro:include filename="$(find arx_acone_description)/xacro/components/ac_one.xacro"/>
 	<xacro:ac_one collider="$(arg collider)"/>
 

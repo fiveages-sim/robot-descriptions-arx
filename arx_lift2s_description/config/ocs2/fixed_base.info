@@ -213,18 +213,17 @@ finalEndEffector
 }
 
 selfCollision
-{ 
+{
   ; activate self-collision constraint
   activate  true
 
   ; Self Collision pairs
   collisionLinkPairs
   {
-     [0] "left_link8, right_link7",
-     [1] "left_link8, head_camera",
-     [2] "right_link7, head_camera",
-     [3] "left_link8, body_link",
-     [4] "right_link7, body_link"
+     [0] "left_link8, body_link",
+     [1] "right_link7, body_link",
+     [2] "left_link3, body_link",
+     [3] "right_link3, body_link",
   }
 
     activationDistance 0.5
@@ -247,7 +246,7 @@ jointPositionLimits
   activate  true
 
   ; relaxed log barrier mu
-  mu      0.01
+  mu      1e-3
 
   ; relaxed log barrier delta
   delta   1e-3

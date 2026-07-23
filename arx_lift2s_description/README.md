@@ -1,113 +1,80 @@
 # ARX Lift 2S Description
 
-This package contains the description files for ARX Lift 2S. 
+Whole-body description for ARX Lift 2S: lift chassis + [ARX AC One](../arx_acone_description/)
+dual-arm torso.
+
+Control layout follows the FiveAges W2 / M6 CCS pattern:
+
+| Mode | Launch | Hardware URDF | Arm planning | Lift |
+|------|--------|---------------|--------------|------|
+| 全身 | `full_body.launch.py` | `arx_lift2s` | `arx_lift2s` (`fixed_base.info`, includes `lift_joint`) | Inside OCS2 |
+| 分体 | `split_body.launch.py` | `arx_lift2s` | `arx_acone` (`task.info`) | `body_joint_controller` |
+| 仅双臂 | `demo.launch.py robot:=arx_acone` | `arx_acone` | `arx_acone` | N/A |
 
 ## 1. Build
 
 ```bash
-cd ~/ros2_ws
+cd ~/arx_lift2s_ws
 colcon build --packages-up-to arx_lift2s_description --symlink-install
 ```
 
-## 2. Visualize the robot
+## 2. Visualize
 
 ### 2.1 Full Lift 2S
 
-* Lift with X5 Arm
+* Lift + X5
   ```bash
-  source ~/ros2_ws/install/setup.bash
+  source ~/arx_lift2s_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s
   ```
 
-* Lift with R5 Arm
+* Lift + R5
   ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:="r5"
+  source ~/arx_lift2s_ws/install/setup.bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:=r5
   ```
 
-### 2.1 AC One Config
+AC One (no chassis) visualization lives in `arx_acone_description`.
 
-* AC One with X5 Arm
+### 2.2 Components
+
+* Chassis
   ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:="acone_x5"
-  ```
-
-* AC One with R5 Arm
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:="acone_r5"
-  ```
-
-
-## 2.2 Components
-
-* chassis
-  ```bash
-  source ~/ros2_ws/install/setup.bash
+  source ~/arx_lift2s_ws/install/setup.bash
   ros2 launch robot_common_launch component.launch.py robot:=arx_lift2s
   ```
-* AC One Base
+
+* AC One torso / arms — see [`arx_acone_description`](../arx_acone_description/README.md)
+
+## 3. OCS2 Control
+
+### 3.1 Full Body（全身：升降 + 双臂同一 OCS2）
+
+```bash
+source ~/arx_lift2s_ws/install/setup.bash
+ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_lift2s
+```
+
+### 3.2 Split Body（分体：双臂 OCS2 + 升降 BasicJoint）
+
+```bash
+source ~/arx_lift2s_ws/install/setup.bash
+ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s
+```
+
+* Isaac
   ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch component.launch.py robot:=arx_lift2s type:=ac_one
-  ```
-* Wheel
-  ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch component.launch.py robot:=arx_lift2s type:=wheel
+  ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=isaac
   ```
 
-## 3. OCS2 Demo
-
-### 3.1 Official OCS2 Mobile Manipulator Demo
-
-* Lift with X5 Arm
-    ```bash
-    source ~/ros2_ws/install/setup.bash
-    ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=arx_lift2s
-    ```
-* Lift with R5 Arm
-   ```bash
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=arx_lift2s type:=r5
-    ```
-
-### 3.2 OCS2 Arm Controller Demo
-
-* Mock Components
+* Real（官方 SDK：can1/can3 臂 + can5 升降）
   ```bash
-  # Lift with X5 Arm
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s
-  ```
-  ```bash
-  # Lift with R5 Arm
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=r5
-  ```
-  ```bash
-  # AC-one and X5 Arm
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=acone_x5
+  ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=real
   ```
 
-* Gazebo
-  ```bash
-  # Lift2S with R5 Arm
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=r5 hardware:=gz world:=dart
-  ```
+### 3.3 Official OCS2 Mobile Manipulator Demo
 
-* Isaac Sim Launch
-  ```bash
-  # Lift2S with X5 Arm
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s hardware:=isaac
-  ```
-  ```bash
-  # AC-one and X5 Arm
-  source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_lift2s type:=acone_x5 hardware:=isaac
-  ```
-  
+```bash
+source ~/arx_lift2s_ws/install/setup.bash
+ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=arx_lift2s
+```

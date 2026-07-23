@@ -1,19 +1,14 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- ARX LIFT 2S 基座关节接口宏定义 -->
-    <xacro:macro name="arx_lift2s_base_interfaces">
-
-        <!-- 升降关节接口定义 (仅 lift2s 底盘需要) -->
-        <xacro:if value="${selected_base_type == 'lift2s'}">
-            <joint name="lift_joint">
-                <command_interface name="position"/>
-                <state_interface name="position"/>
-                <state_interface name="velocity"/>
-                <state_interface name="effort"/>
-            </joint>
-        </xacro:if>
-
-    </xacro:macro>
+	<!-- ARX LIFT 2S 基座关节接口宏定义 -->
+	<xacro:macro name="arx_lift2s_base_interfaces">
+		<joint name="lift_joint">
+			<command_interface name="position"/>
+			<state_interface name="position"/>
+			<state_interface name="velocity"/>
+			<state_interface name="effort"/>
+		</joint>
+	</xacro:macro>
 
 </robot>

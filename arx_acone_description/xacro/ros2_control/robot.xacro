@@ -1,14 +1,13 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_acone">
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="gazebo" default="false"/>
-	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
+
+	<xacro:include filename="$(find arx_acone_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
-	<xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
 
 	<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
-		<!-- Dual arms: official LIFT2S X5 HW (can1 / can3) -->
-		<ros2_control name="arx_lift2s_left_system" type="system">
+		<ros2_control name="arx_acone_left_system" type="system">
 			<hardware>
 				<plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
 				<param name="robot_model">X5</param>
@@ -18,7 +17,7 @@
 			</hardware>
 			<xacro:arx5_interfaces name="left"/>
 		</ros2_control>
-		<ros2_control name="arx_lift2s_right_system" type="system">
+		<ros2_control name="arx_acone_right_system" type="system">
 			<hardware>
 				<plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
 				<param name="robot_model">X5</param>
@@ -28,18 +27,10 @@
 			</hardware>
 			<xacro:arx5_interfaces name="right"/>
 		</ros2_control>
-		<!-- Lift column: official LIFT2S lift HW (can5) -->
-		<ros2_control name="arx_lift2s_lift_system" type="system">
-			<hardware>
-				<plugin>arxlift2s_ros2_control/ArxLiftHardware</plugin>
-				<param name="can_name">can5</param>
-			</hardware>
-			<xacro:arx_lift2s_base_interfaces/>
-		</ros2_control>
 	</xacro:if>
 
 	<xacro:unless value="${'$(arg ros2_control_hardware_type)' == 'real'}">
-		<ros2_control name="arx_lift2s_system" type="system">
+		<ros2_control name="arx_acone_system" type="system">
 			<hardware>
 				<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'gz'}">
 					<plugin>gz_ros2_control/GazeboSimSystem</plugin>
@@ -53,8 +44,6 @@
 					<param name="joint_states_topic">/isaac/joint_states</param>
 				</xacro:if>
 			</hardware>
-
-			<xacro:arx_lift2s_base_interfaces/>
 			<xacro:arx5_interfaces name="left"/>
 			<xacro:arx5_interfaces name="right"/>
 		</ros2_control>
@@ -63,7 +52,7 @@
 	<xacro:if value="$(arg gazebo)">
 		<gazebo>
 			<plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-				<parameters>$(find arx_lift2s_description)/config/ros2_control/ros2_controllers.yaml</parameters>
+				<parameters>$(find arx_acone_description)/config/ros2_control/ros2_controllers.yaml</parameters>
 			</plugin>
 		</gazebo>
 	</xacro:if>
