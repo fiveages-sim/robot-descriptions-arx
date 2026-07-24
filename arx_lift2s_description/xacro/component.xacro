@@ -9,7 +9,7 @@
 
 	<xacro:if value="${'$(arg type)' == 'chassis'}">
 		<xacro:include filename="$(find arx_lift2s_description)/xacro/components/chassis.xacro"/>
-		<xacro:chassis enable_wheel_joints="true"/>
+		<xacro:chassis enable_wheel_joints="true" collider="$(arg collider)"/>
 	</xacro:if>
 
 	<xacro:if value="${'$(arg type)' == 'wheel'}">

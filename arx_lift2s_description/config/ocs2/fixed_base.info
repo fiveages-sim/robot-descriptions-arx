@@ -217,13 +217,21 @@ selfCollision
   ; activate self-collision constraint
   activate  true
 
-  ; Self Collision pairs
+  ; Full-body pairs (minimal):
+  ;   - acone arm↔body_link (same 4 pairs as arx_acone task.info)
+  ;   - same arm links ↔ lift_mast_link (lift column only, not rear panel / deck)
   collisionLinkPairs
   {
+     ; acone dual-arm ↔ body_link
      [0] "left_link8, body_link",
      [1] "right_link7, body_link",
      [2] "left_link3, body_link",
      [3] "right_link3, body_link",
+     ; same links ↔ lift column
+     [4] "left_link8, lift_mast_link",
+     [5] "right_link7, lift_mast_link",
+     [6] "left_link3, lift_mast_link",
+     [7] "right_link3, lift_mast_link",
   }
 
     activationDistance 0.5
@@ -236,7 +244,6 @@ selfCollision
 
     ; relaxed log barrier delta
     delta   1e-2
-  ; TODO: Replace the collision meshes of the arm with primitive shapes.
 }
 
 ; Only applied for arm joints: limits parsed from URDF

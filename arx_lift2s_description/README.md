@@ -7,9 +7,16 @@ Control layout follows the FiveAges W2 / M6 CCS pattern:
 
 | Mode | Launch | Hardware URDF | Arm planning | Lift |
 |------|--------|---------------|--------------|------|
-| 全身 | `full_body.launch.py` | `arx_lift2s` | `arx_lift2s` (`fixed_base.info`, includes `lift_joint`) | Inside OCS2 |
-| 分体 | `split_body.launch.py` | `arx_lift2s` | `arx_acone` (`task.info`) | `body_joint_controller` |
+| 全身 | `full_body.launch.py` | `arx_lift2s` | `arx_lift2s` (`fixed_base.info`，含底盘/升降碰撞) | Inside OCS2 |
+| 分体 | `split_body.launch.py` | `arx_lift2s` | `arx_acone` (`task.info`，仅双臂↔`body_link`) | `body_joint_controller` |
 | 仅双臂 | `demo.launch.py robot:=arx_acone` | `arx_acone` | `arx_acone` | N/A |
+
+### Self-collision（对齐 fa_w2）
+
+| Mode | Planning robot | Collision geometry | `collisionLinkPairs` |
+|------|----------------|--------------------|----------------------|
+| 分体 | `arx_acone`（≈ m6_ccs） | acone `body_link` simple boxes | arms ↔ `body_link` |
+| 全身 | `arx_lift2s`（≈ fiveages_w2） | chassis + lift + `body_link` simple boxes | arms ↔ `body_link` / `lift_link` / `base_link` |
 
 ## 1. Build
 

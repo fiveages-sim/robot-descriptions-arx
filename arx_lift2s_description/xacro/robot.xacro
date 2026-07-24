@@ -13,7 +13,7 @@
 
 	<!-- Lift chassis + prismatic lift_joint -->
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/components/chassis.xacro"/>
-	<xacro:chassis enable_wheel_joints="$(arg enable_wheel_joints)"/>
+	<xacro:chassis enable_wheel_joints="$(arg enable_wheel_joints)" collider="$(arg collider)"/>
 	<joint name="body_joint" type="fixed">
 		<origin xyz="0.13 0.001801 0.0529"/>
 		<parent link="lift_link"/>

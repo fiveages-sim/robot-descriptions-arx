@@ -1,7 +1,9 @@
 # Common controller defaults for ARX Lift 2S.
-# Pattern mirrors fiveages_w2_description:
-#   - split_body: ocs2_arm_controller (planning robot = arx_acone) + body_joint_controller (lift)
-#   - full_body:  ocs2_wbc_controller keyed as Ocs2ArmController (lift + dual arms in one MPC)
+# Pattern mirrors fiveages_w2_description / m6_ccs:
+#   - split_body: ocs2_arm_controller → planning robot arx_acone (like m6_ccs)
+#                 + body_joint_controller for lift. Self-collision: arms ↔ body_link.
+#   - full_body:  ocs2_wbc_controller → planning robot arx_lift2s (like fiveages_w2)
+#                 lift in MPC. Self-collision: arms ↔ body_link / lift_link / base_link.
 
 controller_manager:
   ros__parameters:
@@ -10,7 +12,7 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    # 分体：双臂 OCS2（规划 URDF / task.info 来自 arx_acone）
+    # 分体：双臂 OCS2（规划 URDF / task.info 来自 arx_acone，对齐 fa_w2→m6_ccs）
     ocs2_arm_controller:
       type: ocs2_arm_controller/Ocs2ArmController
 
@@ -31,7 +33,7 @@ ocs2_arm_controller:
   ros__parameters:
     update_rate: 100
     mpc_frequency: 50
-    # Split-body planning uses the standalone AC One description
+    # Split-body planning: standalone AC One (fa_w2 split → m6_ccs)
     robot_name: arx_acone
     info_file_name: task
 
