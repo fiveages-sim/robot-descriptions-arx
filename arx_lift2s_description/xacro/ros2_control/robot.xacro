@@ -16,7 +16,8 @@
 				<param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
 				<param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
 			</hardware>
-			<xacro:arx5_interfaces name="left"/>
+			<!-- Official HI exports position only — do not use MIX arx5_interfaces. -->
+			<xacro:arx5_interfaces_position name="left"/>
 		</ros2_control>
 		<ros2_control name="arx_lift2s_right_system" type="system">
 			<hardware>
@@ -26,7 +27,7 @@
 				<param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
 				<param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
 			</hardware>
-			<xacro:arx5_interfaces name="right"/>
+			<xacro:arx5_interfaces_position name="right"/>
 		</ros2_control>
 		<!-- Lift column: official LIFT2S lift HW (can5) -->
 		<ros2_control name="arx_lift2s_lift_system" type="system">
@@ -55,8 +56,9 @@
 			</hardware>
 
 			<xacro:arx_lift2s_base_interfaces/>
-			<xacro:arx5_interfaces name="left"/>
-			<xacro:arx5_interfaces name="right"/>
+			<!-- Sim/mock: keep position-only to match Lift2S official real HI. -->
+			<xacro:arx5_interfaces_position name="left"/>
+			<xacro:arx5_interfaces_position name="right"/>
 		</ros2_control>
 	</xacro:unless>
 

@@ -74,11 +74,12 @@ ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s
   ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=isaac
   ```
 
-* Real（官方 SDK：can1/can3 臂 + can5 升降）
+* Real（官方 SDK：can1/can3 臂 + can5 升降；**无 MIX**，臂为 position）
   ```bash
   ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=real
   ```
 
+单/双臂 Stanford + `full_control`（OCS2 MIX）见 `arx5_description` / `arx_acone_description`。
 ### 3.3 Official OCS2 Mobile Manipulator Demo
 
 ```bash

@@ -1,4 +1,6 @@
 # This config file is used by ros2_control
+# Pattern mirrors panthera_ht single.yaml / common.yaml (MIX + OCS2).
+
 controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
@@ -18,6 +20,7 @@ controller_manager:
 
 arm_controller:
   ros__parameters:
+    # Keep JTC position-only; OCS2 uses MIX below.
     command_interfaces:
       - position
     state_interfaces:
@@ -39,8 +42,12 @@ hand_controller:
 
 ocs2_arm_controller:
   ros__parameters:
-    # Joint configuration
     update_rate: 50  # Hz
+    mpc_frequency: 50
+    future_time_offset: 1.0
+    robot_name: arx5
+    info_file_name: task
+
     joints:
       - joint1
       - joint2
@@ -49,13 +56,36 @@ ocs2_arm_controller:
       - joint5
       - joint6
 
+    # MIX: matches Stanford ArxX5Hardware control_mode:=full_control
     command_interfaces:
       - position
+      - velocity
+      - effort
+      - kp
+      - kd
     state_interfaces:
       - position
+      - velocity
+      - effort
 
-    robot_name: arx5
+    # MIT kp/kd written to hardware command interfaces (same roles as panthera-ht)
+    default_gains: [30.0, 3.0]   # HOLD / HOME: [kp, kd]
+    pd_gains: [30.0, 3.0]        # OCS2 state: [kp, kd]
 
-    # Control parameters
-    home_pos: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
-    zero_pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    home_duration: 3.0
+    home_interpolation_type: linear
+    hold_first_check_position_threshold: 0.15
+    hold_position_threshold: 0.15
+
+    cartesian_defaults:
+      frame_id: base_link
+      ik_type: AUTO
+      max_linear_velocity: 0.3
+      max_linear_acceleration: 1.0
+      max_linear_jerk: 5.0
+      max_angular_velocity: 0.5
+      max_angular_acceleration: 1.0
+      max_angular_jerk: 5.0
+
+    home_1: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
+    rest_pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]

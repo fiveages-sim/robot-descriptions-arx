@@ -83,10 +83,15 @@ To visualize and check the configuration of the robot in rviz, simply launch:
 
 ### 3.2 OCS2 Arm Controller Demo
 
+Real hardware uses Stanford `arx_ros2_control` with default `control_mode:=full_control` (OCS2 MIX:
+position/velocity/effort/kp/kd → SDK `set_gain` + `set_joint_cmd`). Legacy: `control_mode:=position`.
+
 * ARX X5
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5
+  # Real:
+  # ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5 hardware:=real
   ```
 
 * ARX R5

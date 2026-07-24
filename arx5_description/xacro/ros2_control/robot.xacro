@@ -3,6 +3,8 @@
     <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
     <xacro:arg name="gazebo" default="false"/>
     <xacro:arg name="type" default="x5"/>
+    <!-- full_control (default, OCS2 MIX) | position (legacy: pos + param kp/kd) -->
+    <xacro:arg name="control_mode" default="full_control"/>
 
     <link name="world"/>
 
@@ -20,6 +22,7 @@
                 <plugin>arx_ros2_control/ArxX5Hardware</plugin>
                 <param name="robot_model">X5</param>
                 <param name="can_interface">can1</param>
+                <param name="control_mode">$(arg control_mode)</param>
                 <param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
                 <param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
                 <!-- 可选：夹爪增益，不写则用默认 -->

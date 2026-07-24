@@ -18,8 +18,10 @@ controller_manager:
 
 ocs2_arm_controller:
   ros__parameters:
-    update_rate: 100
+    # Align with panthera-ht common.yaml (MIX + OCS2 cadence)
+    update_rate: 50  # Hz
     mpc_frequency: 50
+    future_time_offset: 1.0
     info_file_name: task
     robot_name: arx_acone
 
@@ -37,13 +39,26 @@ ocs2_arm_controller:
       - right_joint5
       - right_joint6
 
+    # MIX: Stanford ArxX5Hardware control_mode:=full_control (default)
     command_interfaces:
       - position
+      - velocity
+      - effort
+      - kp
+      - kd
     state_interfaces:
       - position
+      - velocity
+      - effort
 
-    future_time_offset: 1.0
-    home_duration: 5.0
+    # MIT kp/kd (same roles as panthera-ht)
+    default_gains: [30.0, 3.0]   # HOLD / HOME: [kp, kd]
+    pd_gains: [30.0, 3.0]        # OCS2 state: [kp, kd]
+
+    home_duration: 3.0
+    home_interpolation_type: linear
+    hold_first_check_position_threshold: 0.15
+    hold_position_threshold: 0.15
 
     cartesian_defaults:
       frame_id: arm_base
@@ -58,6 +73,7 @@ ocs2_arm_controller:
     # left(1-6), right(1-6)
     home_1: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
     home_2: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    rest_pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 left_gripper_controller:
   ros__parameters:

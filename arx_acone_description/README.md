@@ -46,11 +46,12 @@ colcon build --packages-up-to arx_acone_description --symlink-install
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=isaac
   ```
 
-* Real (official LIFT2S arm HW, can1/can3)
+* Real (Stanford `arx_ros2_control`, can1/can3, default `control_mode:=full_control` / OCS2 MIX)
   ```bash
   source ~/arx_lift2s_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=real
   ```
+  Legacy position-only: pass xacro `control_mode:=position` (via description launch args if exposed).
 
-For Lift2S chassis + AC One (split / full body), see
+For Lift2S chassis + AC One (split / full body; **official** SDK, no MIX), see
 [`arx_lift2s_description/README.md`](../arx_lift2s_description/README.md).
