@@ -1,0 +1,8 @@
+/**:
+  ros__parameters:
+
+    # Align with panthera-ht single-arm target_manager.yaml
+    enable_vr: true
+
+    # Must match model_information.baseFrame in task.info / TF Fixed Frame in RViz
+    marker_fixed_frame: base_link
