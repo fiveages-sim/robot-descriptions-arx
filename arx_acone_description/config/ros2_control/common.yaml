@@ -19,8 +19,8 @@ controller_manager:
 ocs2_arm_controller:
   ros__parameters:
     # Align with panthera-ht common.yaml (MIX + OCS2 cadence)
-    update_rate: 50  # Hz
-    mpc_frequency: 50
+    update_rate: 100  # Hz
+    mpc_frequency: 100
     future_time_offset: 1.0
     info_file_name: task
     robot_name: arx_acone
@@ -39,8 +39,8 @@ ocs2_arm_controller:
       - right_joint5
       - right_joint6
 
-    # MIX command IFs (panthera-ht contract). HI control_mode selects write usage:
-    #   full_control → use all; position/pd_control → position + HI joint_k/d_gains only.
+    # MIX command IFs kept for URDF/controller contract. HI ignores kp/kd IF —
+    # real MIT gains come from hardware joint_k/d_gains (rqt / ros2 param).
     command_interfaces:
       - position
       - velocity
@@ -52,9 +52,9 @@ ocs2_arm_controller:
       - velocity
       - effort
 
-    # MIT kp/kd via command IF — only effective under HI control_mode:=full_control
-    default_gains: [30.0, 3.0]   # HOLD / HOME: [kp, kd]
-    pd_gains: [30.0, 3.0]        # OCS2 state: [kp, kd]
+    # Kept for controller state machine; HI no longer applies these to motors.
+    default_gains: [30.0, 2.0]   # HOLD / HOME: [kp, kd]
+    pd_gains: [30.0, 2.0]        # OCS2 state: [kp, kd]
 
     home_duration: 3.0
     home_interpolation_type: linear

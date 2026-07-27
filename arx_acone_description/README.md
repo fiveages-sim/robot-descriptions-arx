@@ -82,19 +82,19 @@ ros2 launch ocs2_arm_controller demo.launch.py \
   robot:=arx_acone hardware:=real xacro_control_mode:=position
 ```
 
-**两套增益（勿混用）**
+**真机 MIT 增益**
 
 | 层级 | 参数 | 何时生效 |
 |------|------|----------|
-| 控制器 | `default_gains` / `pd_gains: [30, 3]`（`common.yaml`） | **仅 `full_control` 运行中** |
-| HI | `joint_k_gains` / `joint_d_gains`（xacro `[80…]` / `[2…]`） | **`position` 全程**；`full_control` 仅 fallback — **保留真机调好的值** |
+| HI | `joint_k_gains` / `joint_d_gains`（xacro，可用 rqt 动态改） | **`full_control` 与 `position` 全程** |
+| 控制器 | `default_gains` / `pd_gains`（`common.yaml`） | **不再驱动真机 MIT 增益** |
 
 **Bring-up checks**
 
 1. HI log: `control_mode=full_control` on `/arx_acone_left_system`、`/arx_acone_right_system`
-2. OCS2 log: `Setting OCS2 gains: kp=30.00, kd=3.00` / Mixed control mode
+2. rqt / `ros2 param`：改 `/arx_acone_*_system` 的 `joint_k_gains` / `joint_d_gains` 即生效
 
-Runtime param tuning（mainly `position` / fallback）：见
+Runtime param tuning：见
 [`arx_ros2_control` DYNAMIC_PARAMS_USAGE.md](https://github.com/fiveages-sim/arx-ros2-control/blob/main/DYNAMIC_PARAMS_USAGE.md)。
 
 For Lift2S chassis + AC One (split / full body; **official** SDK path), see
