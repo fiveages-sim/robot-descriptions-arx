@@ -83,15 +83,21 @@ To visualize and check the configuration of the robot in rviz, simply launch:
 
 ### 3.2 OCS2 Arm Controller Demo
 
-Real hardware uses Stanford `arx_ros2_control` with default `control_mode:=full_control` (OCS2 MIX:
-position/velocity/effort/kp/kd → SDK `set_gain` + `set_joint_cmd`). Legacy: `control_mode:=position`.
+单臂控制模式与 [panthera-ht](https://github.com/fiveages-sim/open-deploy-ws/tree/panthera-ht) 同契约（URDF 始终 MIX；`control_mode` 只影响 `write()`）：
+
+| Launch / xacro | 默认 | 说明 |
+|----------------|------|------|
+| `full_control` | 是（推荐真机） | OCS2 MIX：pos/vel/effort/kp/kd |
+| `position` / `pd_control` | 否 | 保留真机位置环；HI `joint_k/d_gains` |
 
 * ARX X5
   ```bash
-  source ~/ros2_ws/install/setup.bash
+  source ~/arx_lift2s_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5
-  # Real:
-  # ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5 hardware:=real
+  # Real MIX (default / recommended):
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5 hardware:=real
+  # Legacy position write path:
+  # ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5 hardware:=real xacro_control_mode:=position
   ```
 
 * ARX R5

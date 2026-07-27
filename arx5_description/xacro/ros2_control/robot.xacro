@@ -3,7 +3,9 @@
     <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
     <xacro:arg name="gazebo" default="false"/>
     <xacro:arg name="type" default="x5"/>
-    <!-- full_control (default, OCS2 MIX) | position (legacy: pos + param kp/kd) -->
+    <!-- panthera-ht-aligned: full_control (default, OCS2 MIX, recommended) |
+         position (legacy real pos + joint_k/d_gains) | pd_control (alias of position).
+         URDF always declares MIX IFs; mode only affects HI write(). -->
     <xacro:arg name="control_mode" default="full_control"/>
 
     <link name="world"/>

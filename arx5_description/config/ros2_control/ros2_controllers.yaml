@@ -56,7 +56,8 @@ ocs2_arm_controller:
       - joint5
       - joint6
 
-    # MIX: matches Stanford ArxX5Hardware control_mode:=full_control
+    # MIX IFs (panthera-ht). HI control_mode:=full_control uses all;
+    # position/pd_control uses position + HI joint_k/d_gains only.
     command_interfaces:
       - position
       - velocity
@@ -68,7 +69,7 @@ ocs2_arm_controller:
       - velocity
       - effort
 
-    # MIT kp/kd written to hardware command interfaces (same roles as panthera-ht)
+    # MIT kp/kd — effective under full_control only (same roles as panthera-ht)
     default_gains: [30.0, 3.0]   # HOLD / HOME: [kp, kd]
     pd_gains: [30.0, 3.0]        # OCS2 state: [kp, kd]
 
