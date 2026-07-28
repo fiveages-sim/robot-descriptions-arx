@@ -3,25 +3,39 @@
 Whole-body description for ARX Lift 2S: lift chassis + [ARX AC One](../arx_acone_description/)
 dual-arm torso.
 
-Control layout follows the FiveAges W2 / M6 CCS pattern:
+Control layout follows [fa-w2-description/config/ocs2](https://github.com/fiveages-sim/fa-w2-description/tree/main/config/ocs2):
 
-| Mode | Launch | Hardware URDF | Arm planning | Lift |
+| Mode | Launch | Hardware URDF | OCS2 `.info` | Lift |
 |------|--------|---------------|--------------|------|
-| 全身 | `full_body.launch.py` | `arx_lift2s` | `arx_lift2s` (`fixed_base.info`，含底盘/升降碰撞) | Inside OCS2 |
-| 分体 | `split_body.launch.py` | `arx_lift2s` | `arx_acone` (`task.info`，仅双臂↔`body_link`) | `body_joint_controller` |
-| 仅双臂 | `demo.launch.py robot:=arx_acone` | `arx_acone` | `arx_acone` | N/A |
+| 全身 | `full_body.launch.py` | `arx_lift2s` | `fixed_base.info`（升降+双臂） | Inside OCS2 MIX |
+| 分体 | `split_body.launch.py` | `arx_lift2s` | `task_arm.info`（双臂） | `body_joint_controller` |
+| 仅双臂 | `demo.launch.py robot:=arx_acone` | `arx_acone` | acone `task.info` | N/A |
 
-### Self-collision（对齐 fa_w2）
+真机 HI：**full_control only**（臂 + 升降均导出 MIX；升降 `write()` 仍走 `setHeight`）。
 
-| Mode | Planning robot | Collision geometry | `collisionLinkPairs` |
-|------|----------------|--------------------|----------------------|
-| 分体 | `arx_acone`（≈ m6_ccs） | acone `body_link` simple boxes | arms ↔ `body_link` |
-| 全身 | `arx_lift2s`（≈ fiveages_w2） | chassis + lift + `body_link` simple boxes | arms ↔ `body_link` / `lift_link` / `base_link` |
+### OCS2 配置目录
+
+```text
+arx_lift2s_description/config/ocs2/
+  task_arm.info        # 分体：双臂
+  fixed_base.info      # 全身：固定底盘 + 升降 + 双臂
+  target_manager.yaml
+```
+
+`common.yaml`：`ocs2_arm_controller` → `robot_name: arx_lift2s` + `info_file_name: task_arm`；
+`ocs2_wbc_controller` → `info_file_name: fixed_base`。
+
+### Self-collision
+
+| Mode | `.info` | Collision |
+|------|---------|-----------|
+| 分体 | `task_arm` | arms ↔ `body_link` |
+| 全身 | `fixed_base` | arms ↔ `body_link` / `lift_link` / `base_link` |
 
 ## 1. Build
 
 ```bash
-cd ~/arx_lift2s_ws
+cd ~/lift2s-ws
 colcon build --packages-up-to arx_lift2s_description --symlink-install
 ```
 
@@ -29,60 +43,32 @@ colcon build --packages-up-to arx_lift2s_description --symlink-install
 
 ### 2.1 Full Lift 2S
 
-* Lift + X5
-  ```bash
-  source ~/arx_lift2s_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s
-  ```
-
-* Lift + R5
-  ```bash
-  source ~/arx_lift2s_ws/install/setup.bash
-  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s type:=r5
-  ```
-
-AC One (no chassis) visualization lives in `arx_acone_description`.
-
-### 2.2 Components
-
-* Chassis
-  ```bash
-  source ~/arx_lift2s_ws/install/setup.bash
-  ros2 launch robot_common_launch component.launch.py robot:=arx_lift2s
-  ```
-
-* AC One torso / arms — see [`arx_acone_description`](../arx_acone_description/README.md)
+```bash
+source ~/lift2s-ws/install/setup.bash
+ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s
+```
 
 ## 3. OCS2 Control
 
-### 3.1 Full Body（全身：升降 + 双臂同一 OCS2）
+### 3.1 Full Body（`fixed_base.info`）
 
 ```bash
-source ~/arx_lift2s_ws/install/setup.bash
+source ~/lift2s-ws/install/setup.bash
 ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_lift2s
+# 真机
+ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_lift2s hardware:=real
 ```
 
-### 3.2 Split Body（分体：双臂 OCS2 + 升降 BasicJoint）
+### 3.2 Split Body（`task_arm.info`）
 
 ```bash
-source ~/arx_lift2s_ws/install/setup.bash
+source ~/lift2s-ws/install/setup.bash
 ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s
+ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=real
 ```
 
-* Isaac
-  ```bash
-  ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=isaac
-  ```
+或使用仓库根目录 `./quick_start.sh` → Launch → 3/4（真机自动 `full_control`）。
 
-* Real（官方 SDK：can1/can3 臂 + can5 升降；**无 MIX**，臂为 position）
-  ```bash
-  ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=real
-  ```
+### X5 MIT gains（真机默认）
 
-单/双臂 Stanford + `full_control`（OCS2 MIX）见 `arx5_description` / `arx_acone_description`。
-### 3.3 Official OCS2 Mobile Manipulator Demo
-
-```bash
-source ~/arx_lift2s_ws/install/setup.bash
-ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=arx_lift2s
-```
+`joint_k_gains: [20, 20, 20, 20, 10, 10]`，`joint_d_gains: [3.5, 3.5, 3.5, 3.5, 1.0, 1.0]`，`gripper_kp: 5.0`。

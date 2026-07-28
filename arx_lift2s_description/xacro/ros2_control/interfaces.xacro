@@ -1,10 +1,16 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-	<!-- ARX LIFT 2S 基座关节接口宏定义 -->
+	<!-- ARX LIFT 2S lift column: MIX IFs (panthera-ht / fa-w2 full_control contract).
+	     ArxLiftHardware write() still drives height via setHeight(position);
+	     velocity/effort/kp/kd are exported so OCS2 WBC can claim full_control. -->
 	<xacro:macro name="arx_lift2s_base_interfaces">
 		<joint name="lift_joint">
 			<command_interface name="position"/>
+			<command_interface name="velocity"/>
+			<command_interface name="effort"/>
+			<command_interface name="kp"/>
+			<command_interface name="kd"/>
 			<state_interface name="position"/>
 			<state_interface name="velocity"/>
 			<state_interface name="effort"/>

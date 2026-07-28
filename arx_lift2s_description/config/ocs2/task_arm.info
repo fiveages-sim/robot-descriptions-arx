@@ -1,20 +1,22 @@
-; ARX Lift2S — fixed-base full-body OCS2 (fa-w2: fixed_base.info)
-; Used by full_body → ocs2_wbc_controller (info_file_name:=fixed_base).
-; State vector: lift_joint + left(1-6) + right(1-6). Split-body uses task_arm.info.
+; ARX Lift2S — reference dual-arm OCS2 task (kept for docs / offline use).
+; Runtime split_body uses arx_acone task.info via common.yaml:
+;   ocs2_arm_controller.robot_name: arx_acone, info_file_name: task
+; Reason: Pinocchio EE poses (oMf) are in the URDF root frame. Lift2S root is
+; base_link with lift below arm_base; acone root≡arm_base so frame_id matches.
+; Full-body still uses this package's fixed_base.info (lift in MPC).
 
 ; robot model meta-information
 model_information {
   manipulatorModelType     0      // 0: Default-arm, 1: Wheel-based manipulator, 2: Floating-arm manipulator, 3: Fully actuated floating-arm manipulator
-  
-  ; motion joints in the URDF to consider fixed
+
+  ; Not arm-OCS2 DOFs when this file is used with full Lift2S URDF
   removeJoints {
-      [0]  "left_gripper_joint"
-      [1]  "right_gripper_joint"
+      [0]  "lift_joint"
+      [1]  "left_gripper_joint"
+      [2]  "right_gripper_joint"
   }
 
-  ; base frame of the robot (from URDF)
-  baseFrame                       "base_link"
-  ; end-effector frame of the robot (from URDF)
+  baseFrame                       "arm_base"
   eeFrame                         "left_gripper_center"
   eeFrame1                        "right_gripper_center"
 }
@@ -81,13 +83,13 @@ rollout
 mpc
 {
   timeHorizon                     1.0   ; [s]
-  solutionTimeWindow              0.3   ; [s]
+  solutionTimeWindow              0.2   ; [s]
   coldStart                       false
-  
+
   debugPrint                      false
 
-  mpcDesiredFrequency             30   ; [Hz]
-  mrtDesiredFrequency             100   ; [Hz]
+  mpcDesiredFrequency             100   ; [Hz]
+  mrtDesiredFrequency             400   ; [Hz]
 }
 
 ; initial state
@@ -104,24 +106,22 @@ initialState
     }
   }
 
-  ; initial state for the arm DOFs
+  ; initial state for the arm DOFs (same as acone task.info; no lift in MPC)
   arm
   {
-    (0,0)   0.3     ; lift_joint
+    (0,0)   0.0      ; left_joint1
+    (1,0)   0.0      ; left_joint2
+    (2,0)   0.0      ; left_joint3
+    (3,0)   0.0      ; left_joint4
+    (4,0)   0.0      ; left_joint5
+    (5,0)   0.0      ; left_joint6
 
-    (1,0)   0.0      ; left_joint1
-    (2,0)   0.594    ; left_joint2
-    (3,0)   0.306    ; left_joint3
-    (4,0)   0.331    ; left_joint4
-    (5,0)   0.0      ; left_joint5
-    (6,0)   0.0      ; left_joint6
-
-    (7,0)   0.0      ; right_joint1
-    (8,0)   0.594    ; right_joint2
-    (9,0)   0.306    ; right_joint3
-    (10,0)   0.331   ; right_joint4
-    (11,0)   0.0     ; right_joint5
-    (12,0)   0.0     ; right_joint6
+    (6,0)   0.0      ; right_joint1
+    (7,0)   0.0      ; right_joint2
+    (8,0)   0.0      ; right_joint3
+    (9,0)   0.0      ; right_joint4
+    (10,0)   0.0     ; right_joint5
+    (11,0)   0.0     ; right_joint6
   }
 }
 
@@ -159,24 +159,23 @@ inputCost
         (1,1)  1.5  ; turning velocity
       }
     }
-    
-    ; input costs for the arm DOFs
+
+    ; input costs for the arm DOFs (no lift_joint in split MPC)
     arm
     {
-      scaling 1e-3
-        (0,0)   0.1         ; lift_joint
-        (1,0)   5.0         ; left_joint1
-        (2,0)   5.0         ; left_joint2
-        (3,0)   5.0         ; left_joint3
-        (4,0)   5.0         ; left_joint4
-        (5,0)   5.0         ; left_joint5
-        (6,0)   5.0         ; left_joint6
-        (7,0)   5.0         ; right_joint1
-        (8,0)   5.0         ; right_joint2
-        (9,0)   5.0         ; right_joint3
-        (10,0)   5.0        ; right_joint4
-        (11,0)   5.0        ; right_joint5
-        (12,0)   5.0        ; right_joint6
+      scaling 1e-4
+        (0,0)   1.0         ; left_joint1
+        (1,0)   1.0         ; left_joint2
+        (2,0)   1.0         ; left_joint3
+        (3,0)   1.0         ; left_joint4
+        (4,0)   1.0         ; left_joint5
+        (5,0)   1.0         ; left_joint6
+        (6,0)   1.0         ; right_joint1
+        (7,0)   1.0         ; right_joint2
+        (8,0)   1.0         ; right_joint3
+        (9,0)   1.0         ; right_joint4
+        (10,0)   1.0        ; right_joint5
+        (11,0)   1.0        ; right_joint6
     }
   }
 }
@@ -218,24 +217,22 @@ finalEndEffector
 
 selfCollision
 {
-  ; activate self-collision constraint
-  activate  true
+  ; activate self-collision constraint (aligned with acone task.info)
+  activate  false
 
-  ; Full-body pairs (minimal):
-  ;   - acone arm↔body_link (same 4 pairs as arx_acone task.info)
-  ;   - same arm links ↔ lift_mast_link (lift column only, not rear panel / deck)
+  ; Self Collision pairs
   collisionLinkPairs
   {
-     ; acone dual-arm ↔ body_link
-     [0] "left_link8, body_link",
-     [1] "right_link7, body_link",
-     [2] "left_link3, body_link",
-     [3] "right_link3, body_link",
-     ; same links ↔ lift column
-     [4] "left_link8, lift_mast_link",
-     [5] "right_link7, lift_mast_link",
-     [6] "left_link3, lift_mast_link",
-     [7] "right_link3, lift_mast_link",
+     [0] "left_link3, body_link",
+     [1] "left_link4, body_link",
+     [2] "left_link5, body_link",
+     [3] "left_link7, body_link",
+     [4] "left_link8, body_link",
+     [5] "right_link3, body_link",
+     [6] "right_link4, body_link",
+     [7] "right_link5, body_link",
+     [8] "right_link7, body_link",
+     [9] "right_link8, body_link",
   }
 
     activationDistance 0.5
@@ -248,13 +245,14 @@ selfCollision
 
     ; relaxed log barrier delta
     delta   1e-2
+  ; TODO: Replace the collision meshes of the arm with primitive shapes.
 }
 
 ; Only applied for arm joints: limits parsed from URDF
 jointPositionLimits
 {
   ; activate constraint
-  activate  true
+  activate  false
 
   ; relaxed log barrier mu
   mu      1e-3
@@ -301,24 +299,21 @@ jointVelocityLimits
       }
     }
 
-    ; velocity limits for the arm DOFs
+    ; velocity limits for the arm DOFs (aligned with acone)
     arm
     {
-        (0,0)  -0.1       ; lift_joint [m/s]
-
-        (1,0)  -3.300	    ; left_joint1 [rad/s]
-        (2,0)  -3.599	    ; left_joint2 [rad/s]
-        (3,0)  -3.078	    ; left_joint3 [rad/s]
-        (4,0)  -3.599	    ; left_joint4 [rad/s]
-        (5,0)  -3.078	    ; left_joint5 [rad/s]
-        (6,0)  -3.599	    ; left_joint6 [rad/s]
-
-        (7,0)  -3.300	    ; right_joint1 [rad/s]
-        (8,0)  -3.599	    ; right_joint2 [rad/s]
-        (9,0)  -3.078	    ; right_joint3 [rad/s]
-        (10,0)  -3.599	    ; right_joint4 [rad/s]
-        (11,0)  -3.078	    ; right_joint5 [rad/s]
-        (12,0)  -3.599	    ; right_joint6 [rad/s]
+        (0,0)  -1.57	    ; left_joint1 [rad/s]
+        (1,0)  -1.57	    ; left_joint2 [rad/s]
+        (2,0)  -1.57	    ; left_joint3 [rad/s]
+        (3,0)  -1.57	    ; left_joint4 [rad/s]
+        (4,0)  -1.57	    ; left_joint5 [rad/s]
+        (5,0)  -1.57	    ; left_joint6 [rad/s]
+        (6,0)  -1.57	    ; right_joint1 [rad/s]
+        (7,0)  -1.57	    ; right_joint2 [rad/s]
+        (8,0)  -1.57	    ; right_joint3 [rad/s]
+        (9,0)  -1.57	    ; right_joint4 [rad/s]
+        (10,0)  -1.57	    ; right_joint5 [rad/s]
+        (11,0)  -1.57	    ; right_joint6 [rad/s]
     }
   }
 
@@ -352,24 +347,21 @@ jointVelocityLimits
       }
     }
 
-    ; velocity limits for the arm DOFs
+    ; velocity limits for the arm DOFs (aligned with acone)
     arm
     {
-        (0,0)  0.1       ; lift_joint [m/s]
-
-        (1,0)  3.300	    ; left_joint1 [rad/s]
-        (2,0)  3.599	    ; left_joint2 [rad/s]
-        (3,0)  3.078	    ; left_joint3 [rad/s]
-        (4,0)  3.599	    ; left_joint4 [rad/s]
-        (5,0)  3.078	    ; left_joint5 [rad/s]
-        (6,0)  3.599	    ; left_joint6 [rad/s]
-
-        (7,0)  3.300	    ; right_joint1 [rad/s]
-        (8,0)  3.599	    ; right_joint2 [rad/s]
-        (9,0)  3.078	    ; right_joint3 [rad/s]
-        (10,0)  3.599	    ; right_joint4 [rad/s]
-        (11,0)  3.078	    ; right_joint5 [rad/s]
-        (12,0)  3.599	    ; right_joint6 [rad/s]
+        (0,0)  1.57	    ; left_joint1 [rad/s]
+        (1,0)  1.57	    ; left_joint2 [rad/s]
+        (2,0)  1.57	    ; left_joint3 [rad/s]
+        (3,0)  1.57	    ; left_joint4 [rad/s]
+        (4,0)  1.57	    ; left_joint5 [rad/s]
+        (5,0)  1.57	    ; left_joint6 [rad/s]
+        (6,0)  1.57	    ; right_joint1 [rad/s]
+        (7,0)  1.57	    ; right_joint2 [rad/s]
+        (8,0)  1.57	    ; right_joint3 [rad/s]
+        (9,0)  1.57	    ; right_joint4 [rad/s]
+        (10,0)  1.57	    ; right_joint5 [rad/s]
+        (11,0)  1.57	    ; right_joint6 [rad/s]
     }
   }
 }

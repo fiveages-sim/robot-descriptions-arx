@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="gazebo" default="false"/>
-	<!-- panthera-ht / Stanford contract: MIX always; mode selects write() -->
+	<!-- Lift2S real HI is full_control-only (OCS2 MIX). position/pd_control retired. -->
 	<xacro:arg name="control_mode" default="full_control"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
@@ -15,9 +15,12 @@
 				<plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
 				<param name="robot_model">X5</param>
 				<param name="can_interface">can1</param>
-				<param name="control_mode">$(arg control_mode)</param>
+				<param name="control_mode">full_control</param>
+				<!-- Screenshot / field-tuned Lift2S defaults -->
 				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
 				<param name="joint_d_gains">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				<param name="gripper_kp">5.0</param>
+				<param name="gripper_kd">0.2</param>
 			</hardware>
 			<xacro:arx5_interfaces name="left"/>
 		</ros2_control>
@@ -26,18 +29,21 @@
 				<plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
 				<param name="robot_model">X5</param>
 				<param name="can_interface">can3</param>
-				<param name="control_mode">$(arg control_mode)</param>
+				<param name="control_mode">full_control</param>
 				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
 				<param name="joint_d_gains">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				<param name="gripper_kp">5.0</param>
+				<param name="gripper_kd">0.2</param>
 			</hardware>
 			<xacro:arx5_interfaces name="right"/>
 		</ros2_control>
-		<!-- Lift column: official LIFT2S lift HW (can5) -->
+		<!-- Lift column: MIX IFs + official LIFT2S lift HW (can5) -->
 		<ros2_control name="arx_lift2s_lift_system" type="system">
 			<hardware>
 				<plugin>arxlift2s_ros2_control/ArxLiftHardware</plugin>
 				<param name="can_name">can5</param>
 				<param name="robot_type">2</param>
+				<param name="control_mode">full_control</param>
 			</hardware>
 			<xacro:arx_lift2s_base_interfaces/>
 		</ros2_control>
