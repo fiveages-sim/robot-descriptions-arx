@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-	<!-- ARX LIFT 2S lift column: MIX IFs (panthera-ht / fa-w2 full_control contract).
-	     ArxLiftHardware write() still drives height via setHeight(position);
-	     velocity/effort/kp/kd are exported so OCS2 WBC can claim full_control. -->
+	<!-- ARX LIFT 2S lift column: MIX IFs for ocs2_wbc claim.
+	     Real HI drives Hybrid MIT (sendLiftHybrid); Soft-P / setHeight retired.
+	     Gains: arx_lift.hybrid_kp / hybrid_kd (params). effort IF adds to gravity τ_ff. -->
 	<xacro:macro name="arx_lift2s_base_interfaces">
 		<joint name="lift_joint">
 			<command_interface name="position"/>

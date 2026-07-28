@@ -11,7 +11,7 @@ Control layout follows [fa-w2-description/config/ocs2](https://github.com/fiveag
 | 分体 | `split_body.launch.py` | `arx_lift2s` | `task_arm.info`（双臂） | `body_joint_controller` |
 | 仅双臂 | `demo.launch.py robot:=arx_acone` | `arx_acone` | acone `task.info` | N/A |
 
-真机 HI：**full_control only**（臂 + 升降均导出 MIX；升降 `write()` 仍走 `setHeight`）。
+真机 HI：**臂 full_control MIX**；**升降 Hybrid MIT only**（`sendLiftHybrid`，可调 `arx_lift.hybrid_kp/kd`；Soft-P / `setHeight` 已退役）。
 
 ### OCS2 配置目录
 

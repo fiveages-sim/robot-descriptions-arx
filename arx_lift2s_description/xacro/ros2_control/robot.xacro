@@ -37,13 +37,23 @@
 			</hardware>
 			<xacro:arx5_interfaces name="right"/>
 		</ros2_control>
-		<!-- Lift column: MIX IFs + official LIFT2S lift HW (can5) -->
+		<!-- Lift column: Hybrid MIT only (split + full body); Soft-P retired -->
 		<ros2_control name="arx_lift2s_lift_system" type="system">
 			<hardware>
 				<plugin>arxlift2s_ros2_control/ArxLiftHardware</plugin>
 				<param name="can_name">can5</param>
 				<param name="robot_type">2</param>
-				<param name="control_mode">full_control</param>
+				<!-- Hybrid MIT (sendLiftHybrid); live: arx_lift.hybrid_kp / hybrid_kd -->
+				<param name="hybrid_kp">50.0</param>
+				<param name="hybrid_kd">1.0</param>
+				<param name="gravity_compensation_torque">-1.8</param>
+				<param name="lift_max_torque">15.0</param>
+				<param name="cmd_ramp_vel">0.12</param>
+				<param name="max_height_m">0.48</param>
+				<param name="height_span_m">0.48</param>
+				<!-- SDK motor rad / meter -->
+				<param name="height_rad_per_meter">41.54</param>
+				<param name="sdk_max_rad">20.0</param>
 			</hardware>
 			<xacro:arx_lift2s_base_interfaces/>
 		</ros2_control>
