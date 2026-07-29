@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="gazebo" default="false"/>
-	<!-- Lift2S real HI is full_control-only (OCS2 MIX). position/pd_control retired. -->
+	<!-- Real HI: full_control (MIX) | position; live: ros2 param set <arm_node> control_mode ... -->
 	<xacro:arg name="control_mode" default="full_control"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
@@ -15,10 +15,24 @@
 				<plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
 				<param name="robot_model">X5</param>
 				<param name="can_interface">can1</param>
-				<param name="control_mode">full_control</param>
-				<!-- Screenshot / field-tuned Lift2S defaults -->
-				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-				<param name="joint_d_gains">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				<param name="control_mode">$(arg control_mode)</param>
+				<!-- Dual gain sets: auto-selected by HI based on control_mode -->
+				<param name="joint_k_gains_full_control">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+				<param name="joint_d_gains_full_control">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				<param name="joint_k_gains_position">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
+				<param name="joint_d_gains_position">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
+
+				<!-- Backward-compatible aliases (seed active gains on startup) -->
+				<!-- position: same defaults as arx-ros2-control -->
+		<xacro:if value="${'$(arg control_mode)' == 'position'}">
+					<param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
+					<param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
+				</xacro:if>
+				<!-- full_control: Lift2S field-tuned MIX defaults -->
+		<xacro:unless value="${'$(arg control_mode)' == 'position'}">
+					<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+					<param name="joint_d_gains">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				</xacro:unless>
 				<param name="gripper_kp">5.0</param>
 				<param name="gripper_kd">0.2</param>
 			</hardware>
@@ -29,9 +43,22 @@
 				<plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
 				<param name="robot_model">X5</param>
 				<param name="can_interface">can3</param>
-				<param name="control_mode">full_control</param>
-				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-				<param name="joint_d_gains">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				<param name="control_mode">$(arg control_mode)</param>
+				<!-- Dual gain sets: auto-selected by HI based on control_mode -->
+				<param name="joint_k_gains_full_control">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+				<param name="joint_d_gains_full_control">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				<param name="joint_k_gains_position">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
+				<param name="joint_d_gains_position">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
+
+				<!-- Backward-compatible aliases (seed active gains on startup) -->
+				<xacro:if value="${'$(arg control_mode)' == 'position'}">
+					<param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
+					<param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
+				</xacro:if>
+				<xacro:unless value="${'$(arg control_mode)' == 'position'}">
+					<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+					<param name="joint_d_gains">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				</xacro:unless>
 				<param name="gripper_kp">5.0</param>
 				<param name="gripper_kd">0.2</param>
 			</hardware>

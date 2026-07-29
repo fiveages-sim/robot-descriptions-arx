@@ -56,7 +56,8 @@ ocs2_arm_controller:
       - right_joint5
       - right_joint6
 
-    # MIX command IFs; real MIT gains from HI joint_k/d_gains (Lift2S soft defaults).
+    # MIX command IFs. 真机 MIT 增益在 HI：joint_k/d_gains（xacro 启动默认；臂节点 rqt 热调）。
+    # 本文件 pd_gains / default_gains 仅供控制器状态机写 command IF，不驱动 ARX 真机增益。
     command_interfaces:
       - position
       - velocity
@@ -68,7 +69,7 @@ ocs2_arm_controller:
       - velocity
       - effort
 
-    # Kept for controller state machine; HI applies motor gains from xacro/rqt.
+    # Controller state machine only (ARX HI overwrites motor gains from joint_k/d_gains).
     default_gains: [30.0, 2.0]   # HOLD / HOME: [kp, kd]
     pd_gains: [30.0, 2.0]        # OCS2 state: [kp, kd]
 
@@ -125,6 +126,10 @@ ocs2_wbc_controller:
       - position
       - velocity
       - effort
+
+    # Controller only; real arm MIT gains from HI joint_k/d_gains
+    default_gains: [30.0, 2.0]
+    pd_gains: [30.0, 2.0]
 
     home_duration: 5.0
     home_1: [0.3, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
