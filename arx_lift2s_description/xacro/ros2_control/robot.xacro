@@ -37,12 +37,17 @@
 			</hardware>
 			<xacro:arx5_interfaces name="right"/>
 		</ros2_control>
-		<!-- Lift column: Hybrid MIT only (split + full body); Soft-P retired -->
+		<!-- Lift column: soft_p | hybrid (live: arx_lift.motor_mode / soft_p_kp / hybrid_kp|kd) -->
 		<ros2_control name="arx_lift2s_lift_system" type="system">
 			<hardware>
 				<plugin>arxlift2s_ros2_control/ArxLiftHardware</plugin>
 				<param name="can_name">can5</param>
 				<param name="robot_type">2</param>
+				<!-- soft_p | hybrid; switch live via arx_lift.motor_mode -->
+				<param name="lift_motor_mode">hybrid</param>
+				<!-- Soft-P (setHeight/loop); live: arx_lift.soft_p_kp -->
+				<param name="soft_p_kp">8.0</param>
+				<param name="lift_max_vel">0.20</param>
 				<!-- Hybrid MIT (sendLiftHybrid); live: arx_lift.hybrid_kp / hybrid_kd -->
 				<param name="hybrid_kp">50.0</param>
 				<param name="hybrid_kd">1.0</param>
