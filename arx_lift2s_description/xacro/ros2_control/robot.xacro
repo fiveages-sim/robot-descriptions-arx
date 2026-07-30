@@ -37,6 +37,11 @@
 				</xacro:unless>
 				<param name="gripper_kp">5.0</param>
 				<param name="gripper_kd">0.2</param>
+				<!-- Ctrl+C: interpolate to home_2 (all-zero) then damping -->
+				<param name="shutdown_return_home">true</param>
+				<param name="shutdown_home">[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</param>
+				<param name="shutdown_home_velocity">0.3</param>
+				<param name="shutdown_home_timeout">2.0</param>
 			</hardware>
 			<xacro:arx5_interfaces name="left"/>
 		</ros2_control>
@@ -63,6 +68,11 @@
 				</xacro:unless>
 				<param name="gripper_kp">5.0</param>
 				<param name="gripper_kd">0.2</param>
+				<!-- Ctrl+C: interpolate to home_2 (all-zero) then damping (match left) -->
+				<param name="shutdown_return_home">true</param>
+				<param name="shutdown_home">[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</param>
+				<param name="shutdown_home_velocity">0.3</param>
+				<param name="shutdown_home_timeout">2.0</param>
 			</hardware>
 			<xacro:arx5_interfaces name="right"/>
 		</ros2_control>
@@ -88,6 +98,11 @@
 				<!-- SDK motor rad / meter -->
 				<param name="height_rad_per_meter">41.54</param>
 				<param name="sdk_max_rad">20.0</param>
+				<!-- Ctrl+C: ramp to home_2 height (0) then soft-stop -->
+				<param name="shutdown_return_home">true</param>
+				<param name="shutdown_height_m">0.0</param>
+				<param name="shutdown_home_velocity">0.10</param>
+				<param name="shutdown_home_timeout">2.0</param>
 			</hardware>
 			<xacro:arx_lift2s_base_interfaces/>
 		</ros2_control>
