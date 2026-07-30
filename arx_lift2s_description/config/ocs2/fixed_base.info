@@ -165,15 +165,15 @@ inputCost
     {
       scaling 1e-3
         (0,0)   0.1         ; lift_joint
-        (1,0)   5.0         ; left_joint1
-        (2,0)   5.0         ; left_joint2
-        (3,0)   5.0         ; left_joint3
+        (1,0)   1.0         ; left_joint1
+        (2,0)   1.0         ; left_joint2
+        (3,0)   1.0         ; left_joint3
         (4,0)   5.0         ; left_joint4
         (5,0)   5.0         ; left_joint5
         (6,0)   5.0         ; left_joint6
-        (7,0)   5.0         ; right_joint1
-        (8,0)   5.0         ; right_joint2
-        (9,0)   5.0         ; right_joint3
+        (7,0)   1.0         ; right_joint1
+        (8,0)   1.0         ; right_joint2
+        (9,0)   1.0         ; right_joint3
         (10,0)   5.0        ; right_joint4
         (11,0)   5.0        ; right_joint5
         (12,0)   5.0        ; right_joint6
@@ -219,7 +219,7 @@ finalEndEffector
 selfCollision
 {
   ; activate self-collision constraint
-  activate  true
+  activate  false
 
   ; Full-body pairs (minimal):
   ;   - acone arm↔body_link (same 4 pairs as arx_acone task.info)
@@ -254,7 +254,7 @@ selfCollision
 jointPositionLimits
 {
   ; activate constraint
-  activate  true
+  activate  false
 
   ; relaxed log barrier mu
   mu      1e-3
@@ -304,7 +304,7 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-        (0,0)  -0.1       ; lift_joint [m/s]
+        (0,0)  -0.3       ; lift_joint [m/s]
 
         (1,0)  -3.300	    ; left_joint1 [rad/s]
         (2,0)  -3.599	    ; left_joint2 [rad/s]
@@ -355,7 +355,7 @@ jointVelocityLimits
     ; velocity limits for the arm DOFs
     arm
     {
-        (0,0)  0.1       ; lift_joint [m/s]
+        (0,0)  0.3       ; lift_joint [m/s]
 
         (1,0)  3.300	    ; left_joint1 [rad/s]
         (2,0)  3.599	    ; left_joint2 [rad/s]

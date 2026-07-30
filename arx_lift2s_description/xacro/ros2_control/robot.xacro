@@ -2,8 +2,10 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="gazebo" default="false"/>
-	<!-- Real HI: full_control (MIX) | position; live: ros2 param set <arm_node> control_mode ... -->
+	<!-- Arms: full_control (MIX) | position; live: ros2 param set <arm_node> control_mode ... -->
 	<xacro:arg name="control_mode" default="full_control"/>
+	<!-- Lift: soft_p|position | hybrid. hybrid 忽略上层 effort，仅 HI 重力前馈 -->
+	<xacro:arg name="lift_motor_mode" default="hybrid"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
@@ -70,15 +72,15 @@
 				<plugin>arxlift2s_ros2_control/ArxLiftHardware</plugin>
 				<param name="can_name">can5</param>
 				<param name="robot_type">2</param>
-				<!-- soft_p | hybrid; switch live via arx_lift.motor_mode -->
-				<param name="lift_motor_mode">hybrid</param>
+				<!-- soft_p|position: 仅跟踪 position；hybrid: MIT + HI 重力（忽略上层 effort） -->
+				<param name="lift_motor_mode">$(arg lift_motor_mode)</param>
 				<!-- Soft-P (setHeight/loop); live: arx_lift.soft_p_kp -->
-				<param name="soft_p_kp">8.0</param>
+				<param name="soft_p_kp">50.0</param>
 				<param name="lift_max_vel">0.20</param>
-				<!-- Hybrid MIT (sendLiftHybrid); live: arx_lift.hybrid_kp / hybrid_kd -->
+				<!-- Hybrid MIT; live: arx_lift.hybrid_kp / hybrid_kd / gravity_compensation_torque -->
 				<param name="hybrid_kp">50.0</param>
-				<param name="hybrid_kd">1.0</param>
-				<param name="gravity_compensation_torque">-1.8</param>
+				<param name="hybrid_kd">2.0</param>
+				<param name="gravity_compensation_torque">-0.95</param>
 				<param name="lift_max_torque">15.0</param>
 				<param name="cmd_ramp_vel">0.12</param>
 				<param name="max_height_m">0.48</param>
