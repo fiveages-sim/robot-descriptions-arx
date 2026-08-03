@@ -16,7 +16,7 @@ Control layout follows [fa-w2-description/config](https://github.com/fiveages-si
 
 - 臂：`full_control` \| `position`（xacro `control_mode`；热调 `control_mode` / `joint_k_gains` / `joint_d_gains`）
 - 升降：`soft_p`/`position` \| `hybrid`（`lift_motor_mode`；热调 `arx_lift.*`）
-  - **hybrid**：MIT + **仅 HI** `gravity_compensation_torque`（**忽略**上层 effort，防 OCS2 双重前馈）
+  - **hybrid**：MIT + HI τ_ff（`gravity_compensation_torque` − `coulomb_friction_torque·sign(v_cmd)`；**忽略**上层 effort，防 OCS2 双重前馈；均可 `arx_lift.*` 热调）
   - **position/soft_p**：只用上层 position
   - 分体/全身 quick_start 均可选；xacro 默认 `hybrid`
 
