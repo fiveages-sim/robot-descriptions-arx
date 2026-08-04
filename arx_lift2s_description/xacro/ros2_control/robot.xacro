@@ -20,7 +20,7 @@
 				<param name="control_mode">$(arg control_mode)</param>
 				<!-- Dual gain sets: auto-selected by HI based on control_mode -->
 				<param name="joint_k_gains_full_control">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-				<param name="joint_d_gains_full_control">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				<param name="joint_d_gains_full_control">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
 				<param name="joint_k_gains_position">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
 				<param name="joint_d_gains_position">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
 
@@ -33,7 +33,7 @@
 				<!-- full_control: Lift2S field-tuned MIX defaults -->
 		<xacro:unless value="${'$(arg control_mode)' == 'position'}">
 					<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-					<param name="joint_d_gains">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+					<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
 				</xacro:unless>
 				<param name="gripper_kp">5.0</param>
 				<param name="gripper_kd">0.2</param>
@@ -53,7 +53,7 @@
 				<param name="control_mode">$(arg control_mode)</param>
 				<!-- Dual gain sets: auto-selected by HI based on control_mode -->
 				<param name="joint_k_gains_full_control">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-				<param name="joint_d_gains_full_control">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+				<param name="joint_d_gains_full_control">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
 				<param name="joint_k_gains_position">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
 				<param name="joint_d_gains_position">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
 
@@ -64,7 +64,7 @@
 				</xacro:if>
 				<xacro:unless value="${'$(arg control_mode)' == 'position'}">
 					<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-					<param name="joint_d_gains">[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]</param>
+					<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
 				</xacro:unless>
 				<param name="gripper_kp">5.0</param>
 				<param name="gripper_kd">0.2</param>

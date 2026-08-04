@@ -78,7 +78,7 @@ Pinocchio EE 位姿在 URDF root；Lift2S root=`base_link`（下面有 lift）�
 
 | Mode | `joint_k_gains` | `joint_d_gains` |
 |------|-----------------|-----------------|
-| `full_control` | `[20, 20, 20, 20, 10, 10]` | `[3.5, 3.5, 3.5, 3.5, 1.0, 1.0]` |
+| `full_control` | `[20, 20, 20, 20, 10, 10]` | `[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]` |
 | `position` / `pd_control` | `[80, 70, 70, 30, 30, 20]` | `[2, 2, 2, 1, 1, 0.7]` |
 
 ## 1. Build

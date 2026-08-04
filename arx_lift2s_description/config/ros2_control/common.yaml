@@ -12,7 +12,7 @@
 
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 500  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -37,7 +37,7 @@ controller_manager:
 ocs2_arm_controller:
   ros__parameters:
     # Dual-arm split: plan with acone (same X5 arms, no lift DOF in Pinocchio)
-    update_rate: 100  # Hz
+    update_rate: 500  # Hz
     mpc_frequency: 100
     future_time_offset: 1.0
     robot_name: arx_acone
@@ -96,8 +96,8 @@ ocs2_arm_controller:
 
 ocs2_wbc_controller:
   ros__parameters:
-    update_rate: 100
-    mpc_frequency: 50
+    update_rate: 500
+    mpc_frequency: 100
     robot_name: arx_lift2s
     info_file_name: fixed_base
 
