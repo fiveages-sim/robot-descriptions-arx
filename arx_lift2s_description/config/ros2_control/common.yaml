@@ -13,6 +13,8 @@
 controller_manager:
   ros__parameters:
     update_rate: 500  # Hz
+    # HI debug logs (ArxLiftHardware + ArxX5Hardware MIT gains); default off
+    status_debug: false
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -138,7 +140,7 @@ ocs2_wbc_controller:
 
 body_joint_controller:
   ros__parameters:
-    update_rate: 100
+    update_rate: 500
     joints:
       - lift_joint
 
