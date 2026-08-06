@@ -108,7 +108,9 @@
 			<parent link="base_link"/>
 			<child link="lift_link"/>
 			<axis xyz="0 0 1"/>
-			<limit lower="0" upper="0.46" effort="400" velocity="0.15"/>
+			<!-- Planning / joint-limit upper aligns with hybrid MIT pack (±12.5 rad / 41.54 ≈ 0.30 m).
+			     soft_p setHeight can still use HI height_span_m≈0.48; OCS2/URDF clamps stay at 0.30. -->
+			<limit lower="0" upper="0.30" effort="400" velocity="0.15"/>
 		</joint>
 
 		<xacro:property name="wheel_joint_type" value="fixed"/>

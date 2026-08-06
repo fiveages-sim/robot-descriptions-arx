@@ -18,6 +18,8 @@ Control layout follows [fa-w2-description/config](https://github.com/fiveages-si
 - 升降：`hybrid`（默认）\| `soft_p`/`position`（功能保留；`lift_motor_mode`）
   - **hybrid**：MIT 直跟 pos+vel + HI τ_ff（**忽略** effort；热调 `arx_lift.hybrid_kp/kd`）
   - **soft_p**：只用 position（HI 斜坡）
+- **`lift_joint` 规划行程**：URDF `upper=0.30` m（对齐 hybrid MIT pack `±12.5 rad / 41.54`）。
+  OCS2 / `body_joint_controller` 限位跟 URDF。soft_p 电机侧 HI 仍可配置到 `height_span_m≈0.48`，但经规划/URDF 限位的目标会被夹到 0.30。
 
 ## Config 布局
 
