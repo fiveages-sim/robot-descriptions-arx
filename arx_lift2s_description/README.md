@@ -98,6 +98,7 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s
 ### 3.1 Full Body（`fixed_base.info`）
 
 ```bash
+# 推荐 ./quick_start.sh；手动且 RMW=zenoh 时先: ros2 run rmw_zenoh_cpp rmw_zenohd
 source ~/lift2s-ws/install/setup.bash
 ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_lift2s
 ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_lift2s hardware:=real

@@ -63,6 +63,7 @@ Prereqs: `can1` / `can3` up；无其它节点占用总线；Stanford SDK + `arx_
 真机臂**仅** `full_control`（MIT MIX）：URDF 声明 `position/velocity/effort/kp/kd`；HI `write()` 始终下发 pos+vel+effort。
 
 ```bash
+# 推荐 ./quick_start.sh；手动且 RMW=zenoh 时先: ros2 run rmw_zenoh_cpp rmw_zenohd
 source ~/lift2s-ws/install/setup.bash
 ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=real
 ```
