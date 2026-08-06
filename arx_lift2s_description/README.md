@@ -12,13 +12,12 @@ Control layout follows [fa-w2-description/config](https://github.com/fiveages-si
 | 分体 | `split_body.launch.py` | `arx_lift2s` | **acone** `task.info` | `body_joint_controller` |
 | 仅双臂 | `demo.launch.py robot:=arx_acone` | `arx_acone` | acone `task.info` | N/A |
 
-真机 HI（`arxlift2s_ros2_control`）：
+真机 HI（`arx_ros2_control`）：
 
-- 臂：`full_control` \| `position`（xacro `control_mode`；热调 `control_mode` / `joint_k_gains` / `joint_d_gains`）
-- 升降：`soft_p`/`position` \| `hybrid`（`lift_motor_mode`；热调 `arx_lift.*`）
-  - **hybrid**：MIT 直跟上层 position+velocity + HI τ_ff（`gravity` − `coulomb·sign(v_cmd)`；**忽略** effort；死区 `friction_vel_eps_mps`；均可 `arx_lift.*` 热调）
-  - **position/soft_p**：只用上层 position（仍有 HI 斜坡）
-  - 分体/全身 quick_start 均可选；xacro 默认 `hybrid`
+- 臂：**仅** `full_control`（MIT MIX；热调 `joint_k_gains` / `joint_d_gains`）
+- 升降：`hybrid`（默认）\| `soft_p`/`position`（功能保留；`lift_motor_mode`）
+  - **hybrid**：MIT 直跟 pos+vel + HI τ_ff（**忽略** effort；热调 `arx_lift.hybrid_kp/kd`）
+  - **soft_p**：只用 position（HI 斜坡）
 
 ## Config 布局
 
@@ -49,7 +48,7 @@ arx_lift2s_description/config/
 | [CR5](https://github.com/fiveages-sim/robot-descriptions-dobot/tree/main/cr5_description/config) | （或空基） | EEF 类型：`AG2F90-C-Soft.yaml` 等 |
 | **lift2s（当前）** | 分体臂 + 全身 WBC + body lift + grippers | 无 type/EEF 变体 → overlay 为空即可 |
 
-**不必**按 `full_control` / `position` 拆 `common.yaml`：模式相关 MIT 增益在 HI xacro，不在控制器 yaml。
+MIT 增益在 HI xacro（`joint_k_gains` / `joint_d_gains`），不在控制器 yaml。
 
 ### `pd_gains` / `default_gains`（common.yaml:72–74）
 
@@ -74,12 +73,11 @@ Pinocchio EE 位姿在 URDF root；Lift2S root=`base_link`（下面有 lift）�
 | 分体 | acone `task` | arms ↔ torso（acone 模型） |
 | 全身 | `fixed_base` | arms ↔ `body_link` / `lift_link` / `base_link` |
 
-### 真机臂 MIT 默认（xacro，按 `control_mode`）
+### 真机臂 MIT 默认（xacro，full_control）
 
-| Mode | `joint_k_gains` | `joint_d_gains` |
-|------|-----------------|-----------------|
-| `full_control` | `[20, 20, 20, 20, 10, 10]` | `[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]` |
-| `position` / `pd_control` | `[80, 70, 70, 30, 30, 20]` | `[2, 2, 2, 1, 1, 0.7]` |
+| `joint_k_gains` | `joint_d_gains` |
+|-----------------|-----------------|
+| `[20, 20, 20, 20, 10, 10]` | `[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]` |
 
 ## 1. Build
 
@@ -113,4 +111,4 @@ ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s
 ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=real
 ```
 
-或仓库根目录 `./quick_start.sh` → Launch（真机可选臂 `control_mode`）。
+或仓库根目录 `./quick_start.sh` → Launch（真机可选升降 `hybrid` / `soft_p`）。

@@ -2,8 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="gazebo" default="false"/>
-	<!-- Arms: full_control (MIX) | position; live: ros2 param set <arm_node> control_mode ... -->
-	<xacro:arg name="control_mode" default="full_control"/>
+	<!-- Arms: full_control only (MIT MIX). -->
 	<!-- Lift: soft_p|position | hybrid. hybrid 直跟 pos+vel，HI 重力+摩擦（忽略 effort） -->
 	<xacro:arg name="lift_motor_mode" default="hybrid"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
@@ -11,30 +10,16 @@
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
 
 	<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
-		<!-- Dual arms: Stanford arx5-sdk via arxlift2s ArxX5Hardware (can1 / can3) -->
+		<!-- Dual arms: Stanford arx5-sdk via arx_ros2_control (can1 / can3) -->
 		<ros2_control name="arx_lift2s_left_system" type="system">
 			<hardware>
-				<plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
+				<plugin>arx_ros2_control/ArxX5Hardware</plugin>
 				<param name="robot_model">X5</param>
 				<param name="can_interface">can1</param>
-				<param name="control_mode">$(arg control_mode)</param>
-				<!-- Dual gain sets: auto-selected by HI based on control_mode -->
-				<param name="joint_k_gains_full_control">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-				<param name="joint_d_gains_full_control">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
-				<param name="joint_k_gains_position">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-				<param name="joint_d_gains_position">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
-
-				<!-- Backward-compatible aliases (seed active gains on startup) -->
-				<!-- position: same defaults as arx-ros2-control -->
-		<xacro:if value="${'$(arg control_mode)' == 'position'}">
-					<param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-					<param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
-				</xacro:if>
-				<!-- full_control: Lift2S field-tuned MIX defaults -->
-		<xacro:unless value="${'$(arg control_mode)' == 'position'}">
-					<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-					<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
-				</xacro:unless>
+				<param name="control_mode">full_control</param>
+				<!-- Lift2S field-tuned MIX defaults -->
+				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+				<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
 				<param name="gripper_kp">5.0</param>
 				<param name="gripper_kd">0.2</param>
 				<!-- Ctrl+C: interpolate to home_2 (all-zero) then damping -->
@@ -47,28 +32,14 @@
 		</ros2_control>
 		<ros2_control name="arx_lift2s_right_system" type="system">
 			<hardware>
-				<plugin>arxlift2s_ros2_control/ArxX5Hardware</plugin>
+				<plugin>arx_ros2_control/ArxX5Hardware</plugin>
 				<param name="robot_model">X5</param>
 				<param name="can_interface">can3</param>
-				<param name="control_mode">$(arg control_mode)</param>
-				<!-- Dual gain sets: auto-selected by HI based on control_mode -->
-				<param name="joint_k_gains_full_control">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-				<param name="joint_d_gains_full_control">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
-				<param name="joint_k_gains_position">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-				<param name="joint_d_gains_position">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
-
-				<!-- Backward-compatible aliases (seed active gains on startup) -->
-				<xacro:if value="${'$(arg control_mode)' == 'position'}">
-					<param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-					<param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
-				</xacro:if>
-				<xacro:unless value="${'$(arg control_mode)' == 'position'}">
-					<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
-					<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
-				</xacro:unless>
+				<param name="control_mode">full_control</param>
+				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+				<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
 				<param name="gripper_kp">5.0</param>
 				<param name="gripper_kd">0.2</param>
-				<!-- Ctrl+C: interpolate to home_2 (all-zero) then damping (match left) -->
 				<param name="shutdown_return_home">true</param>
 				<param name="shutdown_home">[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</param>
 				<param name="shutdown_home_velocity">0.3</param>
@@ -79,7 +50,7 @@
 		<!-- Lift column: soft_p | hybrid (live: arx_lift.motor_mode / soft_p_kp / hybrid_kp|kd) -->
 		<ros2_control name="arx_lift2s_lift_system" type="system">
 			<hardware>
-				<plugin>arxlift2s_ros2_control/ArxLiftHardware</plugin>
+				<plugin>arx_ros2_control/ArxLiftHardware</plugin>
 				<param name="can_name">can5</param>
 				<param name="robot_type">2</param>
 				<!-- soft_p|position: 仅跟踪 position；hybrid: 直跟 pos+vel + HI 重力/摩擦（忽略 effort） -->

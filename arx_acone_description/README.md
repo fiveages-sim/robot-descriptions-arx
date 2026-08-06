@@ -5,13 +5,9 @@ Standalone dual-arm torso (AC One + X5/R5) description.
 Used by `arx_lift2s_description` for **split-body** planning (same role as
 `m6_ccs_description` for `fiveages_w2_description`).
 
-**Real hardware (Phase 1 MIT):** Stanford [`arx_ros2_control`](https://github.com/fiveages-sim/arx-ros2-control)
-with OCS2 MIX — same contract as
-[panthera-ht](https://github.com/fiveages-sim/open-deploy-ws/tree/panthera-ht)
-(`position/velocity/effort/kp/kd`, `control_mode:=full_control`).
-Deploy flow mirrors
-[arx-acone](https://github.com/fiveages-sim/open-deploy-ws/tree/arx-acone)
-(`hardware:=real`, can1 / can3).
+**Real hardware:** Stanford [`arx_ros2_control`](https://github.com/fiveages-sim/arx-ros2-control)
+with OCS2 MIX only — `position/velocity/effort/kp/kd`，固定 `full_control`。
+Deploy: `hardware:=real`，can1 / can3。
 
 ## 1. Build
 
@@ -60,42 +56,28 @@ Or workspace `./quick_start.sh` → Build → 单/双臂真机包（Stanford）�
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=isaac
   ```
 
-### 3.2 Real — 控制模式（参考 panthera-ht）
+### 3.2 Real — full_control only
 
 Prereqs: `can1` / `can3` up；无其它节点占用总线；Stanford SDK + `arx_ros2_control` 已编译。
 
-设计与 [panthera-ht](https://github.com/fiveages-sim/open-deploy-ws/tree/panthera-ht) 相同：URDF **始终**声明 `position/velocity/effort/kp/kd`；`control_mode` 只改变 HI `write()`。
-
-| Launch / xacro | 默认 | 说明 | 对应 HT |
-|----------------|------|------|---------|
-| `xacro_control_mode:=full_control` | 是（推荐真机） | OCS2 MIX：pos/vel/effort/kp/kd → `set_gain` + `set_joint_cmd`；effort=静力学前馈 | `full_control` |
-| `xacro_control_mode:=position` | 否 | **保留真机位置环**：仅 position；kp/kd = HI `joint_k/d_gains` | ≈ `pd_control` |
-| `xacro_control_mode:=pd_control` | 否 | `position` 的 HT 别名 | `pd_control` |
+真机臂**仅** `full_control`（MIT MIX）：URDF 声明 `position/velocity/effort/kp/kd`；HI `write()` 始终下发 pos+vel+effort。
 
 ```bash
-# 推荐：full_control / OCS2 MIX
-source ~/arx_lift2s_ws/install/setup.bash
+source ~/lift2s-ws/install/setup.bash
 ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=real
-
-# 真机位置环（旧路径）
-ros2 launch ocs2_arm_controller demo.launch.py \
-  robot:=arx_acone hardware:=real xacro_control_mode:=position
 ```
 
 **真机 MIT 增益**
 
-| 层级 | 参数 | 何时生效 |
-|------|------|----------|
-| HI | `joint_k_gains` / `joint_d_gains`（xacro，可用 rqt 动态改） | **`full_control` 与 `position` 全程** |
+| 层级 | 参数 | 说明 |
+|------|------|------|
+| HI | `joint_k_gains` / `joint_d_gains`（xacro，可用 rqt 动态改） | 驱动电机 MIT kp/kd |
 | 控制器 | `default_gains` / `pd_gains`（`common.yaml`） | **不再驱动真机 MIT 增益** |
 
 **Bring-up checks**
 
-1. HI log: `control_mode=full_control` on `/arx_acone_left_system`、`/arx_acone_right_system`
+1. HI log: `full_control / MIT MIX` on `/arx_acone_left_system`、`/arx_acone_right_system`
 2. rqt / `ros2 param`：改 `/arx_acone_*_system` 的 `joint_k_gains` / `joint_d_gains` 即生效
 
-Runtime param tuning：见
-[`arx_ros2_control` DYNAMIC_PARAMS_USAGE.md](https://github.com/fiveages-sim/arx-ros2-control/blob/main/DYNAMIC_PARAMS_USAGE.md)。
-
-For Lift2S chassis + AC One (split / full body; **official** SDK path), see
+For Lift2S chassis + AC One (split / full body), see
 [`arx_lift2s_description/README.md`](../arx_lift2s_description/README.md).

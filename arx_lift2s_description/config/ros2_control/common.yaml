@@ -2,7 +2,7 @@
 # OCS2 layout (feature/ARX_LIFT2S split vs full):
 #   - split_body:  arms MPC only; lift via body_joint_controller
 #   - full_body:   lift + arms in one MPC (fixed_base.info);
-#                  真机升降可选 position(soft_p)/hybrid（默认 hybrid，忽略上层 effort），双臂 full_control MIX
+#                  真机升降可选 soft_p/hybrid（默认 hybrid）；双臂仅 full_control MIX
 #
 # Split planning MUST use arx_acone URDF/task (no lift in tree).
 # Pinocchio oMf is always in the model root; on acone root≡arm_base, so

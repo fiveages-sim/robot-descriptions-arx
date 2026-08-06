@@ -5,7 +5,7 @@
         <xacro:property name="prefix" value="${name + '_' if name else ''}"/>
         <xacro:arg name="gazebo" default="false"/>
 
-        <!-- Arm joints: always declare MIX interfaces (control_mode selects write usage). -->
+        <!-- Arm joints: MIX interfaces for full_control (MIT). -->
         <joint name="${prefix}joint1">
             <command_interface name="position"/>
             <command_interface name="velocity"/>
@@ -93,59 +93,5 @@
                 <state_interface name="effort"/>
             </joint>
         </xacro:if>
-    </xacro:macro>
-
-    <!-- Position-only arm interfaces for official arxlift2s_ros2_control (Lift2S). -->
-    <xacro:macro name="arx5_interfaces_position" params="name">
-        <xacro:property name="prefix" value="${name + '_' if name else ''}"/>
-
-        <joint name="${prefix}joint1">
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-        <joint name="${prefix}joint2">
-            <command_interface name="position"/>
-            <state_interface name="position">
-                <param name="initial_value">0.4</param>
-            </state_interface>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-        <joint name="${prefix}joint3">
-            <command_interface name="position"/>
-            <state_interface name="position">
-                <param name="initial_value">0.12</param>
-            </state_interface>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-        <joint name="${prefix}joint4">
-            <command_interface name="position"/>
-            <state_interface name="position">
-                <param name="initial_value">0.26</param>
-            </state_interface>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-        <joint name="${prefix}joint5">
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-        <joint name="${prefix}joint6">
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-        <joint name="${prefix}gripper_joint">
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
     </xacro:macro>
 </robot>
