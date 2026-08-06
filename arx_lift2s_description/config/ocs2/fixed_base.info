@@ -164,19 +164,19 @@ inputCost
     arm
     {
       scaling 1e-3
-        (0,0)   0.1         ; lift_joint
-        (1,0)   1.0         ; left_joint1
-        (2,0)   1.0         ; left_joint2
-        (3,0)   1.0         ; left_joint3
-        (4,0)   5.0         ; left_joint4
-        (5,0)   5.0         ; left_joint5
-        (6,0)   5.0         ; left_joint6
-        (7,0)   1.0         ; right_joint1
-        (8,0)   1.0         ; right_joint2
-        (9,0)   1.0         ; right_joint3
-        (10,0)   5.0        ; right_joint4
-        (11,0)   5.0        ; right_joint5
-        (12,0)   5.0        ; right_joint6
+        (0,0)   10.0         ; lift_joint
+        (1,0)   5.0         ; left_joint1
+        (2,0)   5.0         ; left_joint2
+        (3,0)   5.0         ; left_joint3
+        (4,0)   3.0         ; left_joint4
+        (5,0)   3.0         ; left_joint5
+        (6,0)   3.0         ; left_joint6
+        (7,0)   5.0         ; right_joint1
+        (8,0)   5.0         ; right_joint2
+        (9,0)   5.0         ; right_joint3
+        (10,0)   3.0        ; right_joint4
+        (11,0)   3.0        ; right_joint5
+        (12,0)   3.0        ; right_joint6
     }
   }
 }
@@ -219,23 +219,15 @@ finalEndEffector
 selfCollision
 {
   ; activate self-collision constraint
-  activate  false
+  activate  true
 
-  ; Full-body pairs (minimal):
-  ;   - acone arm↔body_link (same 4 pairs as arx_acone task.info)
-  ;   - same arm links ↔ lift_mast_link (lift column only, not rear panel / deck)
+  ; Full-body: arm ↔ lift column only (no arm↔body / lift deck)
   collisionLinkPairs
   {
-     ; acone dual-arm ↔ body_link
-     [0] "left_link8, body_link",
-     [1] "right_link7, body_link",
-     [2] "left_link3, body_link",
-     [3] "right_link3, body_link",
-     ; same links ↔ lift column
-     [4] "left_link8, lift_mast_link",
-     [5] "right_link7, lift_mast_link",
-     [6] "left_link3, lift_mast_link",
-     [7] "right_link3, lift_mast_link",
+     [0] "left_link8, lift_mast_link",
+     [1] "right_link7, lift_mast_link",
+     [2] "left_link3, lift_mast_link",
+     [3] "right_link3, lift_mast_link",
   }
 
     activationDistance 0.5
@@ -254,7 +246,7 @@ selfCollision
 jointPositionLimits
 {
   ; activate constraint
-  activate  false
+  activate  true
 
   ; relaxed log barrier mu
   mu      1e-3
@@ -306,19 +298,19 @@ jointVelocityLimits
     {
         (0,0)  -0.15       ; lift_joint [m/s]
 
-        (1,0)  -3.300	    ; left_joint1 [rad/s]
-        (2,0)  -3.599	    ; left_joint2 [rad/s]
-        (3,0)  -3.078	    ; left_joint3 [rad/s]
-        (4,0)  -3.599	    ; left_joint4 [rad/s]
-        (5,0)  -3.078	    ; left_joint5 [rad/s]
-        (6,0)  -3.599	    ; left_joint6 [rad/s]
+        (1,0)  -1.57	    ; left_joint1 [rad/s]
+        (2,0)  -1.57	    ; left_joint2 [rad/s]
+        (3,0)  -1.57	    ; left_joint3 [rad/s]
+        (4,0)  -1.57	    ; left_joint4 [rad/s]
+        (5,0)  -1.57	    ; left_joint5 [rad/s]
+        (6,0)  -1.57	    ; left_joint6 [rad/s]
 
-        (7,0)  -3.300	    ; right_joint1 [rad/s]
-        (8,0)  -3.599	    ; right_joint2 [rad/s]
-        (9,0)  -3.078	    ; right_joint3 [rad/s]
-        (10,0)  -3.599	    ; right_joint4 [rad/s]
-        (11,0)  -3.078	    ; right_joint5 [rad/s]
-        (12,0)  -3.599	    ; right_joint6 [rad/s]
+        (7,0)  -1.57	    ; right_joint1 [rad/s]
+        (8,0)  -1.57	    ; right_joint2 [rad/s]
+        (9,0)  -1.57	    ; right_joint3 [rad/s]
+        (10,0)  -1.57	    ; right_joint4 [rad/s]
+        (11,0)  -1.57	    ; right_joint5 [rad/s]
+        (12,0)  -1.57	    ; right_joint6 [rad/s]
     }
   }
 
@@ -357,19 +349,19 @@ jointVelocityLimits
     {
         (0,0)  0.15       ; lift_joint [m/s]
 
-        (1,0)  3.300	    ; left_joint1 [rad/s]
-        (2,0)  3.599	    ; left_joint2 [rad/s]
-        (3,0)  3.078	    ; left_joint3 [rad/s]
-        (4,0)  3.599	    ; left_joint4 [rad/s]
-        (5,0)  3.078	    ; left_joint5 [rad/s]
-        (6,0)  3.599	    ; left_joint6 [rad/s]
+        (1,0)  1.57	    ; left_joint1 [rad/s]
+        (2,0)  1.57	    ; left_joint2 [rad/s]
+        (3,0)  1.57	    ; left_joint3 [rad/s]
+        (4,0)  1.57	    ; left_joint4 [rad/s]
+        (5,0)  1.57	    ; left_joint5 [rad/s]
+        (6,0)  1.57	    ; left_joint6 [rad/s]
 
-        (7,0)  3.300	    ; right_joint1 [rad/s]
-        (8,0)  3.599	    ; right_joint2 [rad/s]
-        (9,0)  3.078	    ; right_joint3 [rad/s]
-        (10,0)  3.599	    ; right_joint4 [rad/s]
-        (11,0)  3.078	    ; right_joint5 [rad/s]
-        (12,0)  3.599	    ; right_joint6 [rad/s]
+        (7,0)  1.57	    ; right_joint1 [rad/s]
+        (8,0)  1.57	    ; right_joint2 [rad/s]
+        (9,0)  1.57	    ; right_joint3 [rad/s]
+        (10,0)  1.57	    ; right_joint4 [rad/s]
+        (11,0)  1.57	    ; right_joint5 [rad/s]
+        (12,0)  1.57	    ; right_joint6 [rad/s]
     }
   }
 }
