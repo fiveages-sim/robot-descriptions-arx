@@ -12,31 +12,29 @@ Deploy: `hardware:=real`，can1 / can3。
 ## 1. Build
 
 ```bash
-cd ~/lift2s-ws
+cd ~/ros2_ws
 colcon build --packages-up-to arx_acone_description --symlink-install
 # Real MIT also needs:
 #   colcon build --packages-up-to arx_ros2_control ocs2_arm_controller --symlink-install
 ```
 
-Or workspace `./quick_start.sh` → Build → 单/双臂真机包（Stanford）。
-
 ## 2. Visualize
 
 * AC One + X5 (default)
   ```bash
-  source ~/lift2s-ws/install/setup.bash
+  source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx_acone
   ```
 
 * AC One + R5
   ```bash
-  source ~/lift2s-ws/install/setup.bash
+  source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx_acone type:=r5
   ```
 
 * Torso only
   ```bash
-  source ~/lift2s-ws/install/setup.bash
+  source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch component.launch.py robot:=arx_acone type:=ac_one
   ```
 
@@ -46,13 +44,13 @@ Or workspace `./quick_start.sh` → Build → 单/双臂真机包（Stanford）�
 
 * Mock
   ```bash
-  source ~/lift2s-ws/install/setup.bash
+  source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone
   ```
 
 * Isaac Sim
   ```bash
-  source ~/lift2s-ws/install/setup.bash
+  source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=isaac
   ```
 
@@ -63,8 +61,8 @@ Prereqs: `can1` / `can3` up；无其它节点占用总线；Stanford SDK + `arx_
 真机臂**仅** `full_control`（MIT MIX）：URDF 声明 `position/velocity/effort/kp/kd`；HI `write()` 始终下发 pos+vel+effort。
 
 ```bash
-# 推荐 ./quick_start.sh；手动且 RMW=zenoh 时先: ros2 run rmw_zenoh_cpp rmw_zenohd
-source ~/lift2s-ws/install/setup.bash
+# RMW=zenoh 时先另开终端: ros2 run rmw_zenoh_cpp rmw_zenohd
+source ~/ros2_ws/install/setup.bash
 ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=real
 ```
 

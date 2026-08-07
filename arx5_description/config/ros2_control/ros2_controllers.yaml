@@ -3,7 +3,7 @@
 
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 500  # Hz
 
     arm_controller:
       type: joint_trajectory_controller/JointTrajectoryController
@@ -42,7 +42,7 @@ hand_controller:
 
 ocs2_arm_controller:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 500  # Hz
     mpc_frequency: 100
     future_time_offset: 1.0
     robot_name: arx5
