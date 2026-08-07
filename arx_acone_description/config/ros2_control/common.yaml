@@ -2,7 +2,7 @@
 
 controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 500  # Hz
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -18,8 +18,8 @@ controller_manager:
 
 ocs2_arm_controller:
   ros__parameters:
-    # Align with panthera-ht common.yaml (MIX + OCS2 cadence)
-    update_rate: 100  # Hz
+    # Align with panthera-ht / Lift2S (MIX + OCS2 cadence)
+    update_rate: 500  # Hz
     mpc_frequency: 100
     future_time_offset: 1.0
     info_file_name: task

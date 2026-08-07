@@ -15,8 +15,9 @@
 				<param name="robot_model">X5</param>
 				<param name="can_interface">can1</param>
 				<param name="control_mode">full_control</param>
-				<param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-				<param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
+				<!-- Align with Lift2S field-tuned MIX defaults -->
+				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+				<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
 			</hardware>
 			<xacro:arx5_interfaces name="left"/>
 		</ros2_control>
@@ -26,8 +27,8 @@
 				<param name="robot_model">X5</param>
 				<param name="can_interface">can3</param>
 				<param name="control_mode">full_control</param>
-				<param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-				<param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
+				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+				<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
 			</hardware>
 			<xacro:arx5_interfaces name="right"/>
 		</ros2_control>
