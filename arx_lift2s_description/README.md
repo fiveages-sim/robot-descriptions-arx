@@ -14,9 +14,9 @@ Control layout follows [fa-w2-description/config](https://github.com/fiveages-si
 
 真机 HI（`arx_ros2_control`）：
 
-- 臂：**仅** `full_control`（MIT MIX；热调 `joint_k_gains` / `joint_d_gains`）
-- 升降：`hybrid`（默认）\| `soft_p`/`position`（功能保留；`lift_motor_mode`）
-  - **hybrid**：MIT 直跟 pos+vel + HI τ_ff（**忽略** effort；热调 `arx_lift.hybrid_kp/kd`）
+- 臂：仅 `full_control`（MIT MIX；热调 `joint_k_gains` / `joint_d_gains`）
+- 升降：`hybrid`（默认）\| `soft_p`/`position`（`lift_motor_mode`）
+  - **hybrid**：MIT 直跟 pos+vel + HI τ_ff（忽略 effort；热调 `arx_lift.hybrid_kp/kd`）
   - **soft_p**：只用 position（HI 斜坡）
 - **`lift_joint` 规划行程**：URDF `upper=0.30` m（对齐 hybrid MIT pack `±12.5 rad / 41.54`）。
   OCS2 / `body_joint_controller` 限位跟 URDF。soft_p 电机侧 HI 仍可配置到 `height_span_m≈0.48`，但经规划/URDF 限位的目标会被夹到 0.30。
@@ -31,7 +31,7 @@ arx_lift2s_description/config/
     target_manager.yaml
   ros2_control/
     common.yaml           # 控制器全集（合并基底）
-    ros2_controllers.yaml # 默认 overlay（当前为空，占位）
+    ros2_controllers.yaml # 默认 overlay（当前无 type/EEF 变体，可为空）
   rviz/
     fullbody.rviz
     splitbody.rviz
@@ -48,7 +48,7 @@ arx_lift2s_description/config/
 | [fa-w2](https://github.com/fiveages-sim/fa-w2-description/tree/main/config) | 全身+双臂+body/gripper 全集 | `ros2_controllers.yaml` 只补 home_* |
 | [m6_ccs](https://github.com/fiveages-sim/robot-descriptions-tianji/tree/main/m6_ccs_description/config) | 双臂公共 | `left.yaml` / `right.yaml` / `desktop.yaml`（臂数/场景不同） |
 | [CR5](https://github.com/fiveages-sim/robot-descriptions-dobot/tree/main/cr5_description/config) | （或空基） | EEF 类型：`AG2F90-C-Soft.yaml` 等 |
-| **lift2s（当前）** | 分体臂 + 全身 WBC + body lift + grippers | 无 type/EEF 变体 → overlay 为空即可 |
+| **lift2s** | 分体臂 + 全身 WBC + body lift + grippers | 无 type/EEF 变体 → overlay 为空即可 |
 
 MIT 增益在 HI xacro（`joint_k_gains` / `joint_d_gains`），不在控制器 yaml。
 
@@ -58,7 +58,7 @@ MIT 增益在 HI xacro（`joint_k_gains` / `joint_d_gains`），不在控制器 
 |--|--|--|
 | 数值 | `[30.0, 2.0]` | `[30.0, 2.0]`（相同） |
 | 用途 | 控制器状态机写 command IF 的 kp/kd | 同左 |
-| 真机 MIT | **不驱动**；臂用 HI `joint_k/d_gains` | 同左 |
+| 真机 MIT | 不驱动；臂用 HI `joint_k/d_gains` | 同左 |
 
 lift2s 额外有 `ocs2_wbc_controller` 的同值 `[30, 2]`（全身）；升降力矩增益在 lift HI（`hybrid_kp/kd` / `soft_p_kp`），不在这两行。
 

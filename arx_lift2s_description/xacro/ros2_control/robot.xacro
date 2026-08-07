@@ -66,7 +66,7 @@
 				<param name="coulomb_friction_torque">0.32</param>
 				<param name="friction_vel_eps_mps">0.01</param>
 				<param name="lift_max_torque">15.0</param>
-				<!-- cmd_ramp_vel: soft_p / 关机插值；hybrid 不再用 -->
+				<!-- cmd_ramp_vel: soft_p 跟踪与关机插值；hybrid 跟踪不用 -->
 				<param name="cmd_ramp_vel">0.12</param>
 				<param name="max_height_m">0.48</param>
 				<param name="height_span_m">0.48</param>

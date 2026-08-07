@@ -93,7 +93,7 @@
 				</collision>
 			</xacro:if>
 			<xacro:if value="${collider == 'simple'}">
-				<!-- Carriage plate only; rear upright removed (was registering as back screen) -->
+				<!-- Carriage plate only (avoid rear upright registering as back screen) -->
 				<collision name="simple_lift_carriage">
 					<origin xyz="-0.015 0 -0.01" rpy="0 0 0"/>
 					<geometry>

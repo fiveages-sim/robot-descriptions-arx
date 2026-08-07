@@ -147,7 +147,7 @@ body_joint_controller:
     joints:
       - lift_joint
 
-    # Split-body still uses position IF only on lift (HI also exports MIX for full_body).
+    # Split-body: position IF only on lift (HI also exports MIX for full_body WBC).
     command_interfaces:
       - position
     state_interfaces:

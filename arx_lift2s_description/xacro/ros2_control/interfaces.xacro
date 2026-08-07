@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 	<!-- ARX LIFT 2S lift column: MIX IFs so ocs2_wbc can claim.
-	     默认 hybrid：pos+vel + HI τ_ff（忽略 effort）；soft_p 仅功能保留。 -->
+	     hybrid（默认）：pos+vel + HI τ_ff（忽略 effort）；soft_p：仅 position。 -->
 	<xacro:macro name="arx_lift2s_base_interfaces">
 		<joint name="lift_joint">
 			<command_interface name="position"/>
