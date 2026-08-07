@@ -200,7 +200,9 @@ finalEndEffector
 selfCollision
 { 
   ; activate self-collision constraint
-  activate  true
+  ; Match panthera-ht single.info: keep off for tabletop single-arm demos so
+  ; HOLD↔OCS2 is not immediately bounced back by false-positive near pairs.
+  activate  false
 
   ; Self Collision raw object pairs
   collisionObjectPairs
@@ -215,7 +217,7 @@ selfCollision
   }
 
   ; minimum distance allowed between the pairs
-  minimumDistance  0.01
+  minimumDistance  0.05
   activationDistance 0.1
 
   ; relaxed log barrier mu
@@ -229,7 +231,7 @@ selfCollision
 jointPositionLimits
 {
   ; activate constraint
-  activate  true
+  activate  false
 
   ; relaxed log barrier mu
   mu      0.01

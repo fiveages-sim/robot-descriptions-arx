@@ -1,0 +1,91 @@
+# Common controller defaults for ARX AC One (dual-arm torso).
+
+controller_manager:
+  ros__parameters:
+    update_rate: 500  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    ocs2_arm_controller:
+      type: ocs2_arm_controller/Ocs2ArmController
+
+    left_gripper_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
+
+    right_gripper_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
+
+ocs2_arm_controller:
+  ros__parameters:
+    # Align with panthera-ht / Lift2S (MIX + OCS2 cadence)
+    update_rate: 500  # Hz
+    mpc_frequency: 100
+    future_time_offset: 1.0
+    info_file_name: task
+    robot_name: arx_acone
+
+    joints:
+      - left_joint1
+      - left_joint2
+      - left_joint3
+      - left_joint4
+      - left_joint5
+      - left_joint6
+      - right_joint1
+      - right_joint2
+      - right_joint3
+      - right_joint4
+      - right_joint5
+      - right_joint6
+
+    # MIX command IFs kept for URDF/controller contract. HI ignores kp/kd IF —
+    # real MIT gains come from hardware joint_k/d_gains (rqt / ros2 param).
+    command_interfaces:
+      - position
+      - velocity
+      - effort
+      - kp
+      - kd
+    state_interfaces:
+      - position
+      - velocity
+      - effort
+
+    # Kept for controller state machine; HI no longer applies these to motors.
+    default_gains: [30.0, 2.0]   # HOLD / HOME: [kp, kd]
+    pd_gains: [30.0, 2.0]        # OCS2 state: [kp, kd]
+
+    home_duration: 3.0
+    home_interpolation_type: linear
+    hold_first_check_position_threshold: 0.15
+    hold_position_threshold: 0.15
+
+    cartesian_defaults:
+      frame_id: arm_base
+      ik_type: AUTO
+      max_linear_velocity: 0.3
+      max_linear_acceleration: 1.0
+      max_linear_jerk: 5.0
+      max_angular_velocity: 0.5
+      max_angular_acceleration: 1.0
+      max_angular_jerk: 5.0
+
+    # left(1-6), right(1-6)
+    home_1: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
+    home_2: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    rest_pos: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+left_gripper_controller:
+  ros__parameters:
+    joint: left_gripper_joint
+    use_effort_interface: true
+    force_feedback_ratio: 0.0
+    force_threshold: 1.0
+
+right_gripper_controller:
+  ros__parameters:
+    joint: right_gripper_joint
+    use_effort_interface: true
+    force_feedback_ratio: 0.0
+    force_threshold: 1.0

@@ -1,71 +1,117 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s">
-    <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
-    <xacro:arg name="gazebo" default="false"/>
-    <xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
-    <xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
-    <xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
+	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
+	<xacro:arg name="gazebo" default="false"/>
+	<!-- Arms: full_control only (MIT MIX). -->
+	<!-- Lift: soft_p|position | hybrid. hybrid 直跟 pos+vel，HI 重力+摩擦（忽略 effort） -->
+	<xacro:arg name="lift_motor_mode" default="hybrid"/>
+	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
+	<xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
+	<xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
 
-    <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
-        <ros2_control name="arx_lift2s_left_system" type="system">
-            <hardware>
-                <plugin>arx_ros2_control/ArxX5Hardware</plugin>
-                <param name="robot_model">X5</param>
-                <param name="can_interface">can1</param>
-                <param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-                <param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
-                <!-- 可选：夹爪增益，不写则用默认 -->
-                <!-- <param name="gripper_kp">5.0</param> -->
-                <!-- <param name="gripper_kd">0.2</param> -->
-            </hardware>
-            <xacro:arx5_interfaces name="left"/>
-        </ros2_control>
-        <ros2_control name="arx_lift2s_right_system" type="system">
-            <hardware>
-                <plugin>arx_ros2_control/ArxX5Hardware</plugin>
-                <param name="robot_model">X5</param>
-                <param name="can_interface">can3</param>
-                <param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-                <param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
-                <!-- 可选：夹爪增益，不写则用默认 -->
-                <!-- <param name="gripper_kp">5.0</param> -->
-                <!-- <param name="gripper_kd">0.2</param> -->
-            </hardware>
-            <xacro:arx5_interfaces name="right"/>
-        </ros2_control>
-    </xacro:if>
+	<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'real'}">
+		<!-- Dual arms: Stanford arx5-sdk via arx_ros2_control (can1 / can3) -->
+		<ros2_control name="arx_lift2s_left_system" type="system">
+			<hardware>
+				<plugin>arx_ros2_control/ArxX5Hardware</plugin>
+				<param name="robot_model">X5</param>
+				<param name="can_interface">can1</param>
+				<param name="control_mode">full_control</param>
+				<!-- Lift2S field-tuned MIX defaults -->
+				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+				<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
+				<param name="gripper_kp">5.0</param>
+				<param name="gripper_kd">0.2</param>
+				<!-- Ctrl+C: interpolate to home_2 (all-zero) then damping -->
+				<param name="shutdown_return_home">true</param>
+				<param name="shutdown_home">[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</param>
+				<param name="shutdown_home_velocity">0.3</param>
+				<param name="shutdown_home_timeout">2.0</param>
+			</hardware>
+			<xacro:arx5_interfaces name="left"/>
+		</ros2_control>
+		<ros2_control name="arx_lift2s_right_system" type="system">
+			<hardware>
+				<plugin>arx_ros2_control/ArxX5Hardware</plugin>
+				<param name="robot_model">X5</param>
+				<param name="can_interface">can3</param>
+				<param name="control_mode">full_control</param>
+				<param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+				<param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
+				<param name="gripper_kp">5.0</param>
+				<param name="gripper_kd">0.2</param>
+				<param name="shutdown_return_home">true</param>
+				<param name="shutdown_home">[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]</param>
+				<param name="shutdown_home_velocity">0.3</param>
+				<param name="shutdown_home_timeout">2.0</param>
+			</hardware>
+			<xacro:arx5_interfaces name="right"/>
+		</ros2_control>
+		<!-- Lift column: soft_p | hybrid (live: arx_lift.motor_mode / soft_p_kp / hybrid_kp|kd) -->
+		<ros2_control name="arx_lift2s_lift_system" type="system">
+			<hardware>
+				<plugin>arx_ros2_control/ArxLiftHardware</plugin>
+				<param name="can_name">can5</param>
+				<param name="robot_type">2</param>
+				<!-- soft_p|position: 仅跟踪 position；hybrid: 直跟 pos+vel + HI 重力/摩擦（忽略 effort） -->
+				<param name="lift_motor_mode">$(arg lift_motor_mode)</param>
+				<!-- Soft-P (setHeight/loop); live: arx_lift.soft_p_kp -->
+				<param name="soft_p_kp">50.0</param>
+				<param name="lift_max_vel">0.20</param>
+				<!-- Hybrid MIT; live: arx_lift.hybrid_kp / hybrid_kd / gravity_* / coulomb_* / friction_vel_eps_mps -->
+				<param name="hybrid_kp">5.0</param>
+				<param name="hybrid_kd">2.0</param>
+				<!-- τ_ff = gravity - coulomb * sign(v_cmd); v_cmd 来自上层 velocity [m/s] -->
+				<param name="gravity_compensation_torque">-1.01</param>
+				<param name="coulomb_friction_torque">0.32</param>
+				<param name="friction_vel_eps_mps">0.01</param>
+				<param name="lift_max_torque">15.0</param>
+				<!-- cmd_ramp_vel: soft_p 跟踪与关机插值；hybrid 跟踪不用 -->
+				<param name="cmd_ramp_vel">0.12</param>
+				<param name="max_height_m">0.48</param>
+				<param name="height_span_m">0.48</param>
+				<!-- SDK motor rad / meter -->
+				<param name="height_rad_per_meter">41.54</param>
+				<param name="sdk_max_rad">20.0</param>
+				<!-- Ctrl+C: ramp to home_2 height (0) then soft-stop -->
+				<param name="shutdown_return_home">true</param>
+				<param name="shutdown_height_m">0.0</param>
+				<param name="shutdown_home_velocity">0.10</param>
+				<param name="shutdown_home_timeout">2.0</param>
+			</hardware>
+			<xacro:arx_lift2s_base_interfaces/>
+		</ros2_control>
+	</xacro:if>
 
-    <xacro:unless value="${'$(arg ros2_control_hardware_type)' == 'real'}">
-        <ros2_control name="arx_lift2s_system" type="system">
-            <hardware>
-                <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'gz'}">
-                    <plugin>gz_ros2_control/GazeboSimSystem</plugin>
-                </xacro:if>
-                <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'mock_components'}">
-                    <plugin>mock_components/GenericSystem</plugin>
-                </xacro:if>
-                <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'isaac'}">
-                    <plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
-                    <param name="joint_commands_topic">/isaac/joint_command</param>
-                    <param name="joint_states_topic">/isaac/joint_states</param>
-                </xacro:if>
-            </hardware>
+	<xacro:unless value="${'$(arg ros2_control_hardware_type)' == 'real'}">
+		<ros2_control name="arx_lift2s_system" type="system">
+			<hardware>
+				<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'gz'}">
+					<plugin>gz_ros2_control/GazeboSimSystem</plugin>
+				</xacro:if>
+				<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'mock_components'}">
+					<plugin>mock_components/GenericSystem</plugin>
+				</xacro:if>
+				<xacro:if value="${'$(arg ros2_control_hardware_type)' == 'isaac'}">
+					<plugin>topic_based_ros2_control/TopicBasedSystem</plugin>
+					<param name="joint_commands_topic">/isaac/joint_command</param>
+					<param name="joint_states_topic">/isaac/joint_states</param>
+				</xacro:if>
+			</hardware>
 
-            <xacro:if value="${selected_base_type == 'lift2s'}">
-                <xacro:arx_lift2s_base_interfaces/>
-            </xacro:if>
+			<xacro:arx_lift2s_base_interfaces/>
+			<!-- Sim: MIX arm IFs to match real Stanford HI / full_control -->
+			<xacro:arx5_interfaces name="left"/>
+			<xacro:arx5_interfaces name="right"/>
+		</ros2_control>
+	</xacro:unless>
 
-            <xacro:arx5_interfaces name="left"/>
-            <xacro:arx5_interfaces name="right"/>
-        </ros2_control>
-    </xacro:unless>
-
-    <xacro:if value="$(arg gazebo)">
-        <gazebo>
-            <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                <parameters>$(find arx_lift2s_description)/config/ros2_control/ros2_controllers.yaml</parameters>
-            </plugin>
-        </gazebo>
-    </xacro:if>
+	<xacro:if value="$(arg gazebo)">
+		<gazebo>
+			<plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+				<parameters>$(find arx_lift2s_description)/config/ros2_control/ros2_controllers.yaml</parameters>
+			</plugin>
+		</gazebo>
+	</xacro:if>
 
 </robot>

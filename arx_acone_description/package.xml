@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>arx_acone_description</name>
+  <version>1.0.0</version>
+  <description>
+    <p>URDF Description package for ARX AC One (dual-arm torso)</p>
+    <p>Standalone upper-body description used by arx_lift2s_description for
+      split-body planning, similar to m6_ccs_description for fiveages_w2.
+    </p>
+  </description>
+  <author>TODO</author>
+  <maintainer email="TODO@email.com" />
+
+  <license>BSD</license>
+
+  <build_depend>arx5_description</build_depend>
+  <exec_depend>robot_common_launch</exec_depend>
+  <exec_depend>arx5_description</exec_depend>
+  <exec_depend>sensor_models</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
+</package>

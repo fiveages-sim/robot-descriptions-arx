@@ -83,10 +83,15 @@ To visualize and check the configuration of the robot in rviz, simply launch:
 
 ### 3.2 OCS2 Arm Controller Demo
 
-* ARX X5
+单臂真机仅 **`full_control`（MIT MIX）**：URDF 声明 `position/velocity/effort/kp/kd`，HI 始终按 MIX 下发。
+
+* ARX X5（RMW=zenoh 时先另开终端：`ros2 run rmw_zenoh_cpp rmw_zenohd`）
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5
+  # Real（左 can1 / 右 can3）
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5 hardware:=real xacro_can_interface:=can1
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx5 hardware:=real xacro_can_interface:=can3
   ```
 
 * ARX R5

@@ -3,6 +3,8 @@
     <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
     <xacro:arg name="gazebo" default="false"/>
     <xacro:arg name="type" default="x5"/>
+    <!-- Arm: full_control only (MIT MIX). Single-arm side via can_interface (can1 left / can3 right). -->
+    <xacro:arg name="can_interface" default="can1"/>
 
     <link name="world"/>
 
@@ -19,9 +21,11 @@
             <hardware>
                 <plugin>arx_ros2_control/ArxX5Hardware</plugin>
                 <param name="robot_model">X5</param>
-                <param name="can_interface">can1</param>
-                <param name="joint_k_gains">[80.0, 70.0, 70.0, 30.0, 30.0, 20.0]</param>
-                <param name="joint_d_gains">[2.0, 2.0, 2.0, 1.0, 1.0, 0.7]</param>
+                <param name="can_interface">$(arg can_interface)</param>
+                <param name="control_mode">full_control</param>
+                <!-- Align with Lift2S field-tuned MIX defaults -->
+                <param name="joint_k_gains">[20.0, 20.0, 20.0, 20.0, 10.0, 10.0]</param>
+                <param name="joint_d_gains">[0.8, 0.8, 0.8, 0.8, 0.5, 0.5]</param>
                 <!-- 可选：夹爪增益，不写则用默认 -->
                 <!-- <param name="gripper_kp">5.0</param> -->
                 <!-- <param name="gripper_kd">0.2</param> -->

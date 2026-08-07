@@ -4,8 +4,9 @@
   <version>1.0.0</version>
   <description>
     <p>URDF Description package for ARX Lift 2S</p>
-    <p>This package contains configuration data, 3D models and launch files
-      for ARX Lift 2S robot
+    <p>Whole-body description composing the lift chassis with ARX AC One
+      (arx_acone_description). Supports split-body and full-body control
+      via ocs2_arm_controller launch files.
     </p>
   </description>
   <author>TODO</author>
@@ -14,8 +15,11 @@
   <license>BSD</license>
 
   <build_depend>arx5_description</build_depend>
+  <build_depend>arx_acone_description</build_depend>
   <exec_depend>robot_common_launch</exec_depend>
-  <exec_depend>arx5_lift2s_description</exec_depend>
+  <exec_depend>arx5_description</exec_depend>
+  <exec_depend>arx_acone_description</exec_depend>
+  <exec_depend>component_models</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

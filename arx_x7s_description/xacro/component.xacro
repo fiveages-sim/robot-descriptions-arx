@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
 <!-- =================================================================================== -->
-<!-- |    Complete Robot Description for Agibot G1                                     | -->
-<!-- |    This file includes the base robot structure and both arms                    | -->
+<!-- |    Component visualization for ARX X7S                                            | -->
 <!-- =================================================================================== -->
 <robot name="ARX_X7S" xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:property name="PI" value="3.1415926535897931"/>

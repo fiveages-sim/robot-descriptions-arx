@@ -1,0 +1,177 @@
+# Common controller defaults for ARX Lift 2S.
+# OCS2 layout (feature/ARX_LIFT2S split vs full):
+#   - split_body:  arms MPC only; lift via body_joint_controller
+#   - full_body:   lift + arms in one MPC (fixed_base.info);
+#                  真机升降可选 soft_p/hybrid（默认 hybrid）；双臂仅 full_control MIX
+#
+# Split planning MUST use arx_acone URDF/task (no lift in tree).
+# Pinocchio oMf is always in the model root; on acone root≡arm_base, so
+# frame_id=arm_base matches the numbers. Lift2S full URDF roots at base_link
+# with prismatic lift below arm_base — labeling baseFrame=arm_base there only
+# retags frame_id and makes marker TF double-apply the lift offset.
+
+controller_manager:
+  ros__parameters:
+    update_rate: 500  # Hz
+    # HI debug logs (ArxLiftHardware + ArxX5Hardware MIT gains); default off
+    status_debug: false
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    # 分体：双臂 OCS2（规划模型 = arx_acone）
+    ocs2_arm_controller:
+      type: ocs2_arm_controller/Ocs2ArmController
+
+    # 全身：升降 + 双臂（fixed_base.info）
+    ocs2_wbc_controller:
+      type: ocs2_arm_controller/Ocs2ArmController
+
+    body_joint_controller:
+      type: basic_joint_controller/BasicJointController
+
+    left_gripper_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
+
+    right_gripper_controller:
+      type: adaptive_gripper_controller/AdaptiveGripperController
+
+ocs2_arm_controller:
+  ros__parameters:
+    # Dual-arm split: plan with acone (same X5 arms, no lift DOF in Pinocchio)
+    update_rate: 500  # Hz
+    mpc_frequency: 100
+    future_time_offset: 1.0
+    robot_name: arx_acone
+    info_file_name: task
+
+    joints:
+      - left_joint1
+      - left_joint2
+      - left_joint3
+      - left_joint4
+      - left_joint5
+      - left_joint6
+      - right_joint1
+      - right_joint2
+      - right_joint3
+      - right_joint4
+      - right_joint5
+      - right_joint6
+
+    # MIX command IFs. 真机 MIT 增益在 HI：joint_k/d_gains（xacro 启动默认；臂节点 rqt 热调）。
+    # 本文件 pd_gains / default_gains 仅供控制器状态机写 command IF，不驱动 ARX 真机增益。
+    command_interfaces:
+      - position
+      - velocity
+      - effort
+      - kp
+      - kd
+    state_interfaces:
+      - position
+      - velocity
+      - effort
+
+    # Controller state machine only (ARX HI overwrites motor gains from joint_k/d_gains).
+    default_gains: [30.0, 2.0]   # HOLD / HOME: [kp, kd]
+    pd_gains: [30.0, 2.0]        # OCS2 state: [kp, kd]
+
+    home_duration: 3.0
+    home_interpolation_type: linear
+    hold_first_check_position_threshold: 0.15
+    hold_position_threshold: 0.15
+
+    cartesian_defaults:
+      frame_id: arm_base
+      ik_type: AUTO
+      max_linear_velocity: 0.3
+      max_linear_acceleration: 1.0
+      max_linear_jerk: 5.0
+      max_angular_velocity: 0.5
+      max_angular_acceleration: 1.0
+      max_angular_jerk: 5.0
+
+    # left(1-6), right(1-6) — same as acone
+    home_1: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
+    home_2: [0.0, 1.30, 0.60, 0.60, 0.0, 0.0, 0.0, 1.30, 0.60, 0.60, 0.0, 0.0]
+    # Raised arms (lift height set via body_joint_controller home_3 in split mode)
+    home_3: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+ocs2_wbc_controller:
+  ros__parameters:
+    update_rate: 500
+    mpc_frequency: 100
+    robot_name: arx_lift2s
+    info_file_name: fixed_base
+
+    # 必须与 fixed_base.info 状态向量一致：lift + left(1-6) + right(1-6)
+    joints:
+      - lift_joint
+      - left_joint1
+      - left_joint2
+      - left_joint3
+      - left_joint4
+      - left_joint5
+      - left_joint6
+      - right_joint1
+      - right_joint2
+      - right_joint3
+      - right_joint4
+      - right_joint5
+      - right_joint6
+
+    command_interfaces:
+      - position
+      - velocity
+      - effort
+      - kp
+      - kd
+    state_interfaces:
+      - position
+      - velocity
+      - effort
+
+    # Controller only; real arm MIT gains from HI joint_k/d_gains
+    default_gains: [30.0, 2.0]
+    pd_gains: [30.0, 2.0]
+
+    home_duration: 5.0
+    home_1: [0.3, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
+    home_2: [0.3, 0.0, 1.30, 0.60, 0.60, 0.0, 0.0, 0.0, 1.30, 0.60, 0.60, 0.0, 0.0]
+    # lift_joint=0.3 m (same as home_1) + raised dual-arm pose
+    home_3: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+body_joint_controller:
+  ros__parameters:
+    update_rate: 500
+    joints:
+      - lift_joint
+
+    # Split-body: position IF only on lift (HI also exports MIX for full_body WBC).
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+    home_duration: 5.0
+    movej_duration: 5.0
+    hold_position_threshold: 0.05
+
+    home_1: [0.3]
+    home_2: [0.3]
+    home_3: [0.0]
+
+left_gripper_controller:
+  ros__parameters:
+    joint: left_gripper_joint
+    use_effort_interface: true
+    force_feedback_ratio: 0.0
+    force_threshold: 1.0
+
+right_gripper_controller:
+  ros__parameters:
+    joint: right_gripper_joint
+    use_effort_interface: true
+    force_feedback_ratio: 0.0
+    force_threshold: 1.0

@@ -1,0 +1,2 @@
+# Default (x5) overlays for arx_acone ros2_control.
+# Merged on top of common.yaml when type is empty or unmatched.

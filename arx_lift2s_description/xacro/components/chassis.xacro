@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s_base">
 	<xacro:arg name="robot_name" default="arx_lift2s_base"/>
 
-	<xacro:macro name="chassis" params="enable_wheel_joints:='false'">
+	<xacro:macro name="chassis" params="enable_wheel_joints:='false' collider:='simple'">
 
 		<link name="base_link">
 			<inertial>
@@ -16,12 +16,62 @@
 					<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/base_link.glb"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/base_link.glb"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/base_link.glb"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<!-- Main chassis deck (not used in OCS2 arm self-collision pairs) -->
+				<collision name="simple_base_platform">
+					<origin xyz="-0.09 0 0.0" rpy="0 0 0"/>
+					<geometry>
+						<box size="0.52 0.36 0.22"/>
+					</geometry>
+				</collision>
+				<!-- Left / right side skirts -->
+				<collision name="simple_base_left">
+					<origin xyz="0.0 0.24 -0.066" rpy="0 0 0"/>
+					<geometry>
+						<box size="0.44 0.18 0.13"/>
+					</geometry>
+				</collision>
+				<collision name="simple_base_right">
+					<origin xyz="0.0 -0.24 -0.066" rpy="0 0 0"/>
+					<geometry>
+						<box size="0.43 0.18 0.13"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
+
+		<!-- Dedicated mast link so OCS2 pairs hit the lift column, not deck/skirts/rear panel -->
+		<link name="lift_mast_link">
+			<xacro:if value="${collider == 'simple'}">
+				<collision name="simple_lift_mast">
+					<origin xyz="0 0 0" rpy="0 0 0"/>
+					<geometry>
+						<box size="0.13 0.13 0.60"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'convex'}">
+				<!-- approximate mast volume when convex meshes are used on base/lift -->
+				<collision name="simple_lift_mast">
+					<origin xyz="0 0 0" rpy="0 0 0"/>
+					<geometry>
+						<box size="0.13 0.13 0.60"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+		</link>
+		<joint name="lift_mast_joint" type="fixed">
+			<origin xyz="0.01 0 0.50" rpy="0 0 0"/>
+			<parent link="base_link"/>
+			<child link="lift_mast_link"/>
+		</joint>
 
 		<link name="lift_link">
 			<inertial>
@@ -35,11 +85,22 @@
 					<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/lift.glb"/>
 				</geometry>
 			</visual>
-			<collision>
-				<geometry>
-					<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/lift.glb"/>
-				</geometry>
-			</collision>
+			<xacro:if value="${collider == 'convex'}">
+				<collision>
+					<geometry>
+						<mesh filename="file://$(find arx_lift2s_description)/meshes/chassis/lift.glb"/>
+					</geometry>
+				</collision>
+			</xacro:if>
+			<xacro:if value="${collider == 'simple'}">
+				<!-- Carriage plate only (avoid rear upright registering as back screen) -->
+				<collision name="simple_lift_carriage">
+					<origin xyz="-0.015 0 -0.01" rpy="0 0 0"/>
+					<geometry>
+						<box size="0.24 0.16 0.12"/>
+					</geometry>
+				</collision>
+			</xacro:if>
 		</link>
 
 		<joint name="lift_joint" type="prismatic">
@@ -47,7 +108,9 @@
 			<parent link="base_link"/>
 			<child link="lift_link"/>
 			<axis xyz="0 0 1"/>
-			<limit lower="0" upper="0.46" effort="400" velocity="0.15"/>
+			<!-- Planning / joint-limit upper aligns with hybrid MIT pack (±12.5 rad / 41.54 ≈ 0.30 m).
+			     soft_p setHeight can still use HI height_span_m≈0.48; OCS2/URDF clamps stay at 0.30. -->
+			<limit lower="0" upper="0.30" effort="400" velocity="0.15"/>
 		</joint>
 
 		<xacro:property name="wheel_joint_type" value="fixed"/>
