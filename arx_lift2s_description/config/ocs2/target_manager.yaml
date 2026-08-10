@@ -2,7 +2,7 @@
   ros__parameters:
 
      # 线性控制缩放因子（用于手柄/键盘控制）
-    linear_scale: 0.3
+    linear_scale: 0.5
   
     # 角度控制缩放因子（用于手柄/键盘控制）
     angular_scale: 0.5
@@ -13,3 +13,7 @@
     # RViz Fixed Frame on Lift2S. Split control_base_frame comes from acone
     # task.info (arm_base). Marker TF base_link←arm_base includes real lift height.
     marker_fixed_frame: base_link
+
+    # FULL_BODY VR rebase/calculation frame. Lift2S URDF has base_link only
+    # (no base_footprint); override arms_target_manager default.
+    vr_follow_frame: base_link
