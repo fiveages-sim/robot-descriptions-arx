@@ -2,7 +2,7 @@
   ros__parameters:
 
      # 线性控制缩放因子（用于手柄/键盘控制）
-    linear_scale: 0.5
+    linear_scale: 0.3
   
     # 角度控制缩放因子（用于手柄/键盘控制）
     angular_scale: 0.5

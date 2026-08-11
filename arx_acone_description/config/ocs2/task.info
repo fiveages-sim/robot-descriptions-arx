@@ -212,7 +212,7 @@ finalEndEffector
 selfCollision
 {
   ; activate self-collision constraint
-  activate  false
+  activate  true
 
   ; Self Collision pairs
   collisionLinkPairs
@@ -240,7 +240,7 @@ selfCollision
 jointPositionLimits
 {
   ; activate constraint
-  activate  false
+  activate  true
 
   ; relaxed log barrier mu
   mu      1e-3
