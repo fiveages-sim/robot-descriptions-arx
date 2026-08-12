@@ -1,18 +1,21 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-	<!-- ARX LIFT 2S lift column: MIX IFs so ocs2_wbc can claim.
-	     hybrid（默认）：pos+vel + HI τ_ff（忽略 effort）；soft_p：仅 position。 -->
-	<xacro:macro name="arx_lift2s_base_interfaces">
+	<!-- iface_mode: mix = pos/vel/effort（真机 / mock / gz）；position = 仅 position（Isaac）。
+	     hybrid：pos+vel + HI τ_ff（忽略 effort）；soft_p：仅 position。
+	     Gains: arx_lift.hybrid_kp/kd / soft_p_kp（无 kp/kd command IF）。 -->
+	<xacro:macro name="arx_lift2s_base_interfaces" params="iface_mode:=mix">
 		<joint name="lift_joint">
 			<command_interface name="position"/>
-			<command_interface name="velocity"/>
-			<command_interface name="effort"/>
-			<command_interface name="kp"/>
-			<command_interface name="kd"/>
+			<xacro:if value="${iface_mode == 'mix'}">
+				<command_interface name="velocity"/>
+				<command_interface name="effort"/>
+			</xacro:if>
 			<state_interface name="position"/>
-			<state_interface name="velocity"/>
-			<state_interface name="effort"/>
+			<xacro:if value="${iface_mode == 'mix'}">
+				<state_interface name="velocity"/>
+				<state_interface name="effort"/>
+			</xacro:if>
 		</joint>
 	</xacro:macro>
 

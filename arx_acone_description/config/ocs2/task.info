@@ -240,7 +240,7 @@ selfCollision
 jointPositionLimits
 {
   ; activate constraint
-  activate  false
+  activate  true
 
   ; relaxed log barrier mu
   mu      1e-3

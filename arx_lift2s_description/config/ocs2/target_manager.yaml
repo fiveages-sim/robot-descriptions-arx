@@ -1,14 +1,14 @@
 /**:
   ros__parameters:
-
-     # 线性控制缩放因子（用于手柄/键盘控制）
+    # 线性控制缩放因子：映射到 */twist 的线速度上限 (m/s，满杆)
     linear_scale: 0.3
-  
-    # 角度控制缩放因子（用于手柄/键盘控制）
+
+    # 角度控制缩放因子：映射到 */twist 的角速度上限 (rad/s，满杆)
     angular_scale: 0.5
 
     # 是否启用VR输入处理
     enable_vr: true
+    enable_head_control: false
 
     # RViz Fixed Frame on Lift2S. Split control_base_frame comes from acone
     # task.info (arm_base). Marker TF base_link←arm_base includes real lift height.

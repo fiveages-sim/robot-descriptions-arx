@@ -6,7 +6,7 @@ Used by `arx_lift2s_description` for **split-body** planning (same role as
 `m6_ccs_description` for `fiveages_w2_description`).
 
 **Real hardware:** Stanford [`arx_ros2_control`](https://github.com/fiveages-sim/arx-ros2-control)
-with OCS2 MIX only — `position/velocity/effort/kp/kd`，固定 `full_control`。
+with OCS2 MIX only — `position/velocity/effort`，固定 `full_control`；MIT 增益在 HI `joint_k/d_gains`。
 Deploy: `hardware:=real`，can1 / can3。
 
 ## 1. Build
@@ -58,7 +58,7 @@ colcon build --packages-up-to arx_acone_description --symlink-install
 
 Prereqs: `can1` / `can3` up；无其它节点占用总线；Stanford SDK + `arx_ros2_control` 已编译。
 
-真机臂**仅** `full_control`（MIT MIX）：URDF 声明 `position/velocity/effort/kp/kd`；HI `write()` 始终下发 pos+vel+effort。
+真机臂**仅** `full_control`（MIT MIX）：URDF 声明 `position/velocity/effort`；HI `write()` 始终下发 pos+vel+effort。
 
 ```bash
 # RMW=zenoh 时先另开终端: ros2 run rmw_zenoh_cpp rmw_zenohd
@@ -70,8 +70,7 @@ ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=real
 
 | 层级 | 参数 | 说明 |
 |------|------|------|
-| HI | `joint_k_gains` / `joint_d_gains`（xacro，可用 rqt 动态改） | 驱动电机 MIT kp/kd |
-| 控制器 | `default_gains` / `pd_gains`（`common.yaml`） | 仅控制器状态机用；真机 MIT 不读这两项 |
+| HI | `joint_k_gains` / `joint_d_gains`（xacro，可用 rqt 动态改） | 驱动电机 MIT kp/kd（唯一来源） |
 
 **Bring-up checks**
 

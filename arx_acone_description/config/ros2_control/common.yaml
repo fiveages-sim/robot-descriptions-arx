@@ -39,23 +39,17 @@ ocs2_arm_controller:
       - right_joint5
       - right_joint6
 
-    # MIX command IFs kept for URDF/controller contract. HI ignores kp/kd IF —
-    # real MIT gains come from hardware joint_k/d_gains (rqt / ros2 param).
+    # MIX: position/velocity/effort。MIT 增益仅 HI joint_k/d_gains（rqt 热调）。
     command_interfaces:
       - position
       - velocity
       - effort
-      - kp
-      - kd
     state_interfaces:
       - position
       - velocity
       - effort
 
-    # Kept for controller state machine; HI no longer applies these to motors.
-    default_gains: [30.0, 2.0]   # HOLD / HOME: [kp, kd]
-    pd_gains: [30.0, 2.0]        # OCS2 state: [kp, kd]
-
+    
     home_duration: 3.0
     home_interpolation_type: linear
     hold_first_check_position_threshold: 0.15

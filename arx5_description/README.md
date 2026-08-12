@@ -83,7 +83,7 @@ To visualize and check the configuration of the robot in rviz, simply launch:
 
 ### 3.2 OCS2 Arm Controller Demo
 
-单臂真机仅 **`full_control`（MIT MIX）**：URDF 声明 `position/velocity/effort/kp/kd`，HI 始终按 MIX 下发。
+单臂真机仅 **`full_control`（MIT MIX）**：URDF 声明 `position/velocity/effort`，HI 始终按 MIX 下发；MIT 增益仅 HI `joint_k/d_gains`。
 
 * ARX X5（RMW=zenoh 时先另开终端：`ros2 run rmw_zenoh_cpp rmw_zenohd`）
   ```bash

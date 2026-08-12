@@ -1,0 +1,416 @@
+; OCS2 Wheel Humanoid Configuration - ARX Lift2S
+; ==============================================
+; full_body → ocs2_wbc_controller (info_file_name:=task).
+;
+; Body 仅 1 个棱柱升降 DOF（无 pitch / yaw / 三连杆腰）：
+;   State (3 + 13): [base x,y,yaw | lift_joint | left×6 | right×6]
+;   Input (2 + 13): [vx, omega | lift_vel | left×6 | right×6]
+; 躯干模式仅启用：FREE / LOCKED / TRACKING
+;   （关闭 RELATIVE、CUSTOM_LOCKED、HEAD_COUPLED）
+; 底盘：manipulatorModelType=1。无 world→base TF 时 WBC 自动锁底盘并停发
+;   解锁规划（cmd_vel 置零）；有定位 TF 时可 BASE_UNLOCK / 移动模式。
+; split_body 臂 MPC 仍用 arx_acone task.info（见 common.yaml）。
+
+;=============================================================================
+; Model Information
+;=============================================================================
+
+model_information
+{
+    ; 1 = WheelBasedMobileManipulator（虚拟 SE(2) 底盘）
+    manipulatorModelType    1
+
+    ; Pinocchio 根坐标系（Lift2S URDF root）
+    baseFrame               "base_link"
+
+    ; 双臂末端
+    eeFrame                 "left_gripper_center"
+    eeFrame1                "right_gripper_center"
+
+    ; 躯干 / 相对约束用 body link（臂座挂在 body_link 上）
+    bodyFrame               "body_link"
+
+    ; 夹爪主动关节 + mimic 指关节（仅删 gripper_joint 时 Pinocchio 仍保留 mimic DOF）
+    ; 轮关节默认 fixed（enable_wheel_joints:=false），无需列入 removeJoints
+    removeJoints
+    {
+        [0]   "left_gripper_joint"
+        [1]   "right_gripper_joint"
+        [2]   "left_joint8"
+        [3]   "right_joint8"
+    }
+}
+
+;=============================================================================
+; Model Settings
+;=============================================================================
+
+model_settings
+{
+    usePreComputation       true
+    recompileLibraries      true
+}
+
+;=============================================================================
+; Initial State
+; 总维度 = 3（底盘）+ 13（1 升降 + 6 左臂 + 6 右臂）= 16
+;=============================================================================
+
+initialState
+{
+    base
+    {
+        wheelBasedMobileManipulator
+        {
+            (0,0)  0.0   ; x [m]
+            (1,0)  0.0   ; y [m]
+            (2,0)  0.0   ; yaw [rad]
+        }
+    }
+
+    arm
+    {
+        (0,0)   0.0     ; lift_joint [m]
+        (1,0)   0.0     ; left_joint1
+        (2,0)   0.0     ; left_joint2
+        (3,0)   0.0     ; left_joint3
+        (4,0)   0.0     ; left_joint4
+        (5,0)   0.0     ; left_joint5
+        (6,0)   0.0     ; left_joint6
+        (7,0)   0.0     ; right_joint1
+        (8,0)   0.0     ; right_joint2
+        (9,0)   0.0     ; right_joint3
+        (10,0)  0.0     ; right_joint4
+        (11,0)  0.0     ; right_joint5
+        (12,0)  0.0     ; right_joint6
+    }
+}
+
+;=============================================================================
+; Initial Mode Schedule
+;=============================================================================
+
+initialModeSchedule
+{
+    eventTimes
+    {
+    }
+
+    ; 默认：锁定底盘 + 升降锁定（BODY_LOCK）+ 双臂独立
+    ; 无定位 TF 时 WBC 也会强制 baseLocked；有 TF 后再 BASE_UNLOCK
+    ; Lift2S 仅启用 FREE / LOCKED / TRACKING；关闭 RELATIVE / CUSTOM / HEAD_COUPLED
+    modeSequence
+    {
+        [0]     HM_DUAL_IDLE
+    }
+}
+
+;=============================================================================
+; DDP Settings
+;=============================================================================
+
+ddp
+{
+    algorithm                       SLQ
+
+    nThreads                        5
+    threadPriority                  50
+
+    maxNumIterations                1
+    minRelCost                      0.1
+    constraintTolerance             1e-3
+
+    displayInfo                     false
+    displayShortSummary             false
+    checkNumericalStability         false
+    debugPrintRollout               false
+    debugCaching                    false
+
+    AbsTolODE                       1e-5
+    RelTolODE                       1e-3
+    maxNumStepsPerSecond            100000
+    timeStep                        1e-3
+    backwardPassIntegratorType      ODE45
+
+    constraintPenaltyInitialValue   20.0
+    constraintPenaltyIncreaseRate   2.0
+
+    preComputeRiccatiTerms          true
+
+    useFeedbackPolicy               false
+
+    strategy                        LINE_SEARCH
+    lineSearch
+    {
+        minStepLength                   1e-2
+        maxStepLength                   1.0
+        hessianCorrectionStrategy       DIAGONAL_SHIFT
+        hessianCorrectionMultiple       1e-3
+    }
+}
+
+;=============================================================================
+; MPC Settings
+;=============================================================================
+
+mpc
+{
+    timeHorizon                     1.0     ; [s]
+    solutionTimeWindow              0.2     ; [s]
+    coldStart                       false
+
+    debugPrint                      false
+
+    mpcDesiredFrequency             100     ; [Hz]
+    mrtDesiredFrequency             500     ; [Hz]
+}
+
+;=============================================================================
+; Rollout Settings
+;=============================================================================
+
+rollout
+{
+    AbsTolODE                       1e-5
+    RelTolODE                       1e-3
+    timeStep                        1e-2
+    integratorType                  ODE45
+    maxNumStepsPerSecond            100000
+    checkNumericalStability         false
+}
+
+;=============================================================================
+; Body Tracking End Effector（BODY_TRACKING）
+; 升降 1 DOF：主要跟踪 body 高度；水平/姿态由模型结构固定
+;=============================================================================
+
+bodyTrackingEE
+{
+    activate  true
+    muPosition 5.0
+    muOrientation 5.0
+}
+
+;=============================================================================
+; Input Cost
+; 总输入维度 = 2（底盘）+ 13（关节）= 15
+;=============================================================================
+
+inputCost
+{
+    R
+    {
+        base
+        {
+            wheelBasedMobileManipulator
+            {
+                scaling 1e-1
+
+                (0,0)   5.0     ; 线速度 vx [m/s]
+                (1,1)   5.0     ; 角速度 omega [rad/s]
+            }
+        }
+
+        arm
+        {
+            scaling 1e-3
+
+            (0,0)   10.0    ; lift_joint 速度惩罚（升降更保守）
+            (1,0)   1.0     ; left_joint1
+            (2,0)   1.0     ; left_joint2
+            (3,0)   1.0     ; left_joint3
+            (4,0)   1.0     ; left_joint4
+            (5,0)   0.5     ; left_joint5
+            (6,0)   0.5     ; left_joint6
+            (7,0)   1.0     ; right_joint1
+            (8,0)   1.0     ; right_joint2
+            (9,0)   1.0     ; right_joint3
+            (10,0)  1.0     ; right_joint4
+            (11,0)  0.5     ; right_joint5
+            (12,0)  0.5     ; right_joint6
+        }
+    }
+}
+
+;=============================================================================
+; End Effector Constraint
+;=============================================================================
+
+endEffector
+{
+    muPosition                      10.0
+    muOrientation                   5.0
+}
+
+finalEndEffector
+{
+    muPosition                      20.0
+    muOrientation                   10.0
+}
+
+;=============================================================================
+; Body Relative（BODY_RELATIVE / 「竖直」软约束）
+; 仅升降、无腰俯仰/前后伸展 → 关闭；离开 LOCK 请用 BODY_FREE（勿用 BODY_UNLOCK）
+;=============================================================================
+
+bodyRelative
+{
+    activate                        false
+}
+
+;=============================================================================
+; Bimanual Coupling Constraint
+;=============================================================================
+
+bimanualCoupling
+{
+    activate                        true
+    muPosition                      50.0
+    muOrientation                   25.0
+}
+
+;=============================================================================
+; Waist Lock（BODY_LOCK）— 锁 lift_joint 速度
+; 输入布局：[base(2) | lift(1) | left(6) | right(6)] → lift 索引 = 2
+;=============================================================================
+
+waistLock
+{
+    activate                        true
+    numJoints                       1       ; lift_joint
+}
+
+;=============================================================================
+; Head Coupling — 无头，关闭
+;=============================================================================
+
+headCoupling
+{
+    activate                        false
+}
+
+;=============================================================================
+; Custom Joint Lock — 单升降下与 BODY_LOCK 等价，关闭
+;=============================================================================
+
+customJointLock
+{
+    activate                        false
+}
+
+;=============================================================================
+; Arm Lock Constraint
+;=============================================================================
+
+armLock
+{
+    activate                        true
+    leftNumJoints                   6       ; left_joint1~6
+    rightNumJoints                  6       ; right_joint1~6
+}
+
+;=============================================================================
+; Joint Position Limits
+;=============================================================================
+
+jointPositionLimits
+{
+    activate                        true
+    mu                              1e-3
+    delta                           1e-3
+}
+
+;=============================================================================
+; Joint Velocity Limits
+; 输入布局：[base(2) | lift(1) | left_arm(6) | right_arm(6)]
+;=============================================================================
+
+jointVelocityLimits
+{
+    mu                              1e-2
+    delta                           1e-2
+
+    lowerBound
+    {
+        base
+        {
+            wheelBasedMobileManipulator
+            {
+                (0,0)  -0.3     ; 线速度下界 [m/s]
+                (1,0)  -0.3     ; 角速度下界 [rad/s]
+            }
+        }
+
+        arm
+        {
+            (0,0)  -0.15        ; lift_joint [m/s]
+            (1,0)  -1.57        ; left_joint1 [rad/s]
+            (2,0)  -1.57        ; left_joint2 [rad/s]
+            (3,0)  -1.57        ; left_joint3 [rad/s]
+            (4,0)  -1.57        ; left_joint4 [rad/s]
+            (5,0)  -1.57        ; left_joint5 [rad/s]
+            (6,0)  -1.57        ; left_joint6 [rad/s]
+            (7,0)  -1.57        ; right_joint1 [rad/s]
+            (8,0)  -1.57        ; right_joint2 [rad/s]
+            (9,0)  -1.57        ; right_joint3 [rad/s]
+            (10,0) -1.57        ; right_joint4 [rad/s]
+            (11,0) -1.57        ; right_joint5 [rad/s]
+            (12,0) -1.57        ; right_joint6 [rad/s]
+        }
+    }
+
+    upperBound
+    {
+        base
+        {
+            wheelBasedMobileManipulator
+            {
+                (0,0)   0.3     ; 线速度上界 [m/s]
+                (1,0)   0.3     ; 角速度上界 [rad/s]
+            }
+        }
+
+        arm
+        {
+            (0,0)  0.15         ; lift_joint [m/s]
+            (1,0)  1.57         ; left_joint1 [rad/s]
+            (2,0)  1.57         ; left_joint2 [rad/s]
+            (3,0)  1.57         ; left_joint3 [rad/s]
+            (4,0)  1.57         ; left_joint4 [rad/s]
+            (5,0)  1.57         ; left_joint5 [rad/s]
+            (6,0)  1.57         ; left_joint6 [rad/s]
+            (7,0)  1.57         ; right_joint1 [rad/s]
+            (8,0)  1.57         ; right_joint2 [rad/s]
+            (9,0)  1.57         ; right_joint3 [rad/s]
+            (10,0) 1.57         ; right_joint4 [rad/s]
+            (11,0) 1.57         ; right_joint5 [rad/s]
+            (12,0) 1.57         ; right_joint6 [rad/s]
+        }
+    }
+}
+
+;=============================================================================
+; Self Collision
+;=============================================================================
+
+selfCollision
+{
+    activate                        true
+
+    mu                              1e-3
+    delta                           1e-2
+    minimumDistance                 0.02
+
+    collisionObjectPairs
+    {
+    }
+
+    ; 臂 ↔ 升降立柱（避开底盘甲板 / 侧裙）
+    collisionLinkPairs
+    {
+        [0] "left_link8, lift_mast_link",
+        [1] "right_link7, lift_mast_link",
+        [2] "left_link3, lift_mast_link",
+        [3] "right_link3, lift_mast_link",
+    }
+}
