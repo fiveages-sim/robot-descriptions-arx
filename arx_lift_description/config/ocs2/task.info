@@ -1,347 +1,417 @@
-; robot model meta-information
-model_information {
-  manipulatorModelType     1      // 0: Default-arm, 1: Wheel-based manipulator, 2: Floating-arm manipulator, 3: Fully actuated floating-arm manipulator
-  
-  ; motion joints in the URDF to consider fixed
-  removeJoints {
-    [0]  "head_joint1"
-    [1]  "head_joint2"
-    [2]  "left_gripper_joint"
-    [3]  "right_gripper_joint"
-  }
+; OCS2 Wheel Humanoid Configuration - ARX Lift
+; ============================================
+; full_body → ocs2_wbc_controller (info_file_name:=task).
+;
+; Body 仅 1 个棱柱升降 DOF（无 pitch / yaw）；头进 WBC（同 W2 布局）：
+;   State (3 + 15): [base x,y,yaw | lift | left×6 | right×6 | head×2]
+;   Input (2 + 15): [vx, omega | lift_vel | left×6 | right×6 | head×2]
+; 躯干模式仅启用：FREE / LOCKED / TRACKING
+; split_body 臂 MPC 用同包 task_arm.info + topology:=dual（见 common.yaml）。
 
-  ; base frame of the robot (from URDF)
-  baseFrame                       "base_link"
-  ; end-effector frame of the robot (from URDF)
-  eeFrame                         "left_gripper_center"
-  eeFrame1                        "right_gripper_center"
+;=============================================================================
+; Model Information
+;=============================================================================
+
+model_information
+{
+    ; 1 = WheelBasedMobileManipulator（虚拟 SE(2) 底盘）
+    manipulatorModelType    1
+
+    ; Pinocchio 根坐标系（Lift URDF root）
+    baseFrame               "base_link"
+
+    ; 双臂末端
+    eeFrame                 "left_gripper_center"
+    eeFrame1                "right_gripper_center"
+
+    ; 躯干 frame：升降平台
+    bodyFrame               "lift_link"
+
+    ; 夹爪 + mimic（头保留在模型中）
+    removeJoints
+    {
+        [0]   "left_gripper_joint"
+        [1]   "right_gripper_joint"
+        [2]   "left_joint8"
+        [3]   "right_joint8"
+    }
 }
+
+;=============================================================================
+; Model Settings
+;=============================================================================
 
 model_settings
 {
-  usePreComputation               true
-  recompileLibraries              true
+    usePreComputation       true
+    recompileLibraries      true
 }
 
-; DDP settings
-ddp
-{
-  algorithm                       SLQ
+;=============================================================================
+; Initial State
+; 总维度 = 3（底盘）+ 15（1 升降 + 6 左臂 + 6 右臂 + 2 头）= 18
+;=============================================================================
 
-  nThreads                        3
-  threadPriority                  50
-
-  maxNumIterations                1
-  minRelCost                      0.1
-  constraintTolerance             1e-3
-
-  displayInfo                     false
-  displayShortSummary             false
-  checkNumericalStability         false
-  debugPrintRollout               false
-  debugCaching                    false
-
-  AbsTolODE                       1e-5
-  RelTolODE                       1e-3
-  maxNumStepsPerSecond            100000
-  timeStep                        1e-3
-  backwardPassIntegratorType      ODE45
-
-  constraintPenaltyInitialValue   20.0
-  constraintPenaltyIncreaseRate   2.0
-
-  preComputeRiccatiTerms          true
-
-  useFeedbackPolicy               false
-
-  strategy                        LINE_SEARCH
-  lineSearch
-  {
-    minStepLength                 1e-2
-    maxStepLength                 1.0
-    hessianCorrectionStrategy     DIAGONAL_SHIFT
-    hessianCorrectionMultiple     1e-3
-  }
-}
-
-; Rollout settings
-rollout
-{
-  AbsTolODE                       1e-5
-  RelTolODE                       1e-3
-  timeStep                        1e-2
-  integratorType                  ODE45
-  maxNumStepsPerSecond            100000
-  checkNumericalStability         false
-}
-
-; MPC settings
-mpc
-{
-  timeHorizon                     1.0   ; [s]
-  solutionTimeWindow              0.2   ; [s]
-  coldStart                       false
-  
-  debugPrint                      false
-
-  mpcDesiredFrequency             100   ; [Hz]
-  mrtDesiredFrequency             400   ; [Hz]
-}
-
-; initial state
 initialState
 {
-  ; initial state for the different types of arm base DOFs
-  base
-  {
-    wheelBasedMobileManipulator
+    base
     {
-      (0,0)  -1.0  ; position x
-      (1,0)  0.0  ; position y
-      (2,0)  0.0  ; heading
+        wheelBasedMobileManipulator
+        {
+            (0,0)  0.0   ; x [m]
+            (1,0)  0.0   ; y [m]
+            (2,0)  0.0   ; yaw [rad]
+        }
     }
-  }
 
-  ; initial state for the arm DOFs
-  arm
-  {
-    (0,0)   0.3     ; lifting_joint
-
-    (1,0)   0.0      ; left_joint1
-    (2,0)   0.594    ; left_joint2
-    (3,0)   0.306    ; left_joint3
-    (4,0)   0.331    ; left_joint4
-    (5,0)   0.0      ; left_joint5
-    (6,0)   0.0      ; left_joint6
-
-    (7,0)   0.0      ; right_joint1
-    (8,0)   0.594    ; right_joint2
-    (9,0)   0.306    ; right_joint3
-    (10,0)   0.331   ; right_joint4
-    (11,0)   0.0     ; right_joint5
-    (12,0)   0.0     ; right_joint6
-  }
+    arm
+    {
+        (0,0)   0.0     ; lift_joint [m]
+        (1,0)   0.0     ; left_joint1
+        (2,0)   0.0     ; left_joint2
+        (3,0)   0.0     ; left_joint3
+        (4,0)   0.0     ; left_joint4
+        (5,0)   0.0     ; left_joint5
+        (6,0)   0.0     ; left_joint6
+        (7,0)   0.0     ; right_joint1
+        (8,0)   0.0     ; right_joint2
+        (9,0)   0.0     ; right_joint3
+        (10,0)  0.0     ; right_joint4
+        (11,0)  0.0     ; right_joint5
+        (12,0)  0.0     ; right_joint6
+        (13,0)  0.0     ; head_joint1
+        (14,0)  0.0     ; head_joint2
+    }
 }
+
+;=============================================================================
+; Initial Mode Schedule
+;=============================================================================
+
+initialModeSchedule
+{
+    eventTimes
+    {
+    }
+
+    ; 默认：锁定底盘 + 升降锁定（BODY_LOCK）+ 双臂独立
+    ; 无定位 TF 时 WBC 也会强制 baseLocked；有 TF 后再 BASE_UNLOCK
+    modeSequence
+    {
+        [0]     HM_DUAL_IDLE
+    }
+}
+
+;=============================================================================
+; DDP Settings
+;=============================================================================
+
+ddp
+{
+    algorithm                       SLQ
+
+    nThreads                        5
+    threadPriority                  50
+
+    maxNumIterations                1
+    minRelCost                      0.1
+    constraintTolerance             1e-3
+
+    displayInfo                     false
+    displayShortSummary             false
+    checkNumericalStability         false
+    debugPrintRollout               false
+    debugCaching                    false
+
+    AbsTolODE                       1e-5
+    RelTolODE                       1e-3
+    maxNumStepsPerSecond            100000
+    timeStep                        1e-3
+    backwardPassIntegratorType      ODE45
+
+    constraintPenaltyInitialValue   20.0
+    constraintPenaltyIncreaseRate   2.0
+
+    preComputeRiccatiTerms          true
+
+    useFeedbackPolicy               false
+
+    strategy                        LINE_SEARCH
+    lineSearch
+    {
+        minStepLength                   1e-2
+        maxStepLength                   1.0
+        hessianCorrectionStrategy       DIAGONAL_SHIFT
+        hessianCorrectionMultiple       1e-3
+    }
+}
+
+;=============================================================================
+; MPC Settings
+;=============================================================================
+
+mpc
+{
+    timeHorizon                     1.0     ; [s]
+    solutionTimeWindow              0.2     ; [s]
+    coldStart                       false
+
+    debugPrint                      false
+
+    mpcDesiredFrequency             100     ; [Hz]
+    mrtDesiredFrequency             500     ; [Hz]
+}
+
+;=============================================================================
+; Rollout Settings
+;=============================================================================
+
+rollout
+{
+    AbsTolODE                       1e-5
+    RelTolODE                       1e-3
+    timeStep                        1e-2
+    integratorType                  ODE45
+    maxNumStepsPerSecond            100000
+    checkNumericalStability         false
+}
+
+;=============================================================================
+; Body Tracking End Effector（BODY_TRACKING）
+;=============================================================================
+
+bodyTrackingEE
+{
+    activate  true
+    muPosition 5.0
+    muOrientation 5.0
+}
+
+;=============================================================================
+; Input Cost
+; 总输入维度 = 2（底盘）+ 15（关节）= 17
+;=============================================================================
 
 inputCost
 {
-  ; control weight matrix
-  R
-  {
-    ; input costs for the different types of arm base DOFs
-    base
+    R
     {
-      defaultManipulator
-      {
-      }
+        base
+        {
+            wheelBasedMobileManipulator
+            {
+                scaling 1e-1
 
-      floatingArmManipulator
-      {
-      }
+                (0,0)   5.0     ; 线速度 vx [m/s]
+                (1,1)   5.0     ; 角速度 omega [rad/s]
+            }
+        }
 
-      fullyActuatedFloatingArmManipulator
-      {
-        scaling 1e-2
-        (0,0)  5.0  ; position x
-        (1,1)  5.0  ; position y
-        (2,2)  5.0  ; position z
-        (3,3)  5.0  ; euler angle z
-        (4,4)  5.0  ; euler angle y
-        (5,5)  5.0  ; euler angle x
-      }
+        arm
+        {
+            scaling 1e-3
 
-      wheelBasedMobileManipulator
-      {
-        scaling 1e-2
-        (0,0)  1.5  ; forward velocity
-        (1,1)  1.5  ; turning velocity
-      }
+            (0,0)   10.0    ; lift_joint 速度惩罚（升降更保守）
+            (1,0)   1.0     ; left_joint1
+            (2,0)   1.0     ; left_joint2
+            (3,0)   1.0     ; left_joint3
+            (4,0)   1.0     ; left_joint4
+            (5,0)   0.5     ; left_joint5
+            (6,0)   0.5     ; left_joint6
+            (7,0)   1.0     ; right_joint1
+            (8,0)   1.0     ; right_joint2
+            (9,0)   1.0     ; right_joint3
+            (10,0)  1.0     ; right_joint4
+            (11,0)  0.5     ; right_joint5
+            (12,0)  0.5     ; right_joint6
+            (13,0)  1.0     ; head_joint1
+            (14,0)  1.0     ; head_joint2
+        }
     }
-    
-    ; input costs for the arm DOFs
-    arm
-    {
-      scaling 1e-2
-        (0,0)   0.001      ; joint_lift
-        (1,0)   1.0      ; left_joint1
-        (2,0)   1.0      ; left_joint2
-        (3,0)   1.0      ; left_joint3
-        (4,0)   1.0      ; left_joint4
-        (5,0)   1.0      ; left_joint5
-        (6,0)   1.0      ; left_joint6
-        (7,0)   1.0      ; right_joint1
-        (8,0)   1.0      ; right_joint2
-        (9,0)   1.0      ; right_joint3
-        (10,0)   1.0     ; right_joint4
-        (11,0)   1.0     ; right_joint5
-        (12,0)   1.0     ; right_joint6
-    }
-  }
 }
+
+;=============================================================================
+; End Effector Constraint
+;=============================================================================
 
 endEffector
 {
-  ; end effector quadratic penalty scaling
-  dualArmMode      true
-  leftArm
-    {
-      muPosition      10.0
-      muOrientation    5.0
-    }
-
-    ; 右臂特定配置
-  rightArm
-    {
-      muPosition      10.0
-      muOrientation    5.0
-    }
+    muPosition                      10.0
+    muOrientation                   5.0
 }
 
 finalEndEffector
 {
-  dualArmMode      true
-  leftArm
-    {
-      muPosition      10.0
-      muOrientation    5.0
-    }
-
-    ; 右臂特定配置
-  rightArm
-    {
-      muPosition      10.0
-      muOrientation    5.0
-    }
+    muPosition                      20.0
+    muOrientation                   10.0
 }
 
-selfCollision
-{ 
-  ; activate self-collision constraint
-  activate  false
+;=============================================================================
+; Body Relative — 仅升降、无腰俯仰 → 关闭
+;=============================================================================
 
-  ; TODO: Replace the collision meshes of the arm with primitive shapes.
+bodyRelative
+{
+    activate                        false
 }
 
-; Only applied for arm joints: limits parsed from URDF
+;=============================================================================
+; Bimanual Coupling Constraint
+;=============================================================================
+
+bimanualCoupling
+{
+    activate                        true
+    muPosition                      50.0
+    muOrientation                   25.0
+}
+
+;=============================================================================
+; Waist Lock（BODY_LOCK）— 锁 lift_joint 速度
+; 输入布局：[base(2) | lift(1) | left(6) | right(6) | head(2)] → lift 索引 = 2
+;=============================================================================
+
+waistLock
+{
+    activate                        true
+    numJoints                       1       ; lift_joint
+}
+
+;=============================================================================
+; Head Coupling — 暂不启用腰头耦合
+;=============================================================================
+
+headCoupling
+{
+    activate                        false
+}
+
+;=============================================================================
+; Custom Joint Lock — 关闭
+;=============================================================================
+
+customJointLock
+{
+    activate                        false
+}
+
+;=============================================================================
+; Arm Lock Constraint
+;=============================================================================
+
+armLock
+{
+    activate                        true
+    leftNumJoints                   6       ; left_joint1~6
+    rightNumJoints                  6       ; right_joint1~6
+}
+
+;=============================================================================
+; Joint Position Limits
+;=============================================================================
+
 jointPositionLimits
 {
-  ; activate constraint
-  activate  true
-
-  ; relaxed log barrier mu
-  mu      0.01
-
-  ; relaxed log barrier delta
-  delta   1e-3
+    activate                        true
+    mu                              1e-3
+    delta                           1e-3
 }
+
+;=============================================================================
+; Joint Velocity Limits
+; 输入布局：[base(2) | lift(1) | left(6) | right(6) | head(2)]
+;=============================================================================
 
 jointVelocityLimits
 {
-  ; relaxed log barrier mu
-  mu      0.01
+    mu                              1e-2
+    delta                           1e-2
 
-  ; relaxed log barrier delta
-  delta   1e-3
-
-  lowerBound
-  {
-    ; velocity limits for the different types of arm base DOFs
-    base
+    lowerBound
     {
-      defaultManipulator
-      {
-      }
+        base
+        {
+            wheelBasedMobileManipulator
+            {
+                (0,0)  -0.3     ; 线速度下界 [m/s]
+                (1,0)  -0.3     ; 角速度下界 [rad/s]
+            }
+        }
 
-      floatingArmManipulator
-      {
-      }
-
-      fullyActuatedFloatingArmManipulator
-      {
-        (0,0)  -0.1  ; linear velocity x
-        (1,0)  -0.1  ; linear velocity y
-        (2,0)  -0.1  ; linear velocity z
-        (3,0)  -0.3  ; euler angle velocity z
-        (4,0)  -0.3  ; euler angle velocity y
-        (5,0)  -0.3  ; euler angle velocity x
-      }
-
-      wheelBasedMobileManipulator
-      {
-        (0,0)  -2.0 ; forward velocity
-        (1,0)  -2.0 ; turning velocity
-      }
+        arm
+        {
+            (0,0)  -0.15        ; lift_joint [m/s]
+            (1,0)  -1.57        ; left_joint1 [rad/s]
+            (2,0)  -1.57        ; left_joint2 [rad/s]
+            (3,0)  -1.57        ; left_joint3 [rad/s]
+            (4,0)  -1.57        ; left_joint4 [rad/s]
+            (5,0)  -1.57        ; left_joint5 [rad/s]
+            (6,0)  -1.57        ; left_joint6 [rad/s]
+            (7,0)  -1.57        ; right_joint1 [rad/s]
+            (8,0)  -1.57        ; right_joint2 [rad/s]
+            (9,0)  -1.57        ; right_joint3 [rad/s]
+            (10,0) -1.57        ; right_joint4 [rad/s]
+            (11,0) -1.57        ; right_joint5 [rad/s]
+            (12,0) -1.57        ; right_joint6 [rad/s]
+            (13,0) -1.57        ; head_joint1 [rad/s]
+            (14,0) -1.57        ; head_joint2 [rad/s]
+        }
     }
 
-    ; velocity limits for the arm DOFs
-    arm
+    upperBound
     {
-        (0,0)  -0.1       ; joint_lift [m/s]
+        base
+        {
+            wheelBasedMobileManipulator
+            {
+                (0,0)   0.3     ; 线速度上界 [m/s]
+                (1,0)   0.3     ; 角速度上界 [rad/s]
+            }
+        }
 
-        (1,0)  -3.300	    ; left_joint1 [rad/s]
-        (2,0)  -3.599	    ; left_joint2 [rad/s]
-        (3,0)  -3.078	    ; left_joint3 [rad/s]
-        (4,0)  -3.599	    ; left_joint4 [rad/s]
-        (5,0)  -3.078	    ; left_joint5 [rad/s]
-        (6,0)  -3.599	    ; left_joint6 [rad/s]
-
-        (7,0)  -3.300	    ; right_joint1 [rad/s]
-        (8,0)  -3.599	    ; right_joint2 [rad/s]
-        (9,0)  -3.078	    ; right_joint3 [rad/s]
-        (10,0)  -3.599	    ; right_joint4 [rad/s]
-        (11,0)  -3.078	    ; right_joint5 [rad/s]
-        (12,0)  -3.599	    ; right_joint6 [rad/s]
+        arm
+        {
+            (0,0)  0.15         ; lift_joint [m/s]
+            (1,0)  1.57         ; left_joint1 [rad/s]
+            (2,0)  1.57         ; left_joint2 [rad/s]
+            (3,0)  1.57         ; left_joint3 [rad/s]
+            (4,0)  1.57         ; left_joint4 [rad/s]
+            (5,0)  1.57         ; left_joint5 [rad/s]
+            (6,0)  1.57         ; left_joint6 [rad/s]
+            (7,0)  1.57         ; right_joint1 [rad/s]
+            (8,0)  1.57         ; right_joint2 [rad/s]
+            (9,0)  1.57         ; right_joint3 [rad/s]
+            (10,0) 1.57         ; right_joint4 [rad/s]
+            (11,0) 1.57         ; right_joint5 [rad/s]
+            (12,0) 1.57         ; right_joint6 [rad/s]
+            (13,0) 1.57         ; head_joint1 [rad/s]
+            (14,0) 1.57         ; head_joint2 [rad/s]
+        }
     }
-  }
+}
 
-  upperBound
-  {
-    ; velocity limits for the different types of arm base DOFs
-    base
+;=============================================================================
+; Self Collision
+;=============================================================================
+
+selfCollision
+{
+    activate                        true
+
+    mu                              1e-3
+    delta                           1e-2
+    minimumDistance                 0.02
+
+    collisionObjectPairs
     {
-      defaultManipulator
-      {
-      }
-
-      floatingArmManipulator
-      {
-      }
-
-      fullyActuatedFloatingArmManipulator
-      {
-        (0,0)  0.1  ; linear velocity x
-        (1,0)  0.1  ; linear velocity y
-        (2,0)  0.1  ; linear velocity z
-        (3,0)  0.3  ; euler angle velocity z
-        (4,0)  0.3  ; euler angle velocity y
-        (5,0)  0.3  ; euler angle velocity x
-      }
-
-      wheelBasedMobileManipulator
-      {
-        (0,0)  2.0 ; forward velocity
-        (1,0)  2.0 ; turning velocity
-      }
     }
 
-    ; velocity limits for the arm DOFs
-    arm
+    ; 臂 ↔ 升降平台
+    collisionLinkPairs
     {
-        (0,0)  0.1       ; joint_lift [m/s]
-
-        (1,0)  3.300	    ; left_joint1 [rad/s]
-        (2,0)  3.599	    ; left_joint2 [rad/s]
-        (3,0)  3.078	    ; left_joint3 [rad/s]
-        (4,0)  3.599	    ; left_joint4 [rad/s]
-        (5,0)  3.078	    ; left_joint5 [rad/s]
-        (6,0)  3.599	    ; left_joint6 [rad/s]
-
-        (7,0)  3.300	    ; right_joint1 [rad/s]
-        (8,0)  3.599	    ; right_joint2 [rad/s]
-        (9,0)  3.078	    ; right_joint3 [rad/s]
-        (10,0)  3.599	    ; right_joint4 [rad/s]
-        (11,0)  3.078	    ; right_joint5 [rad/s]
-        (12,0)  3.599	    ; right_joint6 [rad/s]
+        [0] "left_link8, lift_link",
+        [1] "right_link7, lift_link",
+        [2] "left_link3, lift_link",
+        [3] "right_link3, lift_link",
     }
-  }
 }

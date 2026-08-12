@@ -20,23 +20,49 @@ colcon build --packages-up-to arx_acone_description --symlink-install
 
 ## 2. Visualize
 
-* AC One + X5 (default)
+* AC One + X5（默认 `variant:=acone`，带躯干）
   ```bash
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx_acone
+  # 等价显式写法：
+  # ros2 launch robot_common_launch manipulator.launch.py robot:=arx_acone variant:=acone
   ```
 
 * AC One + R5
   ```bash
-  source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch manipulator.launch.py robot:=arx_acone type:=r5
+  ```
+
+* 展台底座（无 AC One mesh，同 m6 `variant:=desktop`）
+  ```bash
+  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_acone variant:=desktop
+  ```
+
+* 自定义双臂间距（覆盖默认安装位姿，单位 m）
+  ```bash
+  # 例：与经典 Lift 臂座一致（左右 y=±0.25，前伸 0.208）
+  ros2 launch robot_common_launch manipulator.launch.py robot:=arx_acone \
+    variant:=desktop \
+    xacro_left_xyz:="0.208 0.25 0.092" \
+    xacro_right_xyz:="0.208 -0.25 0.092"
   ```
 
 * Torso only
   ```bash
-  source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch component.launch.py robot:=arx_acone type:=ac_one
   ```
+
+### 2.1 `variant` / 臂安装（对齐 m6_ccs）
+
+| 参数 | 说明 |
+|------|------|
+| `variant` | `acone`（默认）= 带 AC One 躯干；`desktop` = 展台底座（无 AC One） |
+| `left_xyz` / `right_xyz` | 臂相对 `arm_base` 的安装位姿；空则用 variant 默认 |
+| `left_rpy` / `right_rpy` | 可选，默认 `0 0 0` |
+| `arm_base_xyz` | 仅 `desktop`：`arm_base` 相对 `base_link`，默认 `0 0 0.35` |
+
+默认 AC One 安装：`±0.25 m` 半间距（`left_xyz:='-0.01602 0.25 -0.035'`）。  
+宏：`xacro/arm_mount.xacro` → `DualArmMount` / `DesktopArmBase`（可被 Lift2S 等直接调用）。
 
 ## 3. OCS2 Arm Controller Demo
 
@@ -50,8 +76,15 @@ colcon build --packages-up-to arx_acone_description --symlink-install
 
 * Isaac Sim
   ```bash
-  source ~/ros2_ws/install/setup.bash
   ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone hardware:=isaac
+  ```
+
+* Desktop + 自定义间距
+  ```bash
+  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_acone \
+    variant:=desktop \
+    xacro_left_xyz:="0.208 0.25 0.092" \
+    xacro_right_xyz:="0.208 -0.25 0.092"
   ```
 
 ### 3.2 Real — full_control only

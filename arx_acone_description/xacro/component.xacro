@@ -20,4 +20,12 @@
 		<xacro:X5 name="left" collider="$(arg collider)"/>
 		<xacro:X5 name="right" collider="$(arg collider)"/>
 	</xacro:if>
+
+	<xacro:if value="${'$(arg type)' == 'desktop'}">
+		<xacro:include filename="$(find arx_acone_description)/xacro/arm_mount.xacro"/>
+		<xacro:DesktopArmBase/>
+		<xacro:include filename="$(find arx5_description)/xacro/X5_ac1.xacro"/>
+		<xacro:X5 name="left" collider="$(arg collider)"/>
+		<xacro:X5 name="right" collider="$(arg collider)"/>
+	</xacro:if>
 </robot>
