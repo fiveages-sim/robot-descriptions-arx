@@ -88,7 +88,7 @@ ros2 topic pub --once /ocs2_wbc_controller/waist_lifting_command \
   std_msgs/msg/Float64 "data: 0.5"
 ros2 topic pub --once /ocs2_wbc_controller/waist_lifting_pose_relative \
   std_msgs/msg/Float64MultiArray "{data: [0.0, 0.05, 0.0]}"   # [dx, dz, dphi]；仅 dz 有效
-# OCS2 躯干模式（仅 FREE / LOCK / TRACKING；默认 HM_DUAL_IDLE = 锁腰+锁底盘）
+# OCS2 躯干模式（仅 FREE / LOCK / TRACKING；默认 HM_DUAL_BODY_FREE = 躯干自由）
 ros2 topic pub --once /ocs2_wbc_controller/mode_command std_msgs/msg/String "data: 'BODY_FREE'"
 ros2 topic pub --once /ocs2_wbc_controller/mode_command std_msgs/msg/String "data: 'BODY_LOCK'"
 ros2 topic pub --once /ocs2_wbc_controller/mode_command std_msgs/msg/String "data: 'BODY_TRACKING'"
@@ -107,9 +107,9 @@ Requires [`arx_ros2_control`](https://github.com/fiveages-sim/arx-ros2-control)�
 |------|-------------|------|
 | 臂 | 仅 `full_control`（MIT MIX） | URDF：`position/velocity/effort` |
 | 臂 MIT 增益 | HI `joint_k_gains` / `joint_d_gains` | 默认 `[20,20,20,20,10,10]` / `[0.8,0.8,0.8,0.8,0.5,0.5]`；可热调 |
-| 升降 | `hybrid`（默认）或 `soft_p`/`position` | hybrid：pos+vel + HI τ_ff；soft_p：仅 position |
+| 升降 | `hybrid`（默认，**OCS2 全身请用这个**）或 `soft_p` | hybrid：pos+vel+τ_ff 持高；soft_p 仅 position，全身易掉柱 |
 | 升降增益 | `arx_lift.hybrid_kp/kd` 或 `soft_p_kp` | 与臂无关；无 controller kp/kd IF |
-| 底盘 | HI `enable_chassis_cmd_vel`（默认 `false`） | 开则订阅 `/cmd_vel` → `setChassisCmd`；勿与 WBC 底盘规划同时开 |
+| 底盘 | HI `enable_chassis_cmd_vel`（默认 `true`） | hybrid：`/cmd_vel` → `setChassisCmd` + `sendChassisOnly`（不绑 Soft-P）；勿与 WBC 同时开 |
 | `lift_joint` 行程 | 规划 URDF `0.30` m；ros2_control / 真机 `0.48` m | 同 m6_ccs `joint4` + `eef_fixed_joints` |
 
 真机 MIT 增益只走 HI 参数（臂 `joint_k/d_gains`，升降 `arx_lift.*`）。

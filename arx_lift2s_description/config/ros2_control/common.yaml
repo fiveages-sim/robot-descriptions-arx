@@ -10,7 +10,7 @@
 #     - MOVEJ 升降：/ocs2_wbc_controller/waist_lifting*（同样 single_joint）
 #     - 真机升降 soft_p/hybrid（默认 hybrid）；双臂仅 full_control MIX
 #     - Isaac（hardware:=isaac）：URDF + isaac.yaml 仅 position IF（无 vel/effort）
-#     - 底盘 SE(2) 已开启；无 world→base TF 时 WBC 自动锁底盘
+#     - 底盘 SE(2) 已开启；默认躯干自由（HM_DUAL_BODY_FREE）；无 world→base TF 时 WBC 自动锁底盘
 #
 # Split planning MUST use arx_acone URDF/task (no lift in tree).
 # Pinocchio oMf is always in the model root; on acone root≡arm_base, so
@@ -107,9 +107,9 @@ ocs2_wbc_controller:
     info_file_name: task
     left_ee_frame: left_gripper_center
     right_ee_frame: right_gripper_center
-    # 退出 OCS2 / activate：升降锁定（BODY_LOCK）+ 锁定底盘 + 双臂独立
-    # 无定位 TF 时 WBC 也会强制 baseLocked；有 TF 后再 BASE_UNLOCK
-    fsm_default_humanoid_mode: HM_DUAL_IDLE
+    # 退出 OCS2 / activate：躯干自由（BODY_FREE）+ 双臂独立（底盘可动）
+    # 无定位 TF 时 WBC 仍会强制 baseLocked；有 TF 后再 BASE_UNLOCK
+    fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
 
     # 关节顺序与 task.info 的 arm 段一致：[lift_joint | left 1–6 | right 1–6]
     # （虚拟底盘 DOF 不在 joints 列表中）
