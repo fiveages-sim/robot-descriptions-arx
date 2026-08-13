@@ -28,19 +28,26 @@
 				</collision>
 			</xacro:if>
 			<xacro:if value="${collider == 'simple'}">
+				<!-- ACone 底座横梁：不参与 OCS2 自碰对 -->
 				<collision name="simple_base1">
 					<origin xyz="0.002 0 -0.05" rpy="0 0 0"/>
 					<geometry>
 						<box size="0.14 0.6  0.1"/>
 					</geometry>
 				</collision>
-				<collision name="simple_base2">
+			</xacro:if>
+		</link>
+
+		<!-- 短相机立柱：独立 link，供 OCS2 只配臂↔立柱，避开底座 simple_base1 -->
+		<link name="camera_pillar_link">
+			<xacro:if value="${collider == 'simple'}">
+				<collision name="simple_camera_pillar">
 					<origin xyz="0.03 0 0.15" rpy="0 0 0"/>
 					<geometry>
 						<box size="0.04 0.06  0.3"/>
 					</geometry>
 				</collision>
-				<collision name="simple_base3">
+				<collision name="simple_camera_pillar_top">
 					<origin xyz="0.08 0 0.25" rpy="0 ${-PI/6} 0"/>
 					<geometry>
 						<box size="0.04 0.06  0.1"/>
@@ -48,6 +55,11 @@
 				</collision>
 			</xacro:if>
 		</link>
+		<joint name="camera_pillar_joint" type="fixed">
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<parent link="body_link"/>
+			<child link="camera_pillar_link"/>
+		</joint>
 
 		<link name="head_camera">
 			<visual>

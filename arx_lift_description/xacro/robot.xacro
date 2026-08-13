@@ -2,10 +2,11 @@
 <robot name="arx_lift" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- topology:
-       full (default) = 底盘 + 升降 + 双臂 + 头（全身 / 真机 / 可视化）
-       dual           = 仅双臂，根在 arm_base（分体 OCS2 规划，同 m6_ccs）
+       dual (default) = 仅双臂，根在 arm_base（分体 OCS2 规划 URDF 默认）
+       full           = 底盘 + 升降 + 双臂 + 头（真机 / 可视化 / 全身规划须显式传入）
+       硬件与 ros2_control 在 xacro/ros2_control/robot.xacro 里强制 topology:=full。
        全身 Pinocchio / WBC 关节序须为：lift | left×6 | right×6 | head×2 -->
-  <xacro:arg name="topology" default="full"/>
+  <xacro:arg name="topology" default="dual"/>
   <xacro:arg name="type" default="x5"/>
   <xacro:arg name="enable_wheel_joints" default="false"/>
 

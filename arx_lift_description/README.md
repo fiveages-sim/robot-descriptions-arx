@@ -8,7 +8,13 @@
 | Split body | `split_body.launch.py` | `task_arm.info` + `topology:=dual`（根 `arm_base`，同 m6_ccs） | `body_joint_controller` + `head_joint_controller` |
 | 旧 demo | `demo.launch.py` | 见 `fixed_base.info`（遗留） | 不推荐，请用分体/全身 |
 
-分体规划与 m6_ccs 相同思路：`robot.xacro` 在 `topology:=dual` 时只生成双臂树；`task_arm.info` 留在本包 `config/ocs2/`。
+分体规划：`xacro/robot.xacro` **默认 `topology:=dual`**（根 `arm_base`），避免 marker 叠升降高度。
+硬件 / `robot_state_publisher` 走 `ros2_control/robot.xacro`（强制 `full`）。
+全身控制请传 `xacro_topology:=full`（`quick_start` 已自动加）。仅可视化：
+
+```bash
+ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift xacro_topology:=full
+```
 
 全身 WBC 状态：`[base x,y,yaw | lift_joint | left×6 | right×6 | head×2]`（头进 MPC，同 W2 布局）。
 

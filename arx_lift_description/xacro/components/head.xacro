@@ -77,7 +77,8 @@
             <origin xyz="0.258786 0 0.220008"/>
         </joint>
 
-        <joint name="head_joint1" type="continuous">
+        <!-- revolute: continuous → Pinocchio nq=2, breaks OCS2 armDim vs joints (15). -->
+        <joint name="head_joint1" type="revolute">
             <origin xyz="0.0 0.0 0.046"/>
             <parent link="h_base_link"/>
             <child link="head_link1"/>
@@ -85,7 +86,7 @@
             <limit effort="100" lower="${-PI/2}" upper="${PI/2}" velocity="100"/>
         </joint>
 
-        <joint name="head_joint2" type="continuous">
+        <joint name="head_joint2" type="revolute">
             <origin xyz="0.0 -0.025 0.049"/>
             <parent link="head_link1"/>
             <child link="head_link2"/>
