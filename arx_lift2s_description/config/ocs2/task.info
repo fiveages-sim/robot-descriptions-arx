@@ -405,12 +405,11 @@ selfCollision
     {
     }
 
-    ; 臂 ↔ 升降立柱（避开底盘甲板 / 侧裙）
     collisionLinkPairs
     {
-        [0] "left_link8, lift_mast_link",
-        [1] "right_link7, lift_mast_link",
-        [2] "left_link3, lift_mast_link",
-        [3] "right_link3, lift_mast_link",
+        [0] "left_link3, lift_mast_link",
+        [1] "right_link3, lift_mast_link",
+        [2] "left_link5, camera_pillar_link",
+        [3] "right_link5, camera_pillar_link",
     }
 }

@@ -9,7 +9,8 @@
 #   full_body:
 #     - 升降+双臂+头：ocs2_wbc_controller（task.info，[lift|L6|R6|head×2]）
 #
-# 分体规划 URDF：同一包 robot.xacro + topology:=dual（同 m6_ccs 仅双臂），
+# 分体规划 URDF：xacro/robot.xacro 默认 topology:=dual（根 arm_base）。
+# 硬件 / 全身：ros2_control/robot.xacro 强制 full；全身 launch 需 xacro_topology:=full。
 # 勿再另建 lift_arms 包。
 
 controller_manager:
