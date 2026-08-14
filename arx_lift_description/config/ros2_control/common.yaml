@@ -8,6 +8,8 @@
 #     - 头：head_joint_controller（joints: [head_joint1, head_joint2]）
 #   full_body:
 #     - 升降+双臂+头：ocs2_wbc_controller（task.info，[lift|L6|R6|head×2]）
+#     - 默认 HM_DUAL_BODY_FREE（升降进 OCS2）；IDLE 会锁躯干，看起来像只有双臂
+#     - mock/gz：头关节须有 position/velocity/effort command IF（与 WBC MIX 一致）
 #
 # 分体规划 URDF：xacro/robot.xacro 默认 topology:=dual（根 arm_base）。
 # 硬件 / 全身：ros2_control/robot.xacro 强制 full；全身 launch 需 xacro_topology:=full。
@@ -97,7 +99,7 @@ ocs2_wbc_controller:
     info_file_name: task
     left_ee_frame: left_gripper_center
     right_ee_frame: right_gripper_center
-    fsm_default_humanoid_mode: HM_DUAL_IDLE
+    fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
 
     # [lift | left 1–6 | right 1–6 | head 1–2]（与 Pinocchio / task.info 一致）
     joints:

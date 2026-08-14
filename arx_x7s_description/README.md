@@ -25,23 +25,25 @@ ros2 launch robot_common_launch manipulator.launch.py robot:=arx_x7s
   source ~/ros2_ws/install/setup.bash
   ros2 launch robot_common_launch component.launch.py robot:=arx_x7s
   ```
-  
+
 ## 3. OCS2 Demo
 ### 3.1 Official OCS2 Mobile Manipulator Demo
 ```bash
 source ~/ros2_ws/install/setup.bash
-ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=arx_x7s 
+ros2 launch robot_common_launch manipulator_ocs2.launch.py robot_name:=arx_x7s
 ```
 
-### 3.2 OCS2 Arm Controller Demo
+### 3.2 OCS2 Full Body（推荐，与 quick_start「全身」一致）
+
+规划：`config/ocs2/task.info`（WheelHumanoid，`manipulatorModelType=1`）。
 
 * Mock Components
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_x7s
+  ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_x7s
   ```
 * Isaac Sim
   ```bash
   source ~/ros2_ws/install/setup.bash
-  ros2 launch ocs2_arm_controller demo.launch.py robot:=arx_x7s hardware:=isaac
+  ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_x7s hardware:=isaac
   ```

@@ -94,11 +94,11 @@ initialModeSchedule
     {
     }
 
-    ; 默认：锁定底盘 + 升降锁定（BODY_LOCK）+ 双臂独立
-    ; 无定位 TF 时 WBC 也会强制 baseLocked；有 TF 后再 BASE_UNLOCK
+    ; 默认：躯干自由（BODY_FREE）+ 双臂独立（底盘无 TF 时仍锁）
+    ; 无定位 TF 时 WBC 仍会强制 baseLocked；有 TF 后再 BASE_UNLOCK
     modeSequence
     {
-        [0]     HM_DUAL_IDLE
+        [0]     HM_DUAL_BODY_FREE
     }
 }
 

@@ -3,7 +3,7 @@
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="gazebo" default="false"/>
 	<!-- Arms: full_control only (MIT MIX). -->
-	<!-- Lift: soft_p|position | hybrid. hybrid 直跟 pos+vel，HI 重力+摩擦（忽略 effort） -->
+	<!-- Lift: soft_p|position | hybrid. 两种模式升降/底盘分开发；hybrid 跟 pos+vel，soft_p 只跟 position -->
 	<xacro:arg name="lift_motor_mode" default="hybrid"/>
 	<!-- Lift HI：可选订阅 /cmd_vel → setChassisCmd（默认开；若与 WBC 底盘规划抢指令可显式关） -->
 	<xacro:arg name="enable_chassis_cmd_vel" default="true"/>
@@ -55,7 +55,7 @@
 				<plugin>arx_ros2_control/ArxLiftHardware</plugin>
 				<param name="can_name">can5</param>
 				<param name="robot_type">2</param>
-				<!-- soft_p|position: 仅跟踪 position；hybrid: 直跟 pos+vel + HI 重力/摩擦（忽略 effort） -->
+				<!-- soft_p|position: 仅跟踪 position + 常值重力；hybrid: 直跟 pos+vel + 重力/摩擦（忽略 effort） -->
 				<param name="lift_motor_mode">$(arg lift_motor_mode)</param>
 				<!-- Soft-P (setHeight/loop); live: arx_lift.soft_p_kp -->
 				<param name="soft_p_kp">50.0</param>
@@ -68,7 +68,7 @@
 				<param name="coulomb_friction_torque">0.32</param>
 				<param name="friction_vel_eps_mps">0.01</param>
 				<param name="lift_max_torque">15.0</param>
-				<!-- cmd_ramp_vel: soft_p 跟踪与关机插值；hybrid 跟踪不用 -->
+				<!-- cmd_ramp_vel: 仅关机回零插值；Soft-P/hybrid 跟踪都不用 -->
 				<param name="cmd_ramp_vel">0.12</param>
 				<param name="max_height_m">0.48</param>
 				<param name="height_span_m">0.48</param>

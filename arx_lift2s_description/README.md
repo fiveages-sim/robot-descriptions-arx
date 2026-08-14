@@ -107,9 +107,9 @@ Requires [`arx_ros2_control`](https://github.com/fiveages-sim/arx-ros2-control)�
 |------|-------------|------|
 | 臂 | 仅 `full_control`（MIT MIX） | URDF：`position/velocity/effort` |
 | 臂 MIT 增益 | HI `joint_k_gains` / `joint_d_gains` | 默认 `[20,20,20,20,10,10]` / `[0.8,0.8,0.8,0.8,0.5,0.5]`；可热调 |
-| 升降 | `hybrid`（默认，**OCS2 全身请用这个**）或 `soft_p` | hybrid：pos+vel+τ_ff 持高；soft_p 仅 position，全身易掉柱 |
+| 升降 | `hybrid`（默认）或 `soft_p` | hybrid：pos+vel+重力/摩擦；soft_p：直跟 position + 常值重力（无摩擦） |
 | 升降增益 | `arx_lift.hybrid_kp/kd` 或 `soft_p_kp` | 与臂无关；无 controller kp/kd IF |
-| 底盘 | HI `enable_chassis_cmd_vel`（默认 `true`） | hybrid：`/cmd_vel` → `setChassisCmd` + `sendChassisOnly`（不绑 Soft-P）；勿与 WBC 同时开 |
+| 底盘 | HI `enable_chassis_cmd_vel`（默认 `true`） | 两种模式：`/cmd_vel` → `setChassisCmd` + `sendChassisOnly`；勿与 WBC 同时开 |
 | `lift_joint` 行程 | 规划 URDF `0.30` m；ros2_control / 真机 `0.48` m | 同 m6_ccs `joint4` + `eef_fixed_joints` |
 
 真机 MIT 增益只走 HI 参数（臂 `joint_k/d_gains`，升降 `arx_lift.*`）。
