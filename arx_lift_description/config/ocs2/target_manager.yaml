@@ -1,0 +1,10 @@
+/**:
+  ros__parameters:
+    linear_scale: 0.3
+    angular_scale: 0.5
+    enable_vr: true
+    enable_head_control: false
+
+    # 全身 Fixed Frame；分体 marker 用 acone task baseFrame=arm_base（规划树无 lift）
+    marker_fixed_frame: base_link
+    vr_follow_frame: base_link

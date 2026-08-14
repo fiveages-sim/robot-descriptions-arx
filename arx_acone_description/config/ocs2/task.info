@@ -211,36 +211,25 @@ finalEndEffector
 
 selfCollision
 {
-  ; activate self-collision constraint
-  activate  false
+  activate  true
 
-  ; Self Collision pairs
   collisionLinkPairs
   {
-     [0] "left_link8, body_link",
-     [1] "right_link7, body_link",
-     [2] "left_link3, body_link",
-     [3] "right_link3, body_link",
+     [0] "left_link5, camera_pillar_link",
+     [1] "right_link5, camera_pillar_link",
   }
 
-    activationDistance 0.5
-
-  ; minimum distance allowed between the pairs
-    minimumDistance  0.02
-
-    ; relaxed log barrier mu
-    mu      1e-3
-
-    ; relaxed log barrier delta
-    delta   1e-2
-  ; TODO: Replace the collision meshes of the arm with primitive shapes.
+  activationDistance 0.1
+  minimumDistance  0.02
+  mu      1e-3
+  delta   1e-2
 }
 
 ; Only applied for arm joints: limits parsed from URDF
 jointPositionLimits
 {
   ; activate constraint
-  activate  false
+  activate  true
 
   ; relaxed log barrier mu
   mu      1e-3

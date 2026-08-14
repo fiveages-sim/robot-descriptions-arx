@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift2s_base">
 	<xacro:arg name="robot_name" default="arx_lift2s_base"/>
+	<!-- Injected true by robot_common_launch for OCS2 planning URDF; viz / ros2_control keep false -->
+	<xacro:arg name="eef_fixed_joints" default="false"/>
 
 	<xacro:macro name="chassis" params="enable_wheel_joints:='false' collider:='simple'">
 
@@ -103,14 +105,18 @@
 			</xacro:if>
 		</link>
 
+		<!-- Same pattern as m6_ccs joint4 + eef_fixed_joints:
+		     planning URDF → 0.30 m (hybrid MIT pack ±12.5 rad / 41.54);
+		     viz / ros2_control → 0.48 m (HI height_span_m / soft_p setHeight). -->
+		<xacro:property name="lift_joint_upper"
+										value="${0.30 if '$(arg eef_fixed_joints)' == 'true' else 0.48}"/>
+
 		<joint name="lift_joint" type="prismatic">
 			<origin xyz="0.040103 0.0007607 0.221608"/>
 			<parent link="base_link"/>
 			<child link="lift_link"/>
 			<axis xyz="0 0 1"/>
-			<!-- Planning / joint-limit upper aligns with hybrid MIT pack (±12.5 rad / 41.54 ≈ 0.30 m).
-			     soft_p setHeight can still use HI height_span_m≈0.48; OCS2/URDF clamps stay at 0.30. -->
-			<limit lower="0" upper="0.30" effort="400" velocity="0.15"/>
+			<limit lower="0" upper="${lift_joint_upper}" effort="400" velocity="0.15"/>
 		</joint>
 
 		<xacro:property name="wheel_joint_type" value="fixed"/>

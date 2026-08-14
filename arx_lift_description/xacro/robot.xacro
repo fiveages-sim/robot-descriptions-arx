@@ -1,38 +1,62 @@
 <?xml version="1.0" ?>
 <robot name="arx_lift" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <!-- Full robot only. Split-body OCS2 planning uses arx_acone_description
+       (robot_name override + Lift mount xyz), same pattern as Lift2S. -->
   <xacro:arg name="type" default="x5"/>
   <xacro:arg name="enable_wheel_joints" default="false"/>
 
-  <!-- 根据type参数包含不同的机械臂描述文件 -->
-  <xacro:if value="${'$(arg type)' == 'x5'}">
-    <xacro:include filename="$(find arx5_description)/xacro/X5.xacro"/>
-    <!-- 使用R5宏来创建两个机械臂 -->
-    <xacro:X5 name="left"/>
-    <xacro:X5 name="right"/>
-  </xacro:if>
-
-  <xacro:if value="${'$(arg type)' == 'r5'}">
-    <xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
-    <!-- 使用R5宏来创建两个机械臂 -->
-    <xacro:R5 name="left"/>
-    <xacro:R5 name="right"/>
+  <xacro:property name="type_arg" value="$(arg type)"/>
+  <xacro:property name="selected_arm_type" value="x5"/>
+  <xacro:if value="${type_arg == 'r5'}">
+    <xacro:property name="selected_arm_type" value="r5"/>
   </xacro:if>
 
   <xacro:include filename="$(find arx_lift_description)/xacro/components/mobile_base.xacro"/>
   <xacro:include filename="$(find arx_lift_description)/xacro/components/body.xacro"/>
+  <xacro:include filename="$(find arx_lift_description)/xacro/components/head.xacro"/>
 
   <xacro:MobileBase enable_wheel_joints="$(arg enable_wheel_joints)"/>
   <xacro:Body/>
 
-  <joint name="arm_left_fixed" type="fixed">
+  <!-- 臂座：与 lift_link 固连 -->
+  <link name="body_link"/>
+  <joint name="body_fixed" type="fixed">
     <parent link="lift_link"/>
+    <child link="body_link"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+  <link name="arm_base"/>
+  <joint name="arm_base_joint" type="fixed">
+    <parent link="lift_link"/>
+    <child link="arm_base"/>
+    <origin xyz="0 0 0"/>
+  </joint>
+
+  <xacro:if value="${selected_arm_type == 'x5'}">
+    <xacro:include filename="$(find arx5_description)/xacro/X5.xacro"/>
+    <xacro:X5 name="left"/>
+    <xacro:X5 name="right"/>
+  </xacro:if>
+  <xacro:if value="${selected_arm_type == 'r5'}">
+    <xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
+    <xacro:R5 name="left"/>
+    <xacro:R5 name="right"/>
+  </xacro:if>
+
+  <!-- Classic Lift mount (≠ acone default); split planning must pass same xyz to acone. -->
+  <joint name="arm_left_fixed" type="fixed">
+    <parent link="arm_base"/>
     <child link="left_base_link"/>
-    <origin  xyz="0.208 0.25000 0.092"/>
+    <origin xyz="0.208 0.25000 0.092"/>
   </joint>
   <joint name="arm_right_fixed" type="fixed">
-    <parent link="lift_link"/>
+    <parent link="arm_base"/>
     <child link="right_base_link"/>
     <origin xyz="0.208 -0.25000 0.092"/>
   </joint>
+
+  <!-- 头放在双臂之后，Pinocchio 序 = lift | L6 | R6 | head×2 -->
+  <xacro:Head/>
+
 </robot>

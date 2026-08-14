@@ -1,0 +1,32 @@
+# Isaac (TopicBasedSystem): claim position-only — vel/effort 在 Isaac 中不可靠。
+# Merged when launch hardware:=isaac (see load_robot_config hardware overlay).
+# CtrlInterfaces 会自动切到 POSITION（非 MIX）。
+
+ocs2_arm_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+
+ocs2_wbc_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+
+body_joint_controller:
+  ros__parameters:
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+
+left_gripper_controller:
+  ros__parameters:
+    use_effort_interface: false
+
+right_gripper_controller:
+  ros__parameters:
+    use_effort_interface: false

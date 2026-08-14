@@ -15,7 +15,6 @@ controller_manager:
     ocs2_arm_controller:
       type: ocs2_arm_controller/Ocs2ArmController
 
-
 arm_controller:
   ros__parameters:
     command_interfaces:

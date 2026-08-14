@@ -1,12 +1,15 @@
-; OCS2 Wheel Humanoid Configuration - ARX Lift
-; ============================================
+; OCS2 Wheel Humanoid Configuration - ARX Lift2S
+; ==============================================
 ; full_body → ocs2_wbc_controller (info_file_name:=task).
 ;
-; Body 仅 1 个棱柱升降 DOF（无 pitch / yaw）；头进 WBC（同 W2 布局）：
-;   State (3 + 15): [base x,y,yaw | lift | left×6 | right×6 | head×2]
-;   Input (2 + 15): [vx, omega | lift_vel | left×6 | right×6 | head×2]
+; Body 仅 1 个棱柱升降 DOF（无 pitch / yaw / 三连杆腰）：
+;   State (3 + 13): [base x,y,yaw | lift_joint | left×6 | right×6]
+;   Input (2 + 13): [vx, omega | lift_vel | left×6 | right×6]
 ; 躯干模式仅启用：FREE / LOCKED / TRACKING
-; split_body 臂 MPC：arx_acone_description（robot_name 覆盖，见 common.yaml）。
+;   （关闭 RELATIVE、CUSTOM_LOCKED、HEAD_COUPLED）
+; 底盘：manipulatorModelType=1。无 world→base TF 时 WBC 自动锁底盘并停发
+;   解锁规划（cmd_vel 置零）；有定位 TF 时可 BASE_UNLOCK / 移动模式。
+; split_body 臂 MPC 仍用 arx_acone task.info（见 common.yaml）。
 
 ;=============================================================================
 ; Model Information
@@ -17,17 +20,18 @@ model_information
     ; 1 = WheelBasedMobileManipulator（虚拟 SE(2) 底盘）
     manipulatorModelType    1
 
-    ; Pinocchio 根坐标系（Lift URDF root）
+    ; Pinocchio 根坐标系（Lift2S URDF root）
     baseFrame               "base_link"
 
     ; 双臂末端
     eeFrame                 "left_gripper_center"
     eeFrame1                "right_gripper_center"
 
-    ; 躯干 frame：升降平台
-    bodyFrame               "lift_link"
+    ; 躯干 / 相对约束用 body link（臂座挂在 body_link 上）
+    bodyFrame               "body_link"
 
-    ; 夹爪 + mimic（头保留在模型中）
+    ; 夹爪主动关节 + mimic 指关节（仅删 gripper_joint 时 Pinocchio 仍保留 mimic DOF）
+    ; 轮关节默认 fixed（enable_wheel_joints:=false），无需列入 removeJoints
     removeJoints
     {
         [0]   "left_gripper_joint"
@@ -49,7 +53,7 @@ model_settings
 
 ;=============================================================================
 ; Initial State
-; 总维度 = 3（底盘）+ 15（1 升降 + 6 左臂 + 6 右臂 + 2 头）= 18
+; 总维度 = 3（底盘）+ 13（1 升降 + 6 左臂 + 6 右臂）= 16
 ;=============================================================================
 
 initialState
@@ -79,8 +83,6 @@ initialState
         (10,0)  0.0     ; right_joint4
         (11,0)  0.0     ; right_joint5
         (12,0)  0.0     ; right_joint6
-        (13,0)  0.0     ; head_joint1
-        (14,0)  0.0     ; head_joint2
     }
 }
 
@@ -94,8 +96,9 @@ initialModeSchedule
     {
     }
 
-    ; 默认：躯干自由（BODY_FREE）+ 双臂独立（底盘无 TF 时仍锁）
+    ; 默认：躯干自由（BODY_FREE）+ 底盘可动 + 双臂独立
     ; 无定位 TF 时 WBC 仍会强制 baseLocked；有 TF 后再 BASE_UNLOCK
+    ; Lift2S 仅启用 FREE / LOCKED / TRACKING；关闭 RELATIVE / CUSTOM / HEAD_COUPLED
     modeSequence
     {
         [0]     HM_DUAL_BODY_FREE
@@ -178,6 +181,7 @@ rollout
 
 ;=============================================================================
 ; Body Tracking End Effector（BODY_TRACKING）
+; 升降 1 DOF：主要跟踪 body 高度；水平/姿态由模型结构固定
 ;=============================================================================
 
 bodyTrackingEE
@@ -189,7 +193,7 @@ bodyTrackingEE
 
 ;=============================================================================
 ; Input Cost
-; 总输入维度 = 2（底盘）+ 15（关节）= 17
+; 总输入维度 = 2（底盘）+ 13（关节）= 15
 ;=============================================================================
 
 inputCost
@@ -224,8 +228,6 @@ inputCost
             (10,0)  1.0     ; right_joint4
             (11,0)  0.5     ; right_joint5
             (12,0)  0.5     ; right_joint6
-            (13,0)  1.0     ; head_joint1
-            (14,0)  1.0     ; head_joint2
         }
     }
 }
@@ -247,7 +249,8 @@ finalEndEffector
 }
 
 ;=============================================================================
-; Body Relative — 仅升降、无腰俯仰 → 关闭
+; Body Relative（BODY_RELATIVE / 「竖直」软约束）
+; 仅升降、无腰俯仰/前后伸展 → 关闭；离开 LOCK 请用 BODY_FREE（勿用 BODY_UNLOCK）
 ;=============================================================================
 
 bodyRelative
@@ -268,7 +271,7 @@ bimanualCoupling
 
 ;=============================================================================
 ; Waist Lock（BODY_LOCK）— 锁 lift_joint 速度
-; 输入布局：[base(2) | lift(1) | left(6) | right(6) | head(2)] → lift 索引 = 2
+; 输入布局：[base(2) | lift(1) | left(6) | right(6)] → lift 索引 = 2
 ;=============================================================================
 
 waistLock
@@ -278,7 +281,7 @@ waistLock
 }
 
 ;=============================================================================
-; Head Coupling — 暂不启用腰头耦合
+; Head Coupling — 无头，关闭
 ;=============================================================================
 
 headCoupling
@@ -287,7 +290,7 @@ headCoupling
 }
 
 ;=============================================================================
-; Custom Joint Lock — 关闭
+; Custom Joint Lock — 单升降下与 BODY_LOCK 等价，关闭
 ;=============================================================================
 
 customJointLock
@@ -319,7 +322,7 @@ jointPositionLimits
 
 ;=============================================================================
 ; Joint Velocity Limits
-; 输入布局：[base(2) | lift(1) | left(6) | right(6) | head(2)]
+; 输入布局：[base(2) | lift(1) | left_arm(6) | right_arm(6)]
 ;=============================================================================
 
 jointVelocityLimits
@@ -353,8 +356,6 @@ jointVelocityLimits
             (10,0) -1.57        ; right_joint4 [rad/s]
             (11,0) -1.57        ; right_joint5 [rad/s]
             (12,0) -1.57        ; right_joint6 [rad/s]
-            (13,0) -1.57        ; head_joint1 [rad/s]
-            (14,0) -1.57        ; head_joint2 [rad/s]
         }
     }
 
@@ -384,8 +385,6 @@ jointVelocityLimits
             (10,0) 1.57         ; right_joint4 [rad/s]
             (11,0) 1.57         ; right_joint5 [rad/s]
             (12,0) 1.57         ; right_joint6 [rad/s]
-            (13,0) 1.57         ; head_joint1 [rad/s]
-            (14,0) 1.57         ; head_joint2 [rad/s]
         }
     }
 }
@@ -406,12 +405,11 @@ selfCollision
     {
     }
 
-    ; 臂 ↔ 升降平台
     collisionLinkPairs
     {
-        [0] "left_link8, lift_link",
-        [1] "right_link7, lift_link",
-        [2] "left_link3, lift_link",
-        [3] "right_link3, lift_link",
+        [0] "left_link3, lift_mast_link",
+        [1] "right_link3, lift_mast_link",
+        [2] "left_link5, camera_pillar_link",
+        [3] "right_link5, camera_pillar_link",
     }
 }

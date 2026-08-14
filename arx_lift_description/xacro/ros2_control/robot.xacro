@@ -1,8 +1,15 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift">
+  <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
+  <xacro:arg name="gazebo" default="false"/>
+  <!-- Hardware / RSP always use full arx_lift xacro/robot.xacro.
+       Split planning uses arx_acone (robot_name override), not this file. -->
   <xacro:include filename="$(find arx_lift_description)/xacro/robot.xacro"/>
   <xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
   <xacro:include filename="$(find arx_lift_description)/xacro/ros2_control/interfaces.xacro"/>
+
+  <xacro:property name="sim_iface_mode"
+    value="${'position' if '$(arg ros2_control_hardware_type)' == 'isaac' else 'mix'}"/>
 
   <ros2_control name="arx_lift_unified_system" type="system">
     <hardware>
@@ -19,14 +26,11 @@
       </xacro:if>
     </hardware>
 
-    <xacro:lift_interfaces/>
-    <xacro:arx5_interfaces name="left"/>
-    <xacro:arx5_interfaces name="right"/>
-
+    <xacro:lift_interfaces iface_mode="${sim_iface_mode}"/>
+    <xacro:arx5_interfaces name="left" iface_mode="${sim_iface_mode}"/>
+    <xacro:arx5_interfaces name="right" iface_mode="${sim_iface_mode}"/>
   </ros2_control>
 
-  <!-- Gazebo插件配置 -->
-  <xacro:arg name="gazebo" default="false" />
   <xacro:if value="$(arg gazebo)">
     <gazebo>
       <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
@@ -34,4 +38,4 @@
       </plugin>
     </gazebo>
   </xacro:if>
-</robot> 
+</robot>

@@ -1,4 +1,16 @@
-# This config file is used by ros2_control
+# ARX X7S ros2_control defaults.
+#
+# split_body（同包 topology:=dual，无独立 arms 包）:
+#   - 臂规划：ocs2_arm_controller robot_name:=arx_x7s + info_file_name:=task_arm
+#     launch 须 xacro_topology:=dual（根=body，仅双臂）
+#   - 升降+腰：body_joint_controller（lift_joint + body_joint）
+#   - 头：head_joint_controller
+# full_body:
+#   - ocs2_wbc_controller（本包 task.info，WheelHumanoid，
+#     Pinocchio 序 [lift|body_joint|head×2|L7|R7]）
+#
+# OCS2：本包 task.info（全身）+ task_arm.info（分体）+ target_manager.yaml
+
 controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
@@ -9,21 +21,34 @@ controller_manager:
     ocs2_arm_controller:
       type: ocs2_arm_controller/Ocs2ArmController
 
+    ocs2_wbc_controller:
+      type: ocs2_wbc_controller/Ocs2WbcController
+
+    body_joint_controller:
+      type: basic_joint_controller/BasicJointController
+
+    head_joint_controller:
+      type: basic_joint_controller/BasicJointController
+
     left_hand_controller:
       type: adaptive_gripper_controller/AdaptiveGripperController
 
     right_hand_controller:
       type: adaptive_gripper_controller/AdaptiveGripperController
 
+# ---------------------------------------------------------------------------
+# split_body：双臂 MPC
+# ---------------------------------------------------------------------------
 ocs2_arm_controller:
   ros__parameters:
-    # Joint configuration
     update_rate: 100  # Hz
     mpc_frequency: 50
-    info_file_name: fixed_base
+    future_time_offset: 1.0
+    # 同包分体规划：须 launch 传 xacro_topology:=dual（根 body）
+    robot_name: arx_x7s
+    info_file_name: task_arm
+
     joints:
-      - lift_joint
-      - waist_joint
       - left_joint1
       - left_joint2
       - left_joint3
@@ -44,15 +69,152 @@ ocs2_arm_controller:
     state_interfaces:
       - position
 
-    robot_name: arx_x7s
+    home_duration: 3.0
+    hold_first_check_position_threshold: 0.15
+    hold_position_threshold: 0.15
 
-    # Control parameters
-    home_1: [ 0.3, 0.0,
-                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]
-    home_2: [ 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]
+    cartesian_defaults:
+      frame_id: body
+      ik_type: AUTO
+      max_linear_velocity: 0.3
+      max_linear_acceleration: 1.0
+      max_linear_jerk: 5.0
+      max_angular_velocity: 0.5
+      max_angular_acceleration: 1.0
+      max_angular_jerk: 5.0
+
+    home_1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    home_2: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+# ---------------------------------------------------------------------------
+# full_body：WBC
+# ---------------------------------------------------------------------------
+ocs2_wbc_controller:
+  ros__parameters:
+    update_rate: 100  # Hz
+    mpc_frequency: 50
+    robot_name: arx_x7s
+    info_file_name: task
+    left_ee_frame: left_eef
+    right_ee_frame: right_eef
+    fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
+
+    # 须与 Pinocchio 序一致（头在 Body xacro 里、臂之前）
+    joints:
+      - lift_joint
+      - body_joint
+      - head_joint1
+      - head_joint2
+      - left_joint1
+      - left_joint2
+      - left_joint3
+      - left_joint4
+      - left_joint5
+      - left_joint6
+      - left_joint7
+      - right_joint1
+      - right_joint2
+      - right_joint3
+      - right_joint4
+      - right_joint5
+      - right_joint6
+      - right_joint7
+
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+
+    home_duration: 5.0
+    hold_first_check_position_threshold: 0.15
+    hold_position_threshold: 0.15
+
+    waist_absolute_source_frame: base_link
+    waist_absolute_target_frame: body
+
+    waist_lifting_enabled: true
+    waist_lifting_duration: 3.0
+    waist_lifting_type: single_joint
+    waist_single_joint_direction: 1.0
+    waist_single_joint_offset: 0.0
+    waist_single_joint_pitch_joint: body_joint
+    waist_single_joint_pitch_direction: 1.0
+    waist_single_joint_pitch_offset: 0.0
+    waist_lifting_default_parameter: [0.05, 0.5, 1.0]
+    waist_turning_default_parameter: [0.0, 0.5, 1.0]
+
+    cartesian_defaults:
+      frame_id: base_link
+      ik_type: AUTO
+      max_linear_velocity: 0.3
+      max_linear_acceleration: 1.0
+      max_linear_jerk: 5.0
+      max_angular_velocity: 0.5
+      max_angular_acceleration: 1.0
+      max_angular_jerk: 5.0
+
+    # [lift | body_joint | head×2 | left×7 | right×7]
+    home_1: [0.3, 0.0, 0.0, 0.0,
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    home_2: [0.0, 0.0, 0.0, 0.0,
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+# ---------------------------------------------------------------------------
+# split_body：升降 + 腰
+# ---------------------------------------------------------------------------
+body_joint_controller:
+  ros__parameters:
+    update_rate: 100
+    joints:
+      - lift_joint
+      - body_joint
+
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+
+    home_duration: 5.0
+    movej_duration: 5.0
+    hold_position_threshold: 0.05
+
+    home_1: [0.3, 0.0]
+    home_2: [0.3, 0.0]
+    home_3: [0.0, 0.0]
+
+    waist_lifting_enabled: true
+    waist_lifting_duration: 3.0
+    waist_lifting_type: single_joint
+    waist_single_joint_direction: 1.0
+    waist_single_joint_offset: 0.0
+    waist_single_joint_pitch_joint: body_joint
+    waist_single_joint_pitch_direction: 1.0
+    waist_single_joint_pitch_offset: 0.0
+    waist_lifting_default_parameter: [0.05, 0.5, 1.0]
+    waist_turning_default_parameter: [0.0, 0.5, 1.0]
+    waist_absolute_source_frame: base_link
+    waist_absolute_target_frame: body
+
+head_joint_controller:
+  ros__parameters:
+    update_rate: 100
+    joints:
+      - head_joint1
+      - head_joint2
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+    home_duration: 3.0
+    movej_duration: 3.0
+    hold_position_threshold: 0.1
+    home_1: [0.0, 0.0]
+    home_2: [0.0, 0.0]
+    home_3: [0.0, 0.0]
 
 left_hand_controller:
   ros__parameters:
@@ -65,4 +227,3 @@ right_hand_controller:
     joint: right_gripper_joint
     force_feedback_ratio: 0.1
     force_threshold: 0.5
-

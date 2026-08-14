@@ -1,40 +1,82 @@
 <?xml version="1.0"?>
 <robot name="arx_acone" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+	<!-- type: 臂型 x5|r5（与末端无关） -->
 	<xacro:arg name="type" default="x5"/>
+	<!-- variant: acone=带 AC One 躯干（默认）；desktop=展台底座（无 AC One mesh） -->
+	<xacro:arg name="variant" default="acone"/>
 	<xacro:arg name="collider" default="simple"/>
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 
+	<!-- 双臂安装位姿（空=按 variant 默认；可覆盖间距，同 m6 left_xyz/right_xyz） -->
+	<xacro:arg name="left_xyz" default=""/>
+	<xacro:arg name="right_xyz" default=""/>
+	<xacro:arg name="left_rpy" default="0 0 0"/>
+	<xacro:arg name="right_rpy" default="0 0 0"/>
+	<!-- desktop 时 arm_base 相对 base_link 高度 -->
+	<xacro:arg name="arm_base_xyz" default="0 0 0.35"/>
+
 	<xacro:property name="type_arg" value="$(arg type)"/>
+	<xacro:property name="variant_raw" value="$(arg variant)"/>
+	<!-- 空字符串兼容旧 launch，视为 acone -->
+	<xacro:property name="variant_arg" value="${'acone' if variant_raw == '' else variant_raw}"/>
 	<xacro:property name="selected_arm_type" value="x5"/>
 	<xacro:if value="${type_arg == 'r5'}">
 		<xacro:property name="selected_arm_type" value="r5"/>
 	</xacro:if>
 
-	<!-- Fixed-base dual-arm torso (no lift chassis) -->
-	<link name="base_link"/>
-	<joint name="base_joint" type="fixed">
-		<parent link="base_link"/>
-		<child link="body_link"/>
-	</joint>
+	<!-- 默认安装：AC One 原厂；desktop 默认 z=0（相对 arm_base） -->
+	<xacro:property name="default_left_xyz" value="-0.01602 0.25 -0.035"/>
+	<xacro:property name="default_right_xyz" value="-0.01602 -0.25 -0.035"/>
+	<xacro:if value="${variant_arg == 'desktop'}">
+		<xacro:property name="default_left_xyz" value="-0.01602 0.25 0.0"/>
+		<xacro:property name="default_right_xyz" value="-0.01602 -0.25 0.0"/>
+	</xacro:if>
 
-	<xacro:include filename="$(find arx_acone_description)/xacro/components/ac_one.xacro"/>
-	<xacro:ac_one collider="$(arg collider)"/>
+	<xacro:property name="left_xyz_arg" value="$(arg left_xyz)"/>
+	<xacro:property name="right_xyz_arg" value="$(arg right_xyz)"/>
+	<xacro:property name="effective_left_xyz"
+		value="${left_xyz_arg if left_xyz_arg != '' else default_left_xyz}"/>
+	<xacro:property name="effective_right_xyz"
+		value="${right_xyz_arg if right_xyz_arg != '' else default_right_xyz}"/>
 
+	<xacro:include filename="$(find arx_acone_description)/xacro/arm_mount.xacro"/>
+
+	<!-- ===== desktop：展台底座，无 AC One ===== -->
+	<xacro:if value="${variant_arg == 'desktop'}">
+		<xacro:DesktopArmBase
+			left_xyz="${effective_left_xyz}" right_xyz="${effective_right_xyz}"
+			left_rpy="$(arg left_rpy)" right_rpy="$(arg right_rpy)"
+			arm_base_xyz="$(arg arm_base_xyz)"/>
+	</xacro:if>
+
+	<!-- ===== acone：带 AC One 躯干 ===== -->
+	<xacro:if value="${variant_arg == 'acone'}">
+		<link name="base_link"/>
+		<joint name="base_joint" type="fixed">
+			<parent link="base_link"/>
+			<child link="body_link"/>
+		</joint>
+
+		<xacro:include filename="$(find arx_acone_description)/xacro/components/ac_one.xacro"/>
+		<xacro:ac_one collider="$(arg collider)"/>
+
+		<xacro:ArmBase parent="body_link"/>
+		<xacro:DualArmMount parent="arm_base"
+			left_xyz="${effective_left_xyz}" right_xyz="${effective_right_xyz}"
+			left_rpy="$(arg left_rpy)" right_rpy="$(arg right_rpy)"/>
+	</xacro:if>
+
+	<!-- 双臂 -->
 	<xacro:if value="${selected_arm_type == 'x5'}">
 		<xacro:include filename="$(find arx5_description)/xacro/X5_ac1.xacro"/>
 		<xacro:X5 name="left" collider="$(arg collider)"/>
 		<xacro:X5 name="right" collider="$(arg collider)"/>
 	</xacro:if>
-
 	<xacro:if value="${selected_arm_type == 'r5'}">
 		<xacro:include filename="$(find arx5_description)/xacro/R5.xacro"/>
 		<xacro:R5 name="left" collider="$(arg collider)"/>
 		<xacro:R5 name="right" collider="$(arg collider)"/>
 	</xacro:if>
-
-	<xacro:include filename="$(find arx_acone_description)/xacro/arm_mount.xacro"/>
-	<xacro:ArmBase parent="body_link"/>
-	<xacro:DualArmMount parent="arm_base"/>
 
 </robot>

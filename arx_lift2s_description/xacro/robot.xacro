@@ -4,6 +4,9 @@
 	<xacro:arg name="enable_wheel_joints" default="false"/>
 	<xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 	<xacro:arg name="collider" default="simple"/>
+	<!-- Declared here so planning mappings (eef_fixed_joints:=true) reach chassis.xacro;
+	     same hook m6_ccs uses to tighten joint4 on planning URDF. -->
+	<xacro:arg name="eef_fixed_joints" default="false"/>
 
 	<xacro:property name="type_arg" value="$(arg type)"/>
 	<xacro:property name="selected_arm_type" value="x5"/>

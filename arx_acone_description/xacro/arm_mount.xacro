@@ -11,23 +11,34 @@
 		</joint>
 	</xacro:macro>
 
-	<!-- Mount dual arms onto an existing parent link (typically arm_base). -->
-	<xacro:macro name="DualArmMount" params="parent:=arm_base">
+	<!-- Mount dual arms onto parent (typically arm_base). Defaults = AC One 原厂安装位姿。 -->
+	<xacro:macro name="DualArmMount" params="
+		parent:=arm_base
+		left_xyz:='-0.01602 0.25 -0.035'
+		right_xyz:='-0.01602 -0.25 -0.035'
+		left_rpy:='0 0 0'
+		right_rpy:='0 0 0'
+	">
 		<joint name="arm_left_fixed" type="fixed">
 			<parent link="${parent}"/>
 			<child link="left_base_link"/>
-			<origin xyz="-0.01602 0.25 -0.035"/>
+			<origin xyz="${left_xyz}" rpy="${left_rpy}"/>
 		</joint>
-
 		<joint name="arm_right_fixed" type="fixed">
 			<parent link="${parent}"/>
 			<child link="right_base_link"/>
-			<origin xyz="-0.01602 -0.25 -0.035"/>
+			<origin xyz="${right_xyz}" rpy="${right_rpy}"/>
 		</joint>
 	</xacro:macro>
 
-	<!-- Standalone base + torso + arm_base for component visualization. -->
-	<xacro:macro name="DualArmBase" params="collider:=simple">
+	<!-- Standalone base + torso + arm_base（带 AC One 底座）。 -->
+	<xacro:macro name="DualArmBase" params="
+		collider:=simple
+		left_xyz:='-0.01602 0.25 -0.035'
+		right_xyz:='-0.01602 -0.25 -0.035'
+		left_rpy:='0 0 0'
+		right_rpy:='0 0 0'
+	">
 		<link name="base_link"/>
 		<joint name="base_joint" type="fixed">
 			<parent link="base_link"/>
@@ -36,7 +47,49 @@
 		<xacro:include filename="$(find arx_acone_description)/xacro/components/ac_one.xacro"/>
 		<xacro:ac_one collider="${collider}"/>
 		<xacro:ArmBase parent="body_link"/>
-		<xacro:DualArmMount parent="arm_base"/>
+		<xacro:DualArmMount parent="arm_base"
+			left_xyz="${left_xyz}" right_xyz="${right_xyz}"
+			left_rpy="${left_rpy}" right_rpy="${right_rpy}"/>
+	</xacro:macro>
+
+	<!-- 展台 / 无 AC One 躯干：base_link + arm_base（同 m6_ccs variant:=desktop）。 -->
+	<xacro:macro name="DesktopArmBase" params="
+		left_xyz:='-0.01602 0.25 0.0'
+		right_xyz:='-0.01602 -0.25 0.0'
+		left_rpy:='0 0 0'
+		right_rpy:='0 0 0'
+		arm_base_xyz:='0 0 0.35'
+	">
+		<link name="base_link"/>
+		<link name="arm_base">
+			<visual>
+				<origin xyz="0 0 -0.175"/>
+				<geometry>
+					<box size="0.20 0.55 0.35"/>
+				</geometry>
+			</visual>
+			<collision>
+				<origin xyz="0 0 -0.175"/>
+				<geometry>
+					<box size="0.20 0.55 0.35"/>
+				</geometry>
+			</collision>
+		</link>
+		<joint name="arm_base_joint" type="fixed">
+			<parent link="base_link"/>
+			<child link="arm_base"/>
+			<origin xyz="${arm_base_xyz}"/>
+		</joint>
+		<!-- 规划 / 碰撞参考（无 AC One mesh） -->
+		<link name="body_link"/>
+		<joint name="arm_base_body" type="fixed">
+			<parent link="arm_base"/>
+			<child link="body_link"/>
+			<origin xyz="0 0 0"/>
+		</joint>
+		<xacro:DualArmMount parent="arm_base"
+			left_xyz="${left_xyz}" right_xyz="${right_xyz}"
+			left_rpy="${left_rpy}" right_rpy="${right_rpy}"/>
 	</xacro:macro>
 
 </robot>

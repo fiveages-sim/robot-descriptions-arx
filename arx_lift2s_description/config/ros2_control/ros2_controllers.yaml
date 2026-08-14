@@ -1,1 +1,14 @@
-# Default overlays for arx_lift2s ros2_control (merged on top of common.yaml).
+# Overlays merged on top of common.yaml for arx_lift2s.
+# Body = 单棱柱 lift_joint [m] only（无 body_joint* / 无头）。
+
+ocs2_wbc_controller:
+  ros__parameters:
+    # [lift | left×6 | right×6]
+    home_3: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    home_4: [0.3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+body_joint_controller:
+  ros__parameters:
+    # 分体：仅 lift_joint [m]
+    home_3: [0.0]
+    home_4: [0.15]

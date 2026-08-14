@@ -1,41 +1,38 @@
-# Common controller defaults for ARX Lift 2S.
+# Common controller defaults for ARX Lift.
 #
-# Body 只有 1 个自由度：棱柱 lift_joint [m]（无 pitch / yaw / 三连杆腰）。
+# Body：棱柱 lift_joint [m]；另有 head_joint1/2（与 Lift2S 不同，经典 Lift 有头）。
 #
-#   split_body:
-#     - 臂：ocs2_arm_controller（规划模型 = arx_acone，无 lift）
-#     - 升降：body_joint_controller（joints: [lift_joint]，single_joint 升降话题）
+#   split_body（对齐 Lift2S→acone，无 topology）:
+#     - 臂：ocs2_arm_controller.robot_name:=arx_acone + task.info
+#       规划树根=arm_base；须传 Lift 安装位姿
+#       xacro_left_xyz / xacro_right_xyz（默认 acone 安装 ≠ 经典 Lift）
+#     - 升降：body_joint_controller（joints: [lift_joint]）
+#     - 头：head_joint_controller（joints: [head_joint1, head_joint2]）
 #   full_body:
-#     - 升降+双臂：ocs2_wbc_controller（task.info，状态 [base×3|lift|L6|R6]）
-#     - MOVEJ 升降：/ocs2_wbc_controller/waist_lifting*（同样 single_joint）
-#     - 真机升降 soft_p/hybrid（默认 hybrid）；双臂仅 full_control MIX
-#     - Isaac（hardware:=isaac）：URDF + isaac.yaml 仅 position IF（无 vel/effort）
-#     - 底盘 SE(2) 已开启；默认躯干自由（HM_DUAL_BODY_FREE）；无 world→base TF 时 WBC 自动锁底盘
+#     - 升降+双臂+头：ocs2_wbc_controller（本包 task.info，[lift|L6|R6|head×2]）
+#     - 默认 HM_DUAL_BODY_FREE（升降进 OCS2）；IDLE 会锁躯干，看起来像只有双臂
+#     - mock/gz：头关节须有 position/velocity/effort command IF（与 WBC MIX 一致）
 #
-# Split planning MUST use arx_acone URDF/task (no lift in tree).
-# Pinocchio oMf is always in the model root; on acone root≡arm_base, so
-# frame_id=arm_base matches the numbers. Lift2S full URDF roots at base_link
-# with prismatic lift below arm_base — labeling baseFrame=arm_base there only
-# retags frame_id and makes marker TF double-apply the lift offset.
+# 硬件 / RSP / 全身规划：始终用本包 full xacro/robot.xacro（无 topology 分支）。
+# 勿另建 lift_arms 包；分体复用 arx_acone_description。
 
 controller_manager:
   ros__parameters:
     update_rate: 500  # Hz
-    # HI debug logs (ArxLiftHardware + ArxX5Hardware MIT gains); default off
-    status_debug: false
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    # 分体：双臂 OCS2（规划模型 = arx_acone）
     ocs2_arm_controller:
       type: ocs2_arm_controller/Ocs2ArmController
 
-    # 全身：升降 + 双臂（task.info → ocs2_wheel_humanoid，含虚拟底盘）
     ocs2_wbc_controller:
       type: ocs2_wbc_controller/Ocs2WbcController
 
     body_joint_controller:
+      type: basic_joint_controller/BasicJointController
+
+    head_joint_controller:
       type: basic_joint_controller/BasicJointController
 
     left_gripper_controller:
@@ -46,7 +43,8 @@ controller_manager:
 
 ocs2_arm_controller:
   ros__parameters:
-    # Dual-arm split: plan with acone (same X5 arms, no lift DOF in Pinocchio)
+    # Dual-arm split: plan with acone (X5 arms, root=arm_base). Pass Lift mounts via
+    # xacro_left_xyz / xacro_right_xyz (see quick_start / README).
     update_rate: 500  # Hz
     mpc_frequency: 100
     future_time_offset: 1.0
@@ -67,7 +65,6 @@ ocs2_arm_controller:
       - right_joint5
       - right_joint6
 
-    # MIX: position/velocity/effort。MIT 增益仅 HI joint_k/d_gains（rqt 热调）。
     command_interfaces:
       - position
       - velocity
@@ -77,7 +74,6 @@ ocs2_arm_controller:
       - velocity
       - effort
 
-    
     home_duration: 3.0
     home_interpolation_type: linear
     hold_first_check_position_threshold: 0.15
@@ -93,26 +89,21 @@ ocs2_arm_controller:
       max_angular_acceleration: 1.0
       max_angular_jerk: 5.0
 
-    # left(1-6), right(1-6) — same as acone
     home_1: [0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
     home_2: [0.0, 1.30, 0.60, 0.60, 0.0, 0.0, 0.0, 1.30, 0.60, 0.60, 0.0, 0.0]
-    # Raised / folded arms only（升降高度由 body_joint_controller 在 split 下单独设）
     home_3: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 ocs2_wbc_controller:
   ros__parameters:
     update_rate: 500  # Hz
     mpc_frequency: 100
-    robot_name: arx_lift2s
+    robot_name: arx_lift
     info_file_name: task
     left_ee_frame: left_gripper_center
     right_ee_frame: right_gripper_center
-    # 退出 OCS2 / activate：躯干自由（BODY_FREE）+ 双臂独立（底盘可动）
-    # 无定位 TF 时 WBC 仍会强制 baseLocked；有 TF 后再 BASE_UNLOCK
     fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
 
-    # 关节顺序与 task.info 的 arm 段一致：[lift_joint | left 1–6 | right 1–6]
-    # （虚拟底盘 DOF 不在 joints 列表中）
+    # [lift | left 1–6 | right 1–6 | head 1–2]（与 Pinocchio / task.info 一致）
     joints:
       - lift_joint
       - left_joint1
@@ -127,6 +118,8 @@ ocs2_wbc_controller:
       - right_joint4
       - right_joint5
       - right_joint6
+      - head_joint1
+      - head_joint2
 
     command_interfaces:
       - position
@@ -137,26 +130,19 @@ ocs2_wbc_controller:
       - velocity
       - effort
 
-    # MIT 增益仅 HI joint_k/d_gains（无 controller kp/kd IF）。
-
     home_duration: 5.0
     hold_first_check_position_threshold: 0.15
     hold_position_threshold: 0.15
 
-    # Body = 仅 lift_joint [m]（axis +Z）。无 pitch / yaw。
-    # 限位：规划 URDF 0.30 m；本控制器 / HI 真机 0.48 m（eef_fixed_joints 切换）。
-    # MOVEJ 下用 /ocs2_wbc_controller/waist_lifting*；勿发 waist_turning*（无转向关节）。
     waist_lifting_enabled: true
     waist_lifting_duration: 3.0
     waist_lifting_type: single_joint
-    waist_single_joint_direction: 1.0   # height = q * direction + offset
+    waist_single_joint_direction: 1.0
     waist_single_joint_offset: 0.0
-    # 无 pitch：占位名不在 joints 中，StateMoveJ 会禁用 phi
     waist_single_joint_pitch_joint: _no_pitch_
     waist_single_joint_pitch_direction: 1.0
     waist_single_joint_pitch_offset: 0.0
-    waist_lifting_default_parameter: [0.05, 0.5, 1.0]  # [v, a, j] m/s
-    # 无 yaw DOF；保留键以免参数缺失，实际勿使用转向话题
+    waist_lifting_default_parameter: [0.05, 0.5, 1.0]
     waist_turning_default_parameter: [0.0, 0.5, 1.0]
 
     cartesian_defaults:
@@ -169,19 +155,17 @@ ocs2_wbc_controller:
       max_angular_acceleration: 1.0
       max_angular_jerk: 5.0
 
-    # [lift | left×6 | right×6]
-    home_1: [0.3, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0]
-    home_2: [0.3, 0.0, 1.30, 0.60, 0.60, 0.0, 0.0, 0.0, 1.30, 0.60, 0.60, 0.0, 0.0]
-    home_3: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    # [lift | left×6 | right×6 | head×2]
+    home_1: [0.3, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.594, 0.306, 0.331, 0.0, 0.0, 0.0, 0.0]
+    home_2: [0.3, 0.0, 1.30, 0.60, 0.60, 0.0, 0.0, 0.0, 1.30, 0.60, 0.60, 0.0, 0.0, 0.0, 0.0]
+    home_3: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 body_joint_controller:
   ros__parameters:
     update_rate: 500
-    # 分体：body 只有 lift_joint [m]
     joints:
       - lift_joint
 
-    # Split：升降用 position IF（full_body 时 lift 由 WBC 占用 MIX）
     command_interfaces:
       - position
     state_interfaces:
@@ -196,7 +180,6 @@ body_joint_controller:
     home_2: [0.3]
     home_3: [0.0]
 
-    # 与 WBC 相同的 single_joint 升降语义（仅 split_body MOVEJ）
     waist_lifting_enabled: true
     waist_lifting_duration: 3.0
     waist_lifting_type: single_joint
@@ -207,9 +190,31 @@ body_joint_controller:
     waist_single_joint_pitch_offset: 0.0
     waist_lifting_default_parameter: [0.05, 0.5, 1.0]
     waist_turning_default_parameter: [0.0, 0.5, 1.0]
-    # Lift2S URDF：base_link → lift_link（无 base_footprint / body_base）
+    # Lift URDF：base_link → lift_link（无 base_footprint / body_base）
     waist_absolute_source_frame: base_link
     waist_absolute_target_frame: lift_link
+
+head_joint_controller:
+  ros__parameters:
+    update_rate: 500
+    joints:
+      - head_joint1
+      - head_joint2
+
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+    home_duration: 3.0
+    movej_duration: 3.0
+    hold_position_threshold: 0.1
+
+    home_1: [0.0, 0.0]
+    home_2: [0.0, 0.0]
+    home_3: [0.0, 0.0]
+    home_4: [0.0, 0.0]
 
 left_gripper_controller:
   ros__parameters:

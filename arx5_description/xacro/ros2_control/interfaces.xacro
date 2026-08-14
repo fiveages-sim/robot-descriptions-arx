@@ -1,89 +1,46 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:macro name="arx5_interfaces" params="name">
+    <!-- iface_mode: mix = pos/vel/effort (real / mock / gz); position = pos only (Isaac). -->
+    <xacro:macro name="arx5_arm_joint" params="jname iface_mode initial:=''">
+        <joint name="${jname}">
+            <command_interface name="position"/>
+            <xacro:if value="${iface_mode == 'mix'}">
+                <command_interface name="velocity"/>
+                <command_interface name="effort"/>
+            </xacro:if>
+            <state_interface name="position">
+                <xacro:unless value="${initial == ''}">
+                    <param name="initial_value">${initial}</param>
+                </xacro:unless>
+            </state_interface>
+            <xacro:if value="${iface_mode == 'mix'}">
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </xacro:if>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="arx5_interfaces" params="name iface_mode:=mix">
 
         <xacro:property name="prefix" value="${name + '_' if name else ''}"/>
         <xacro:arg name="gazebo" default="false"/>
 
-        <!-- Arm joints: MIX interfaces for full_control (MIT). -->
-        <joint name="${prefix}joint1">
-            <command_interface name="position"/>
-            <command_interface name="velocity"/>
-            <command_interface name="effort"/>
-            <command_interface name="kp"/>
-            <command_interface name="kd"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
+        <!-- Arm: mix → full_control MIT; position → Isaac TopicBasedSystem. Gains: HI joint_k/d_gains. -->
+        <xacro:arx5_arm_joint jname="${prefix}joint1" iface_mode="${iface_mode}"/>
+        <xacro:arx5_arm_joint jname="${prefix}joint2" iface_mode="${iface_mode}" initial="0.4"/>
+        <xacro:arx5_arm_joint jname="${prefix}joint3" iface_mode="${iface_mode}" initial="0.12"/>
+        <xacro:arx5_arm_joint jname="${prefix}joint4" iface_mode="${iface_mode}" initial="0.26"/>
+        <xacro:arx5_arm_joint jname="${prefix}joint5" iface_mode="${iface_mode}"/>
+        <xacro:arx5_arm_joint jname="${prefix}joint6" iface_mode="${iface_mode}"/>
 
-        <joint name="${prefix}joint2">
-            <command_interface name="position"/>
-            <command_interface name="velocity"/>
-            <command_interface name="effort"/>
-            <command_interface name="kp"/>
-            <command_interface name="kd"/>
-            <state_interface name="position">
-                <param name="initial_value">0.4</param>
-            </state_interface>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-
-        <joint name="${prefix}joint3">
-            <command_interface name="position"/>
-            <command_interface name="velocity"/>
-            <command_interface name="effort"/>
-            <command_interface name="kp"/>
-            <command_interface name="kd"/>
-            <state_interface name="position">
-                <param name="initial_value">0.12</param>
-            </state_interface>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-
-        <joint name="${prefix}joint4">
-            <command_interface name="position"/>
-            <command_interface name="velocity"/>
-            <command_interface name="effort"/>
-            <command_interface name="kp"/>
-            <command_interface name="kd"/>
-            <state_interface name="position">
-                <param name="initial_value">0.26</param>
-            </state_interface>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-
-        <joint name="${prefix}joint5">
-            <command_interface name="position"/>
-            <command_interface name="velocity"/>
-            <command_interface name="effort"/>
-            <command_interface name="kp"/>
-            <command_interface name="kd"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-
-        <joint name="${prefix}joint6">
-            <command_interface name="position"/>
-            <command_interface name="velocity"/>
-            <command_interface name="effort"/>
-            <command_interface name="kp"/>
-            <command_interface name="kd"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-
-        <!-- Gripper stays position-only (AdaptiveGripperController). -->
+        <!-- Gripper: AdaptiveGripperController (effort state only when mix). -->
         <joint name="${prefix}gripper_joint">
             <command_interface name="position"/>
             <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
+            <xacro:if value="${iface_mode == 'mix'}">
+                <state_interface name="velocity"/>
+                <state_interface name="effort"/>
+            </xacro:if>
         </joint>
 
         <xacro:if value="$(arg gazebo)">

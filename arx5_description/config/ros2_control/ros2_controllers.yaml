@@ -17,7 +17,6 @@ controller_manager:
     ocs2_arm_controller:
       type: ocs2_arm_controller/Ocs2ArmController
 
-
 arm_controller:
   ros__parameters:
     # Keep JTC position-only; OCS2 uses MIX below.
@@ -56,22 +55,15 @@ ocs2_arm_controller:
       - joint5
       - joint6
 
-    # MIX IFs kept for URDF/controller contract. HI ignores kp/kd IF —
-    # real MIT gains come from hardware joint_k/d_gains (rqt / ros2 param).
+    # MIX: position/velocity/effort。MIT 增益仅 HI joint_k/d_gains（rqt 热调）。
     command_interfaces:
       - position
       - velocity
       - effort
-      - kp
-      - kd
     state_interfaces:
       - position
       - velocity
       - effort
-
-    # Kept for controller state machine; HI no longer applies these to motors.
-    default_gains: [30.0, 2.0]   # HOLD / HOME: [kp, kd]
-    pd_gains: [30.0, 2.0]        # OCS2 state: [kp, kd]
 
     home_duration: 3.0
     home_interpolation_type: linear
