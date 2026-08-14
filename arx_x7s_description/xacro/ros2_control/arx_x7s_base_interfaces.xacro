@@ -12,8 +12,8 @@
       <state_interface name="effort"/>
     </joint>
 
-    <!-- 腰部关节接口定义 -->
-    <joint name="waist_joint">
+    <!-- 腰俯仰（body_joint；MOVEJ Body 前缀需 body*） -->
+    <joint name="body_joint">
       <command_interface name="position"/>
       <state_interface name="position"/>
       <state_interface name="velocity"/>

@@ -1,12 +1,11 @@
 <?xml version="1.0" ?>
-<!-- =================================================================================== -->
-<!-- |    Complete Robot Description for ARX X7S with ROS2 Control                    | -->
-<!-- =================================================================================== -->
+<!-- Hardware / RSP: always full kinematics (never honor planning topology:=dual). -->
 <robot name="arx_x7s_whole_body" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
+  <xacro:arg name="enable_wheel_joints" default="false"/>
 
-  <xacro:include filename="$(find arx_x7s_description)/xacro/robot.xacro"/>
+  <xacro:include filename="$(find arx_x7s_description)/xacro/robot_full.xacro"/>
 
   <xacro:include filename="$(find arx_x7s_description)/xacro/ros2_control/arx_x7s_base_interfaces.xacro"/>
   <xacro:include filename="$(find arx_x7s_description)/xacro/ros2_control/arx_x7s_arm_interfaces.xacro"/>

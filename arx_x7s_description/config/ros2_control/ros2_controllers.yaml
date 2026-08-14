@@ -1,14 +1,15 @@
 # ARX X7S ros2_control defaults.
 #
-# split_body（对齐 Lift2S→acone / fa_w2→m6）:
-#   - 臂规划：ocs2_arm_controller.robot_name:=arx_x7s_arms（瘦树根=body）+ task.info
-#   - 升降+腰：body_joint_controller
+# split_body（同包 topology:=dual，无独立 arms 包）:
+#   - 臂规划：ocs2_arm_controller robot_name:=arx_x7s + info_file_name:=task_arm
+#     launch 须 xacro_topology:=dual（根=body，仅双臂）
+#   - 升降+腰：body_joint_controller（lift_joint + body_joint）
 #   - 头：head_joint_controller
 # full_body:
 #   - ocs2_wbc_controller（本包 task.info，WheelHumanoid，
-#     Pinocchio 序 [lift|waist|head×2|L7|R7]）
+#     Pinocchio 序 [lift|body_joint|head×2|L7|R7]）
 #
-# OCS2：本包 task.info（全身）+ arx_x7s_arms_description/task.info（分体）+ target_manager.yaml
+# OCS2：本包 task.info（全身）+ task_arm.info（分体）+ target_manager.yaml
 
 controller_manager:
   ros__parameters:
@@ -43,9 +44,9 @@ ocs2_arm_controller:
     update_rate: 100  # Hz
     mpc_frequency: 50
     future_time_offset: 1.0
-    # 分体规划包（仅双臂，根 body）— 勿用本包 full URDF
-    robot_name: arx_x7s_arms
-    info_file_name: task
+    # 同包分体规划：须 launch 传 xacro_topology:=dual（根 body）
+    robot_name: arx_x7s
+    info_file_name: task_arm
 
     joints:
       - left_joint1
@@ -103,7 +104,7 @@ ocs2_wbc_controller:
     # 须与 Pinocchio 序一致（头在 Body xacro 里、臂之前）
     joints:
       - lift_joint
-      - waist_joint
+      - body_joint
       - head_joint1
       - head_joint2
       - left_joint1
@@ -138,7 +139,7 @@ ocs2_wbc_controller:
     waist_lifting_type: single_joint
     waist_single_joint_direction: 1.0
     waist_single_joint_offset: 0.0
-    waist_single_joint_pitch_joint: waist_joint
+    waist_single_joint_pitch_joint: body_joint
     waist_single_joint_pitch_direction: 1.0
     waist_single_joint_pitch_offset: 0.0
     waist_lifting_default_parameter: [0.05, 0.5, 1.0]
@@ -154,7 +155,7 @@ ocs2_wbc_controller:
       max_angular_acceleration: 1.0
       max_angular_jerk: 5.0
 
-    # [lift | waist | head×2 | left×7 | right×7]
+    # [lift | body_joint | head×2 | left×7 | right×7]
     home_1: [0.3, 0.0, 0.0, 0.0,
              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
              0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -170,7 +171,7 @@ body_joint_controller:
     update_rate: 100
     joints:
       - lift_joint
-      - waist_joint
+      - body_joint
 
     command_interfaces:
       - position
@@ -190,7 +191,7 @@ body_joint_controller:
     waist_lifting_type: single_joint
     waist_single_joint_direction: 1.0
     waist_single_joint_offset: 0.0
-    waist_single_joint_pitch_joint: waist_joint
+    waist_single_joint_pitch_joint: body_joint
     waist_single_joint_pitch_direction: 1.0
     waist_single_joint_pitch_offset: 0.0
     waist_lifting_default_parameter: [0.05, 0.5, 1.0]

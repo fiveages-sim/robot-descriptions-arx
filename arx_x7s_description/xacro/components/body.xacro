@@ -26,7 +26,8 @@
       </collision>
     </link>
 
-    <joint name="waist_joint" type="revolute">
+    <!-- Named body_joint (not waist_joint) so MOVEJ Body group matches arms/fa-py rules. -->
+    <joint name="body_joint" type="revolute">
       <origin xyz="0.066 -0.0546 -0.06"/>
       <parent link="lift"/>
       <child link="body"/>

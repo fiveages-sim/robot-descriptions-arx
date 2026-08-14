@@ -16,8 +16,6 @@
     <exec_depend>robot_common_launch</exec_depend>
     <exec_depend>arx_lift_description</exec_depend>
     <exec_depend>component_models</exec_depend>
-    <!-- Split planning: install arx_x7s_arms_description alongside (see README / quick_start).
-         Not listed here to avoid a circular exec_depend with arms→this package for meshes. -->
 
     <export>
         <build_type>ament_cmake</build_type>

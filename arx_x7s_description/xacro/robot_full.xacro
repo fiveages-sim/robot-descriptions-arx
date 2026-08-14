@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!-- Full X7S kinematics (base + body/head + dual arms). Used by topology:=full
+     and always by ros2_control/robot.xacro (hardware must never be dual). -->
+<robot name="ARX X7S" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:arg name="enable_wheel_joints" default="false"/>
+
+  <xacro:include filename="$(find arx_x7s_description)/xacro/components/base.xacro"/>
+  <xacro:include filename="$(find arx_x7s_description)/xacro/components/body.xacro"/>
+  <xacro:include filename="$(find arx_x7s_description)/xacro/components/arm.xacro"/>
+  <xacro:include filename="$(find arx_x7s_description)/xacro/components/gripper.xacro"/>
+
+  <xacro:Base enable_wheel_joints="$(arg enable_wheel_joints)"/>
+  <xacro:Body/>
+
+  <xacro:Arm name="left" direction="1"/>
+  <xacro:Gripper name="left" direction="1"/>
+  <xacro:Arm name="right" direction="-1"/>
+  <xacro:Gripper name="right" direction="-1"/>
+
+</robot>
