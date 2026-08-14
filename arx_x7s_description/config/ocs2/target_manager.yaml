@@ -5,7 +5,6 @@
     enable_vr: true
     enable_head_control: false
 
-    # X7S URDF root is base_link only（无 base_footprint），与 Lift2S 一致覆盖默认。
-    # task.info baseFrame=base_link；marker 勿标到臂座以免重复叠升降解算。
+    # 分体：control_base_frame 来自 arx_x7s_arms task（body）；全身 Wheel-based 会被 launch 覆写为 world。
     marker_fixed_frame: base_link
     vr_follow_frame: base_link

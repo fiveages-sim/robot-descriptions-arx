@@ -6,7 +6,7 @@
 ;   State (3 + 15): [base x,y,yaw | lift | left×6 | right×6 | head×2]
 ;   Input (2 + 15): [vx, omega | lift_vel | left×6 | right×6 | head×2]
 ; 躯干模式仅启用：FREE / LOCKED / TRACKING
-; split_body 臂 MPC 用同包 task_arm.info + topology:=dual（见 common.yaml）。
+; split_body 臂 MPC：arx_acone_description（robot_name 覆盖，见 common.yaml）。
 
 ;=============================================================================
 ; Model Information

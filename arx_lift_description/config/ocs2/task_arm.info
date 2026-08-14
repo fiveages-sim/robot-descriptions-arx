@@ -1,8 +1,8 @@
-; OCS2 Dual-Arm Configuration - ARX Lift (split_body)
+; DEPRECATED — unused. Split-body now uses arx_acone_description task.info
+; via ocs2_arm_controller.robot_name:=arx_acone (see common.yaml). Kept for reference.
+; OCS2 Dual-Arm Configuration - ARX Lift (split_body) [legacy topology path]
 ; ==================================================
-; split_body → ocs2_arm_controller (info_file_name:=task_arm)
-; 规划 URDF：本包 xacro/robot.xacro + topology:=dual（根 = arm_base，同 m6_ccs）
-; 升降由 body_joint_controller 单独控制，不在本模型中。
+; Previously: info_file_name:=task_arm + topology:=dual on this package.
 
 ; robot model meta-information
 model_information {

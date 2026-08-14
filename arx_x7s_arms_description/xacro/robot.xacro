@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- Split-body planning URDF only: root = body, dual 7-DOF arms + grippers.
+     Full robot (base/lift/waist/head) lives in arx_x7s_description. -->
+<robot name="ARX X7S Arms" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find arx_x7s_description)/xacro/components/arm.xacro"/>
+  <xacro:include filename="$(find arx_x7s_description)/xacro/components/gripper.xacro"/>
+
+  <link name="body"/>
+
+  <xacro:Arm name="left" direction="1"/>
+  <xacro:Gripper name="left" direction="1"/>
+  <xacro:Arm name="right" direction="-1"/>
+  <xacro:Gripper name="right" direction="-1"/>
+
+</robot>

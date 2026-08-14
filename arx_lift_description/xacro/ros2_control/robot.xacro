@@ -2,14 +2,12 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arx_lift">
   <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
   <xacro:arg name="gazebo" default="false"/>
-  <!-- Force full tree for hardware / robot_state_publisher. Planning URDF uses
-       xacro/robot.xacro alone (default topology:=dual) so split markers stay correct. -->
-  <xacro:arg name="topology" default="full"/>
+  <!-- Hardware / RSP always use full arx_lift xacro/robot.xacro.
+       Split planning uses arx_acone (robot_name override), not this file. -->
   <xacro:include filename="$(find arx_lift_description)/xacro/robot.xacro"/>
   <xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
   <xacro:include filename="$(find arx_lift_description)/xacro/ros2_control/interfaces.xacro"/>
 
-  <!-- 硬件描述始终用 full 拓扑（分体规划 dual 只影响 planning URDF） -->
   <xacro:property name="sim_iface_mode"
     value="${'position' if '$(arg ros2_control_hardware_type)' == 'isaac' else 'mix'}"/>
 
