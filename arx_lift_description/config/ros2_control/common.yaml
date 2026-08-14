@@ -2,18 +2,19 @@
 #
 # Body：棱柱 lift_joint [m]；另有 head_joint1/2（与 Lift2S 不同，经典 Lift 有头）。
 #
-#   split_body:
-#     - 臂：ocs2_arm_controller（info_file_name:=task_arm，规划 topology:=dual，根 arm_base）
+#   split_body（对齐 Lift2S→acone，无 topology）:
+#     - 臂：ocs2_arm_controller.robot_name:=arx_acone + task.info
+#       规划树根=arm_base；须传 Lift 安装位姿
+#       xacro_left_xyz / xacro_right_xyz（默认 acone 安装 ≠ 经典 Lift）
 #     - 升降：body_joint_controller（joints: [lift_joint]）
 #     - 头：head_joint_controller（joints: [head_joint1, head_joint2]）
 #   full_body:
-#     - 升降+双臂+头：ocs2_wbc_controller（task.info，[lift|L6|R6|head×2]）
+#     - 升降+双臂+头：ocs2_wbc_controller（本包 task.info，[lift|L6|R6|head×2]）
 #     - 默认 HM_DUAL_BODY_FREE（升降进 OCS2）；IDLE 会锁躯干，看起来像只有双臂
 #     - mock/gz：头关节须有 position/velocity/effort command IF（与 WBC MIX 一致）
 #
-# 分体规划 URDF：xacro/robot.xacro 默认 topology:=dual（根 arm_base）。
-# 硬件 / 全身：ros2_control/robot.xacro 强制 full；全身 launch 需 xacro_topology:=full。
-# 勿再另建 lift_arms 包。
+# 硬件 / RSP / 全身规划：始终用本包 full xacro/robot.xacro（无 topology 分支）。
+# 勿另建 lift_arms 包；分体复用 arx_acone_description。
 
 controller_manager:
   ros__parameters:
@@ -42,12 +43,13 @@ controller_manager:
 
 ocs2_arm_controller:
   ros__parameters:
-    # 分体双臂：规划用本包 task_arm + topology:=dual（根 arm_base）
+    # Dual-arm split: plan with acone (X5 arms, root=arm_base). Pass Lift mounts via
+    # xacro_left_xyz / xacro_right_xyz (see quick_start / README).
     update_rate: 500  # Hz
     mpc_frequency: 100
     future_time_offset: 1.0
-    robot_name: arx_lift
-    info_file_name: task_arm
+    robot_name: arx_acone
+    info_file_name: task
 
     joints:
       - left_joint1

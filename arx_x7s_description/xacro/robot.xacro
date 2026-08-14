@@ -1,23 +1,19 @@
 <robot name="ARX X7S" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+  <!-- Full robot only. Split-body OCS2 planning uses arx_x7s_arms_description
+       (robot_name override), same pattern as Lift2S→acone / fa_w2→m6_ccs. -->
   <xacro:arg name="enable_wheel_joints" default="false"/>
-  <!-- Include component files -->
+
   <xacro:include filename="$(find arx_x7s_description)/xacro/components/base.xacro"/>
   <xacro:include filename="$(find arx_x7s_description)/xacro/components/body.xacro"/>
   <xacro:include filename="$(find arx_x7s_description)/xacro/components/arm.xacro"/>
   <xacro:include filename="$(find arx_x7s_description)/xacro/components/gripper.xacro"/>
 
-  <!-- Base and lift -->
   <xacro:Base enable_wheel_joints="$(arg enable_wheel_joints)"/>
-
-  <!-- Body, neck, and head -->
   <xacro:Body/>
 
-  <!-- Left arm -->
   <xacro:Arm name="left" direction="1"/>
   <xacro:Gripper name="left" direction="1"/>
-
-  <!-- Right arm -->
   <xacro:Arm name="right" direction="-1"/>
   <xacro:Gripper name="right" direction="-1"/>
 

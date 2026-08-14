@@ -1,21 +1,17 @@
 <?xml version="1.0" ?>
 <!-- =================================================================================== -->
 <!-- |    Complete Robot Description for ARX X7S with ROS2 Control                    | -->
-<!-- |    This file includes the base robot structure and both arms                   | -->
 <!-- =================================================================================== -->
 <robot name="arx_x7s_whole_body" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:arg name="ros2_control_hardware_type" default="mock_components"/>
 
-  <!-- Include the base robot structure -->
   <xacro:include filename="$(find arx_x7s_description)/xacro/robot.xacro"/>
 
-  <!-- Import modular interface components -->
   <xacro:include filename="$(find arx_x7s_description)/xacro/ros2_control/arx_x7s_base_interfaces.xacro"/>
   <xacro:include filename="$(find arx_x7s_description)/xacro/ros2_control/arx_x7s_arm_interfaces.xacro"/>
   <xacro:include filename="$(find arx_x7s_description)/xacro/ros2_control/arx_x7s_gripper_interfaces.xacro"/>
 
-  <!-- Unified ros2_control system -->
   <ros2_control name="arx_x7s_unified_system" type="system">
     <hardware>
       <xacro:if value="${'$(arg ros2_control_hardware_type)' == 'gz'}">
@@ -31,16 +27,9 @@
       </xacro:if>
     </hardware>
 
-    <!-- 基座接口 (包含升降、腰部、头部) -->
     <xacro:arx_x7s_base_interfaces/>
-
-    <!-- 左臂接口 -->
     <xacro:arx_x7s_arm_interfaces name="left"/>
-
-    <!-- 右臂接口 -->
     <xacro:arx_x7s_arm_interfaces name="right"/>
-
-    <!-- 夹爪接口 -->
     <xacro:arx_x7s_gripper_interfaces name="left"/>
     <xacro:arx_x7s_gripper_interfaces name="right"/>
 
@@ -55,4 +44,3 @@
     </gazebo>
   </xacro:if>
 </robot>
-

@@ -1,11 +1,12 @@
 ; OCS2 Wheel Humanoid Configuration - ARX X7S
 ; ===========================================
 ; full_body → ocs2_wbc_controller（info_file_name:=task）。
-; 本包仅保留本文件 + target_manager.yaml（无 fixed_base）。
+; split_body 臂 MPC：arx_x7s_arms_description（robot_name 覆盖，见 ros2_controllers.yaml）。
 ;
-; Body：lift_joint [m] + waist_joint pitch [rad]；头不进规划（removeJoints）。
-;   State (3 + 16): [base x,y,yaw | lift | waist | left×7 | right×7]
-;   Input (2 + 16): [vx, omega | lift_vel | waist_vel | left×7 | right×7]
+; Body：lift_joint [m] + waist_joint pitch [rad]；头进 WBC（MOVEJ /Head 可用）。
+; Pinocchio 序（本包 xacro：Body 含头，再挂双臂）：
+;   State (3 + 18): [base x,y,yaw | lift | waist | head×2 | left×7 | right×7]
+;   Input (2 + 18): [vx, omega | lift_vel | waist_vel | head×2 | left×7 | right×7]
 ; 底盘：manipulatorModelType=1。无 world→base TF 时 WBC 自动锁底盘并补发 identity TF（供 RViz marker）。
 
 ;=============================================================================
@@ -24,12 +25,10 @@ model_information
 
     removeJoints
     {
-        [0]   "head_joint1"
-        [1]   "head_joint2"
-        [2]   "left_gripper_joint"
-        [3]   "right_gripper_joint"
-        [4]   "left_gripper_1"
-        [5]   "right_gripper_1"
+        [0]   "left_gripper_joint"
+        [1]   "right_gripper_joint"
+        [2]   "left_gripper_1"
+        [3]   "right_gripper_1"
     }
 }
 
@@ -40,11 +39,12 @@ model_information
 model_settings
 {
     usePreComputation       true
+    ; 模型 DOF 变更后须重编一次；稳定后可改回 false，避免每次进 OCS2 拖死
     recompileLibraries      true
 }
 
 ;=============================================================================
-; Initial State — 3 + 16 = 19
+; Initial State — 3 + 18 = 21
 ;=============================================================================
 
 initialState
@@ -63,22 +63,24 @@ initialState
     {
         (0,0)   0.0     ; lift_joint [m]
         (1,0)   0.0     ; waist_joint [rad]
+        (2,0)   0.0     ; head_joint1
+        (3,0)   0.0     ; head_joint2
 
-        (2,0)   0.0     ; left_joint1
-        (3,0)   0.0     ; left_joint2
-        (4,0)   0.0     ; left_joint3
-        (5,0)   0.0     ; left_joint4
-        (6,0)   0.0     ; left_joint5
-        (7,0)   0.0     ; left_joint6
-        (8,0)   0.0     ; left_joint7
+        (4,0)   0.0     ; left_joint1
+        (5,0)   0.0     ; left_joint2
+        (6,0)   0.0     ; left_joint3
+        (7,0)   0.0     ; left_joint4
+        (8,0)   0.0     ; left_joint5
+        (9,0)   0.0     ; left_joint6
+        (10,0)  0.0     ; left_joint7
 
-        (9,0)   0.0     ; right_joint1
-        (10,0)  0.0     ; right_joint2
-        (11,0)  0.0     ; right_joint3
-        (12,0)  0.0     ; right_joint4
-        (13,0)  0.0     ; right_joint5
-        (14,0)  0.0     ; right_joint6
-        (15,0)  0.0     ; right_joint7
+        (11,0)  0.0     ; right_joint1
+        (12,0)  0.0     ; right_joint2
+        (13,0)  0.0     ; right_joint3
+        (14,0)  0.0     ; right_joint4
+        (15,0)  0.0     ; right_joint5
+        (16,0)  0.0     ; right_joint6
+        (17,0)  0.0     ; right_joint7
     }
 }
 
@@ -184,7 +186,7 @@ bodyTrackingEE
 }
 
 ;=============================================================================
-; Input Cost — 2 + 16 = 18
+; Input Cost — 2 + 18 = 20
 ;=============================================================================
 
 inputCost
@@ -209,22 +211,24 @@ inputCost
 
             (0,0)   10.0    ; lift
             (1,1)   5.0     ; waist
+            (2,2)   1.0     ; head_joint1
+            (3,3)   1.0     ; head_joint2
 
-            (2,2)   1.0     ; left 1-7
-            (3,3)   1.0
-            (4,4)   1.0
+            (4,4)   1.0     ; left 1-7
             (5,5)   1.0
-            (6,6)   0.5
-            (7,7)   0.5
+            (6,6)   1.0
+            (7,7)   1.0
             (8,8)   0.5
+            (9,9)   0.5
+            (10,10) 0.5
 
-            (9,9)   1.0     ; right 1-7
-            (10,10) 1.0
-            (11,11) 1.0
+            (11,11) 1.0     ; right 1-7
             (12,12) 1.0
-            (13,13) 0.5
-            (14,14) 0.5
+            (13,13) 1.0
+            (14,14) 1.0
             (15,15) 0.5
+            (16,16) 0.5
+            (17,17) 0.5
         }
     }
 }
@@ -257,7 +261,7 @@ bimanualCoupling
     muOrientation                   25.0
 }
 
-; 输入布局：[base(2) | lift | waist | left×7 | right×7]
+; 输入布局：[base(2) | lift | waist | head×2 | left×7 | right×7]
 waistLock
 {
     activate                        true
@@ -308,22 +312,24 @@ jointVelocityLimits
         {
             (0,0)  -0.2
             (1,0)  -1.0
+            (2,0)  -1.57    ; head1
+            (3,0)  -1.57    ; head2
 
-            (2,0)  -1.57
-            (3,0)  -1.57
             (4,0)  -1.57
             (5,0)  -1.57
             (6,0)  -1.57
             (7,0)  -1.57
             (8,0)  -1.57
-
             (9,0)  -1.57
             (10,0) -1.57
+
             (11,0) -1.57
             (12,0) -1.57
             (13,0) -1.57
             (14,0) -1.57
             (15,0) -1.57
+            (16,0) -1.57
+            (17,0) -1.57
         }
     }
 
@@ -342,29 +348,33 @@ jointVelocityLimits
         {
             (0,0)  0.2
             (1,0)  1.0
+            (2,0)  1.57     ; head1
+            (3,0)  1.57     ; head2
 
-            (2,0)  1.57
-            (3,0)  1.57
             (4,0)  1.57
             (5,0)  1.57
             (6,0)  1.57
             (7,0)  1.57
             (8,0)  1.57
-
             (9,0)  1.57
             (10,0) 1.57
+
             (11,0) 1.57
             (12,0) 1.57
             (13,0) 1.57
             (14,0) 1.57
             (15,0) 1.57
+            (16,0) 1.57
+            (17,0) 1.57
         }
     }
 }
 
 selfCollision
 {
-    activate                        true
+    ; 零位时 forearm–body / upper_arm–lift 易常开惩罚，MPC 跟不上 → plan 过期刷屏。
+    ; 先关自碰；标定安全距离后再打开。
+    activate                        false
 
     mu                              1e-3
     delta                           1e-2

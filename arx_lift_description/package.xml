@@ -15,6 +15,8 @@
 
     <exec_depend>robot_common_launch</exec_depend>
     <exec_depend>arx5_description</exec_depend>
+    <!-- Split-body OCS2 planning reuses acone (robot_name override) -->
+    <exec_depend>arx_acone_description</exec_depend>
     <exec_depend>component_models</exec_depend>
     <exec_depend>sensor_models</exec_depend>
 
