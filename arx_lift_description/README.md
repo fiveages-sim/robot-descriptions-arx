@@ -6,7 +6,6 @@
 |------|--------|------|------|
 | Full body | `full_body.launch.py` | `task.info`（`ocs2_wheel_humanoid`） | `ocs2_wbc_controller`（lift + 双臂 + 头） |
 | Split body | `split_body.launch.py` | `task_arm.info` + `topology:=dual`（根 `arm_base`，同 m6_ccs） | `body_joint_controller` + `head_joint_controller` |
-| 旧 demo | `demo.launch.py` | 见 `fixed_base.info`（遗留） | 不推荐，请用分体/全身 |
 
 分体规划：`xacro/robot.xacro` **默认 `topology:=dual`**（根 `arm_base`），避免 marker 叠升降高度。
 硬件 / `robot_state_publisher` 走 `ros2_control/robot.xacro`（强制 `full`）。

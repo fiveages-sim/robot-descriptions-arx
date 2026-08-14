@@ -5,6 +5,7 @@
     enable_vr: true
     enable_head_control: false
 
-    # X7S URDF root is base_link (no base_footprint). Override arms_target_manager default.
+    # X7S URDF root is base_link only（无 base_footprint），与 Lift2S 一致覆盖默认。
+    # task.info baseFrame=base_link；marker 勿标到臂座以免重复叠升降解算。
     marker_fixed_frame: base_link
     vr_follow_frame: base_link
