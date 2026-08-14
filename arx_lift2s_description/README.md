@@ -1,68 +1,56 @@
-# ARX Lift 2S Description
+# ARX Lift2S 描述
 
-This package contains the description files for ARX Lift 2S
-(lift chassis + [ARX AC One](../arx_acone_description/) dual-arm torso).
+ARX Lift2S 描述（升降底盘 + [ARX AC One](../arx_acone_description/) 双臂躯干）。
 
-| Mode | Launch | OCS2 model | Lift |
-|------|--------|------------|------|
-| Full body | `full_body.launch.py` | `task.info`（`ocs2_wheel_humanoid`，含 SE(2) 底盘） | Inside WBC（`ocs2_wbc_controller`，`waist_lifting_type: single_joint`） |
-| Split body | `split_body.launch.py` | acone `task.info` | `body_joint_controller` |
-| Arms only | `demo.launch.py robot:=arx_acone` | acone `task.info` | N/A |
+| 模式 | Launch | OCS2 模型 | 升降 |
+|------|--------|-----------|------|
+| 全身 | `full_body.launch.py` | 本包 `task.info`（`ocs2_wheel_humanoid`，含 SE(2) 底盘） | 在 WBC 内（`ocs2_wbc_controller`，`waist_lifting_type: single_joint`） |
+| 分体 | `split_body.launch.py` | acone `task.info` | `body_joint_controller` |
+| 仅双臂 | `demo.launch.py robot:=arx_acone` | acone `task.info` | 无 |
 
-Split body uses the acone Pinocchio model (`robot_name: arx_acone`) because EE poses are
-relative to URDF root (`arm_base`); the Lift2S root is `base_link` under the lift.
-
-Full-body WBC 状态：`[base x,y,yaw | lift_joint | left 1–6 | right 1–6]`（3+13）。
-Body **仅** `lift_joint`（棱柱）：无 `body_joint*`、无头；
-`waist_lifting_type: single_joint`，不要发 `waist_turning*`。
-行程：`eef_fixed_joints` 规划 URDF → **0.30 m**；viz / ros2_control → **0.48 m**（同 HI `height_span_m`）。
-底盘：模型已开 `manipulatorModelType=1`；无 `world→base_link` TF 时 WBC 自动锁底盘（真机无定位即失效）。
-
-配置见 `config/ocs2/task.info` 与 `config/ros2_control/common.yaml`。
-Isaac 的 position-only overlay（`isaac.yaml`）及与 `variant` 的合并顺序，见
-[`robot_common_launch` README · ros2_control 配置合并](../../../common/robot_common_launch/README.md#ros2_control-配置合并load_robot_config)。
+无头、无腰转；升降只有 `lift_joint`。规划行程 0.30 m，可视化 / 真机 0.48 m（详见 §4）。
 
 ![arx lift2s x5](../.images/arx_lift2s_x5.png)
 
-## 1. Build
+## 1. 编译
 
 ```bash
-cd ~/ros2_ws
+cd ~/lift2s-ws   # or ~/ros2_ws
 colcon build --packages-up-to arx_lift2s_description --symlink-install
 ```
 
-## 2. Visualize the robot
+## 2. 可视化
 
 ```bash
-source ~/ros2_ws/install/setup.bash
+source ~/lift2s-ws/install/setup.bash
 ros2 launch robot_common_launch manipulator.launch.py robot:=arx_lift2s
 ```
 
-## 3. OCS2 Demo
+## 3. OCS2 演示
 
 RMW=zenoh 时先另开终端：`ros2 run rmw_zenoh_cpp rmw_zenohd`。
 
-### 3.1 Full body
+### 3.1 全身
 
 ```bash
-source ~/ros2_ws/install/setup.bash
+source ~/lift2s-ws/install/setup.bash
 ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_lift2s
 # Isaac：position-only（URDF + config/ros2_control/isaac.yaml）
 # overlay 机制见 robot_common_launch README「ros2_control 配置合并」
 ros2 launch ocs2_arm_controller full_body.launch.py robot:=arx_lift2s hardware:=isaac
 ```
 
-### 3.2 Split body
+### 3.2 分体
 
 ```bash
-source ~/ros2_ws/install/setup.bash
+source ~/lift2s-ws/install/setup.bash
 ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s
 ros2 launch ocs2_arm_controller split_body.launch.py robot:=arx_lift2s hardware:=isaac
 ```
 
-### 3.3 Arms only
+### 3.3 仅双臂
 
-See [`arx_acone_description/README.md`](../arx_acone_description/README.md).
+见 [`arx_acone_description/README.md`](../arx_acone_description/README.md)。
 
 ### 3.4 分体 / 全身常用话题（body = 仅 lift）
 
@@ -99,9 +87,9 @@ ros2 topic pub --once /ocs2_wbc_controller/fsm_command std_msgs/msg/Int32 "data:
 
 无转向关节，**不要**使用 `waist_turning_command`。无头 / 无竖直 RELATIVE / 无 CUSTOM_LOCK。
 
-## 4. Real hardware
+## 4. 真机
 
-Requires [`arx_ros2_control`](https://github.com/fiveages-sim/arx-ros2-control)：臂 can1/can3，升降 can5。
+需要 [`arx_ros2_control`](https://github.com/fiveages-sim/arx-ros2-control)：臂 can1/can3，升降 can5。
 
 | 对象 | 模式 / 参数 | 说明 |
 |------|-------------|------|
