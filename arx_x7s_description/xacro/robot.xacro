@@ -1,20 +1,35 @@
+<?xml version="1.0"?>
+<!-- Planning / visualization entry.
+     topology:=full (default) — whole robot (WBC).
+     topology:=dual — root=body, arms only (split-body OCS2 planning).
+     Hardware always uses ros2_control/robot.xacro → robot_full.xacro (ignores dual). -->
 <robot name="ARX X7S" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- Full robot only. Split-body OCS2 planning uses arx_x7s_arms_description
-       (robot_name override), same pattern as Lift2S→acone / fa_w2→m6_ccs. -->
+  <xacro:arg name="topology" default="full"/>
   <xacro:arg name="enable_wheel_joints" default="false"/>
 
-  <xacro:include filename="$(find arx_x7s_description)/xacro/components/base.xacro"/>
-  <xacro:include filename="$(find arx_x7s_description)/xacro/components/body.xacro"/>
+  <xacro:property name="topo" value="$(arg topology)"/>
+
   <xacro:include filename="$(find arx_x7s_description)/xacro/components/arm.xacro"/>
   <xacro:include filename="$(find arx_x7s_description)/xacro/components/gripper.xacro"/>
 
-  <xacro:Base enable_wheel_joints="$(arg enable_wheel_joints)"/>
-  <xacro:Body/>
+  <xacro:if value="${topo == 'dual'}">
+    <link name="body"/>
+    <xacro:Arm name="left" direction="1"/>
+    <xacro:Gripper name="left" direction="1"/>
+    <xacro:Arm name="right" direction="-1"/>
+    <xacro:Gripper name="right" direction="-1"/>
+  </xacro:if>
 
-  <xacro:Arm name="left" direction="1"/>
-  <xacro:Gripper name="left" direction="1"/>
-  <xacro:Arm name="right" direction="-1"/>
-  <xacro:Gripper name="right" direction="-1"/>
+  <xacro:unless value="${topo == 'dual'}">
+    <xacro:include filename="$(find arx_x7s_description)/xacro/components/base.xacro"/>
+    <xacro:include filename="$(find arx_x7s_description)/xacro/components/body.xacro"/>
+    <xacro:Base enable_wheel_joints="$(arg enable_wheel_joints)"/>
+    <xacro:Body/>
+    <xacro:Arm name="left" direction="1"/>
+    <xacro:Gripper name="left" direction="1"/>
+    <xacro:Arm name="right" direction="-1"/>
+    <xacro:Gripper name="right" direction="-1"/>
+  </xacro:unless>
 
 </robot>

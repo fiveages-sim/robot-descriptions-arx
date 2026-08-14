@@ -1,23 +1,18 @@
-; DEPRECATED — unused. Split-body now uses arx_x7s_arms_description task.info
-; via ocs2_arm_controller.robot_name:=arx_x7s_arms. Kept for reference.
-; OCS2 Dual-Arm Configuration - ARX X7S (split_body) [legacy topology path]
+; OCS2 Dual-Arm Configuration - ARX X7S (split_body)
 ; ==================================================
-; Previously: info_file_name:=task_arm + topology:=dual on this package.
+; split_body → ocs2_arm_controller (info_file_name:=task_arm)
+; 规划 URDF：本包 xacro/robot.xacro + topology:=dual（根 = body）
+; 升降/腰/头由 body_joint_controller / head_joint_controller；本模型仅双臂 7+7。
+; 全身 WBC 用同包 task.info（须 topology:=full 或默认 full）。
 
-; robot model meta-information
 model_information {
   manipulatorModelType     0      // 0: Default-arm
 
-  ; dual 拓扑无 lift/腰/头；仍列出以免误用 full URDF 时残留 DOF
   removeJoints {
-      [0]  "lift_joint"
-      [1]  "waist_joint"
-      [2]  "head_joint1"
-      [3]  "head_joint2"
-      [4]  "left_gripper_joint"
-      [5]  "right_gripper_joint"
-      [6]  "left_gripper_1"
-      [7]  "right_gripper_1"
+      [0]  "left_gripper_joint"
+      [1]  "right_gripper_joint"
+      [2]  "left_gripper_1"
+      [3]  "right_gripper_1"
   }
 
   baseFrame                       "body"

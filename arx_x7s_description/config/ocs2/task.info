@@ -1,12 +1,12 @@
 ; OCS2 Wheel Humanoid Configuration - ARX X7S
 ; ===========================================
 ; full_body → ocs2_wbc_controller（info_file_name:=task）。
-; split_body 臂 MPC：arx_x7s_arms_description（robot_name 覆盖，见 ros2_controllers.yaml）。
+; split_body 臂 MPC：同包 task_arm.info + xacro_topology:=dual（见 ros2_controllers.yaml）。
 ;
-; Body：lift_joint [m] + waist_joint pitch [rad]；头进 WBC（MOVEJ /Head 可用）。
+; Body：lift_joint [m] + body_joint pitch [rad]；头进 WBC（MOVEJ /Head 可用）。
 ; Pinocchio 序（本包 xacro：Body 含头，再挂双臂）：
-;   State (3 + 18): [base x,y,yaw | lift | waist | head×2 | left×7 | right×7]
-;   Input (2 + 18): [vx, omega | lift_vel | waist_vel | head×2 | left×7 | right×7]
+;   State (3 + 18): [base x,y,yaw | lift | body_joint | head×2 | left×7 | right×7]
+;   Input (2 + 18): [vx, omega | lift_vel | body_vel | head×2 | left×7 | right×7]
 ; 底盘：manipulatorModelType=1。无 world→base TF 时 WBC 自动锁底盘并补发 identity TF（供 RViz marker）。
 
 ;=============================================================================
@@ -62,7 +62,7 @@ initialState
     arm
     {
         (0,0)   0.0     ; lift_joint [m]
-        (1,0)   0.0     ; waist_joint [rad]
+        (1,0)   0.0     ; body_joint [rad]
         (2,0)   0.0     ; head_joint1
         (3,0)   0.0     ; head_joint2
 
@@ -210,7 +210,7 @@ inputCost
             scaling 1e-3
 
             (0,0)   10.0    ; lift
-            (1,1)   5.0     ; waist
+            (1,1)   5.0     ; body_joint
             (2,2)   1.0     ; head_joint1
             (3,3)   1.0     ; head_joint2
 
@@ -261,7 +261,7 @@ bimanualCoupling
     muOrientation                   25.0
 }
 
-; 输入布局：[base(2) | lift | waist | head×2 | left×7 | right×7]
+; 输入布局：[base(2) | lift | body_joint | head×2 | left×7 | right×7]
 waistLock
 {
     activate                        true

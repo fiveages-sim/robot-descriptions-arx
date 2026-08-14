@@ -5,6 +5,6 @@
     enable_vr: true
     enable_head_control: false
 
-    # 分体：control_base_frame 来自 arx_x7s_arms task（body）；全身 Wheel-based 会被 launch 覆写为 world。
+    # 分体：task_arm baseFrame=body；全身 Wheel-based 会被 launch 覆写为 world。
     marker_fixed_frame: base_link
     vr_follow_frame: base_link
