@@ -7,6 +7,11 @@
 	<xacro:arg name="lift_motor_mode" default="hybrid"/>
 	<!-- Lift HI：可选订阅 /cmd_vel → setChassisCmd（默认开；若与 WBC 底盘规划抢指令可显式关） -->
 	<xacro:arg name="enable_chassis_cmd_vel" default="true"/>
+	<!-- 轮速+IMU 自解算 odom/TF：默认开 TF，由 HI 持续发 world→base_link（替代 WBC identity 占位） -->
+	<xacro:arg name="enable_chassis_feedback" default="true"/>
+	<xacro:arg name="enable_chassis_odom" default="true"/>
+	<xacro:arg name="enable_chassis_odom_tf" default="true"/>
+	<xacro:arg name="enable_chassis_odom_debug" default="true"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
@@ -80,7 +85,7 @@
 				<param name="shutdown_height_m">0.0</param>
 				<param name="shutdown_home_velocity">0.10</param>
 				<param name="shutdown_home_timeout">2.0</param>
-				<!-- 可选：/cmd_vel → 底盘 setChassisCmd；默认关 -->
+				<!-- 可选：/cmd_vel → 底盘 setChassisCmd；默认开 -->
 				<param name="enable_chassis_cmd_vel">$(arg enable_chassis_cmd_vel)</param>
 				<param name="chassis_cmd_vel_topic">/cmd_vel</param>
 				<param name="chassis_cmd_timeout">0.3</param>
@@ -90,6 +95,14 @@
 				<param name="chassis_max_vel_x">1.0</param>
 				<param name="chassis_max_vel_y">1.0</param>
 				<param name="chassis_max_vel_z">2.0</param>
+				<!-- 轮速逆解 + IMU yaw → /arx_lift/odom + world→base_link（持续发布，替代 WBC 占位 TF） -->
+				<param name="enable_chassis_feedback">$(arg enable_chassis_feedback)</param>
+				<param name="enable_chassis_odom">$(arg enable_chassis_odom)</param>
+				<param name="enable_chassis_odom_tf">$(arg enable_chassis_odom_tf)</param>
+				<param name="enable_chassis_odom_debug">$(arg enable_chassis_odom_debug)</param>
+				<param name="chassis_odom_parent_frame">world</param>
+				<param name="chassis_odom_child_frame">base_link</param>
+				<param name="chassis_odom_topic">/arx_lift/odom</param>
 			</hardware>
 			<xacro:arx_lift2s_base_interfaces/>
 		</ros2_control>
