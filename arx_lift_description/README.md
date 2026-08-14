@@ -18,6 +18,8 @@ xacro_right_xyz:="0.208 -0.25000 0.092"
 
 （`quick_start` 分体已自动加。）规划臂型为 acone 的 `X5_ac1`；与硬件 `X5.xacro` 在法兰细节上可能略有差别，一般够用 MPC。
 
+RViz：本包 `config/rviz/` 默认关闭规划模型的 Collision 显示（不改 acone / Lift2S 的 URDF 碰撞体）。
+
 全身 WBC 状态：`[base x,y,yaw | lift_joint | left×6 | right×6 | head×2]`。
 
 ## 1. Build
