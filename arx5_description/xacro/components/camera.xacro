@@ -89,27 +89,27 @@
             <link name="${prefix}camera">
                 <visual>
                     <geometry>
-                        <mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
+                        <mesh filename="file://$(find sensor_models)/meshes/realsense/d435.glb"/>
                     </geometry>
                 </visual>
                 <xacro:if value="${collider == 'convex'}">
                     <collision>
                         <geometry>
-                            <mesh filename="file://$(find sensor_models)/meshes/d435/d435.obj"/>
+                            <mesh filename="file://$(find sensor_models)/meshes/realsense/d435.glb"/>
                         </geometry>
                     </collision>
                 </xacro:if>
                 <xacro:if value="${collider == 'simple'}">
                     <collision name="simple_d435camera">
-                        <origin xyz="-0.0125 0 0" rpy="0 0 0"/>
+                        <origin xyz="0 0 -0.0125" rpy="0 0 0"/>
                         <geometry>
-                            <box size="0.0251 0.0899 0.025"/>
+                            <box size="0.0899 0.025 0.0251"/>
                         </geometry>
                     </collision>
                 </xacro:if>
             </link>
             <joint name="${prefix}camera_fixed" type="fixed">
-                <origin xyz="0.03 0 0.034113"/>
+                <origin xyz="0.03 0 0.034113" rpy="-1.5708 0 -1.5708"/>
                 <parent link="${prefix}camera_support"/>
                 <child link="${prefix}camera"/>
             </joint>
