@@ -11,7 +11,7 @@
 	<xacro:arg name="enable_chassis_feedback" default="true"/>
 	<xacro:arg name="enable_chassis_odom" default="false"/>
 	<xacro:arg name="enable_chassis_odom_tf" default="false"/>
-	<xacro:arg name="enable_chassis_odom_debug" default="false"/>
+	<xacro:arg name="enable_chassis_odom_debug" default="true"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
