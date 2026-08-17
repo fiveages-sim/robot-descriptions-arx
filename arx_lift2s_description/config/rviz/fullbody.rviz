@@ -81,75 +81,12 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        body_base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
           Value: true
-        body_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_link1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_link2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_link3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_link4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        chassis_base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        chassis_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fl_lidar:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fl_steer:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fl_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fr_steer:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fr_wheel:
+        body_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -159,90 +96,33 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        head_link1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        head_link2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        head_top_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         left_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        left_hand_flange:
+        left_camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        left_hand_hand_base:
+        left_camera_support:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        left_hand_index_distal:
+        left_ee:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        left_hand_index_proximal:
+        left_gripper_center:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        left_hand_middle_distal:
+        left_left_pad:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        left_hand_middle_proximal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_hand_pinky_distal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_hand_pinky_proximal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_hand_ring_distal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_hand_ring_proximal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_hand_thumb_distal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_hand_thumb_metacarpals:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        left_hand_thumb_metacarpals_base1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         left_link1:
           Alpha: 1
           Show Axes: false
@@ -278,80 +158,47 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        left_tcp:
+        left_link8:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
+        left_right_pad:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lift_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         right_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_hand_flange:
+        right_camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_hand_hand_base:
+        right_camera_support:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_hand_index_distal:
+        right_ee:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        right_hand_index_proximal:
+        right_gripper_center:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        right_hand_middle_distal:
+        right_left_pad:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
-        right_hand_middle_proximal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_hand_pinky_distal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_hand_pinky_proximal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_hand_ring_distal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_hand_ring_proximal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_hand_thumb_distal:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_hand_thumb_metacarpals:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        right_hand_thumb_metacarpals_base1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         right_link1:
           Alpha: 1
           Show Axes: false
@@ -387,31 +234,26 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        right_tcp:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rl_steer:
+        right_link8:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        rl_wheel:
+        right_right_pad:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        wheel_1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        rr_lidar:
+        wheel_2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        rr_steer:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rr_wheel:
+        wheel_3:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -455,75 +297,12 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        body_base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
           Value: true
-        body_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_link1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_link2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_link3:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_link4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        chassis_base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        chassis_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fl_lidar:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fl_steer:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fl_wheel:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fr_steer:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fr_wheel:
+        body_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -533,22 +312,30 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        head_link1:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        head_link2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         left_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        left_eef:
+        left_camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_camera_support:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_ee:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_gripper_center:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_left_pad:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -587,16 +374,44 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        left_tcp:
+        left_link8:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+          Value: true
+        left_right_pad:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lift_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         right_base_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        right_eef:
+        right_camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_camera_support:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_ee:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_gripper_center:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_left_pad:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -635,31 +450,26 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        right_tcp:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        rl_steer:
+        right_link8:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        rl_wheel:
+        right_right_pad:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        wheel_1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        rr_lidar:
+        wheel_2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        rr_steer:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        rr_wheel:
+        wheel_3:
           Alpha: 1
           Show Axes: false
           Show Trail: false

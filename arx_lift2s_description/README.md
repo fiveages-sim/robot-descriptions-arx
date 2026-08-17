@@ -97,7 +97,30 @@ ros2 topic pub --once /ocs2_wbc_controller/fsm_command std_msgs/msg/Int32 "data:
 | 臂 MIT 增益 | HI `joint_k_gains` / `joint_d_gains` | 默认 `[20,20,20,20,10,10]` / `[0.8,0.8,0.8,0.8,0.5,0.5]`；可热调 |
 | 升降 | `hybrid`（默认）或 `soft_p` | hybrid：pos+vel+重力/摩擦；soft_p：直跟 position + 常值重力（无摩擦） |
 | 升降增益 | `arx_lift.hybrid_kp/kd` 或 `soft_p_kp` | 与臂无关；无 controller kp/kd IF |
-| 底盘 | HI `enable_chassis_cmd_vel`（默认 `true`） | 两种模式：`/cmd_vel` → `setChassisCmd` + `sendChassisOnly`；勿与 WBC 同时开 |
-| `lift_joint` 行程 | 规划 URDF `0.30` m；ros2_control / 真机 `0.48` m | 同 m6_ccs `joint4` + `eef_fixed_joints` |
+| 底盘 | HI `enable_chassis_cmd_vel`（默认 `true`） | `/cmd_vel` → `setChassisCmd`；勿与 WBC 底盘规划同时开 |
+| 底盘 odom/TF | `enable_chassis_odom` / `_tf`（默认 **true**） | IMU yaw + `0x702` 轮速逆解 → `/arx_lift/odom` + `world→base_link`；临时关：`xacro_enable_chassis_odom_tf:=false` |
+
+### 底盘 TF 快速验证（真机）
+
+```bash
+source ~/lift2s-ws/install/setup.bash
+# 重新 quick_start（加载新 fullbody.rviz：含 lift_link/轮；HI TF≤50Hz）
+
+# Fixed Frame=world；若车漂出视野：RViz Views → Zero，或盯着机器人 Zoom
+ros2 run tf2_ros tf2_echo world base_link
+ros2 topic echo /arx_lift/odom
+```
+
+日志期望：`External TF world->base_link available`。
+
+### TF 刻度（显示正常后再调）
+
+雅可比按**官方轮组编号**：`getWheelVel[0..2]` = 轮1车尾 / 轮2右前 / 轮3左前（URDF 名 `wheel_1` 是左前，编号不同）。
+
+1. 静止时 `tf2_echo` 应接近原点（允许小漂）。  
+2. 遥控量地面前进 ~1 m，看 Δx：偏大/偏小 → `chassis_wheel_vel_scale` 或 `chassis_wheel_radius_m`。  
+3. 若某轴仍反了 → `chassis_wheel_vel_sign`，并对比 `/arx_lift/wheel_vel_expected` 与 `/body_information` 的 `temp_float_data[1..3]`。  
+参数在 `xacro/ros2_control/robot.xacro` 的 Lift HI `<param>`。
+
 
 真机 MIT 增益只走 HI 参数（臂 `joint_k/d_gains`，升降 `arx_lift.*`）。

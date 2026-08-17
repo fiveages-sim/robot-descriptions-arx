@@ -7,11 +7,12 @@
 	<xacro:arg name="lift_motor_mode" default="hybrid"/>
 	<!-- Lift HI：可选订阅 /cmd_vel → setChassisCmd（默认开；若与 WBC 底盘规划抢指令可显式关） -->
 	<xacro:arg name="enable_chassis_cmd_vel" default="true"/>
-	<!-- 底盘反馈：默认只开 IMU/轮速；odom/TF 先关，全身 RViz 仍走 WBC identity 占位 TF -->
+	<!-- 底盘：IMU/轮速 + 轮速逆解/IMU yaw 里程计；开 TF 后 WBC 不再发 identity 占位 -->
 	<xacro:arg name="enable_chassis_feedback" default="true"/>
-	<xacro:arg name="enable_chassis_odom" default="false"/>
-	<xacro:arg name="enable_chassis_odom_tf" default="false"/>
+	<xacro:arg name="enable_chassis_odom" default="true"/>
+	<xacro:arg name="enable_chassis_odom_tf" default="true"/>
 	<xacro:arg name="enable_chassis_odom_debug" default="true"/>
+	<!-- 可临时关：xacro_enable_chassis_odom_tf:=false -->
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/robot.xacro"/>
 	<xacro:include filename="$(find arx5_description)/xacro/ros2_control/interfaces.xacro"/>
 	<xacro:include filename="$(find arx_lift2s_description)/xacro/ros2_control/interfaces.xacro"/>
@@ -95,7 +96,7 @@
 				<param name="chassis_max_vel_x">1.0</param>
 				<param name="chassis_max_vel_y">1.0</param>
 				<param name="chassis_max_vel_z">2.0</param>
-				<!-- 先测 SDK 反馈：IMU + 轮速；odom/TF 默认关（WBC 仍发 identity 占位） -->
+				<!-- IMU + 0x702 轮速 → odom/TF（几何对齐 chassis.xacro / Omnia150） -->
 				<param name="enable_chassis_feedback">$(arg enable_chassis_feedback)</param>
 				<param name="enable_chassis_odom">$(arg enable_chassis_odom)</param>
 				<param name="enable_chassis_odom_tf">$(arg enable_chassis_odom_tf)</param>
@@ -105,6 +106,18 @@
 				<param name="chassis_odom_parent_frame">world</param>
 				<param name="chassis_odom_child_frame">base_link</param>
 				<param name="chassis_odom_topic">/arx_lift/odom</param>
+				<param name="chassis_wheel_radius_m">0.075</param>
+				<param name="chassis_mecanum_angle_deg">90.0</param>
+				<!-- 官方轮组编号顺序（与 getWheelVel / body_information[1..3] 一致）：
+				     [0]=轮1 车尾, [1]=轮2 右前, [2]=轮3 左前。
+				     注意：URDF 里 joint 名 wheel_1 是左前，与官方编号不同。 -->
+				<param name="chassis_wheel_x_m">[-0.35293, 0.15361, 0.15361]</param>
+				<param name="chassis_wheel_y_m">[0.0, -0.29245, 0.29246]</param>
+				<param name="chassis_wheel_yaw_rad">[3.1415, -1.0472, 1.0472]</param>
+				<param name="chassis_wheel_vel_sign">[1.0, 1.0, 1.0]</param>
+				<!-- 静止噪声门限（rad/s）；0x702 标定不准时可调 chassis_wheel_vel_scale -->
+				<param name="chassis_wheel_vel_deadband">0.03</param>
+				<param name="chassis_wheel_vel_scale">1.0</param>
 			</hardware>
 			<xacro:arx_lift2s_base_interfaces/>
 		</ros2_control>

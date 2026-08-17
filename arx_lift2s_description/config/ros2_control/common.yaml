@@ -110,6 +110,10 @@ ocs2_wbc_controller:
     # 退出 OCS2 / activate：躯干自由（BODY_FREE）+ 双臂独立（底盘可动）
     # 无定位 TF 时 WBC 仍会强制 baseLocked；有 TF 后再 BASE_UNLOCK
     fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
+    # HI 在 activate 校准期已持续发 world→base_link；加长探测，避免 WBC 发 /tf_static identity 占位
+    world_frame: world
+    tf_topic: /tf
+    mobile_base_tf_timeout_sec: 8.0
 
     # 关节顺序与 task.info 的 arm 段一致：[lift_joint | left 1–6 | right 1–6]
     # （虚拟底盘 DOF 不在 joints 列表中）

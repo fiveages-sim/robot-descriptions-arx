@@ -136,6 +136,8 @@
 			<xacro:wheel wheel_name="wheel_3" enable_passive_wheels="false"/>
 		</xacro:unless>
 
+		<!-- 轮组：URDF 名 wheel_1/2/3 为建模名；官方文档编号为
+		     1=车尾(-x)、2=右前(+x,-y)、3=左前(+x,+y)。里程计雅可比按官方编号排 getWheelVel。 -->
 		<joint name="wheel1_joint" type="${wheel_joint_type}">
 			<origin xyz="0.15361 0.29246 -0.093" rpy="0.0 0.0 1.0472"/>
 			<parent link="base_link"/>
