@@ -4,11 +4,12 @@
 ;
 ; Body 仅 1 个棱柱升降 DOF（无 pitch / yaw / 三连杆腰）：
 ;   State (3 + 13): [base x,y,yaw | lift_joint | left×6 | right×6]
-;   Input (2 + 13): [vx, omega | lift_vel | left×6 | right×6]
+;   Input (3 + 13): [vx, vy, omega | lift_vel | left×6 | right×6]
 ; 躯干模式仅启用：FREE / LOCKED / TRACKING
 ;   （关闭 RELATIVE、CUSTOM_LOCKED、HEAD_COUPLED）
-; 底盘：manipulatorModelType=1。无 world→base TF 时 WBC 自动锁底盘并停发
-;   解锁规划（cmd_vel 置零）；有定位 TF 时可 BASE_UNLOCK / 移动模式。
+; 底盘：manipulatorModelType=4（全向轮，body 系 vx/vy/omega）。
+;   差速轮是 type=1（仅 vx, omega）。无 world→base TF 时 WBC 自动锁底盘；
+;   有定位 TF 且 BASE_UNLOCK 时 WBC 发 /cmd_vel（会与手柄/VR 抢话题）。
 ; split_body 臂 MPC 仍用 arx_acone task.info（见 common.yaml）。
 
 ;=============================================================================
@@ -17,8 +18,9 @@
 
 model_information
 {
-    ; 1 = WheelBasedMobileManipulator（虚拟 SE(2) 底盘）
-    manipulatorModelType    1
+    ; 4 = OmniWheelBasedMobileManipulator（全向：vx, vy, omega）
+    ; 1 = WheelBasedMobileManipulator（差速：vx, omega）
+    manipulatorModelType    4
 
     ; Pinocchio 根坐标系（Lift2S URDF root）
     baseFrame               "base_link"
@@ -60,7 +62,7 @@ initialState
 {
     base
     {
-        wheelBasedMobileManipulator
+        omniWheelBasedMobileManipulator
         {
             (0,0)  0.0   ; x [m]
             (1,0)  0.0   ; y [m]
@@ -97,8 +99,7 @@ initialModeSchedule
     }
 
     ; 默认：躯干自由（BODY_FREE）+ 底盘可动 + 双臂独立
-    ; 无定位 TF 时 WBC 仍会强制 baseLocked；有 TF 后再 BASE_UNLOCK
-    ; Lift2S 仅启用 FREE / LOCKED / TRACKING；关闭 RELATIVE / CUSTOM / HEAD_COUPLED
+    ; 有 world→base TF 时 WBC 会发 /cmd_vel。手柄/VR 单独开底盘前先 BASE_LOCK。
     modeSequence
     {
         [0]     HM_DUAL_BODY_FREE
@@ -193,7 +194,7 @@ bodyTrackingEE
 
 ;=============================================================================
 ; Input Cost
-; 总输入维度 = 2（底盘）+ 13（关节）= 15
+; 总输入维度 = 3（底盘 vx,vy,omega）+ 13（关节）= 16
 ;=============================================================================
 
 inputCost
@@ -202,32 +203,34 @@ inputCost
     {
         base
         {
-            wheelBasedMobileManipulator
+            omniWheelBasedMobileManipulator
             {
                 scaling 1e-1
 
                 (0,0)   5.0     ; 线速度 vx [m/s]
-                (1,1)   5.0     ; 角速度 omega [rad/s]
+                (1,1)   5.0     ; 线速度 vy [m/s]
+                (2,2)   5.0     ; 角速度 omega [rad/s]
             }
         }
 
         arm
         {
+            ; 必须写对角 (i,i)：R 按 inputDim×inputDim 方阵加载，(i,0) 只填第一列 → R 奇异 → 解锁底盘时 MPC NaN
             scaling 1e-3
 
-            (0,0)   10.0    ; lift_joint 速度惩罚（升降更保守）
-            (1,0)   1.0     ; left_joint1
-            (2,0)   1.0     ; left_joint2
-            (3,0)   1.0     ; left_joint3
-            (4,0)   1.0     ; left_joint4
-            (5,0)   0.5     ; left_joint5
-            (6,0)   0.5     ; left_joint6
-            (7,0)   1.0     ; right_joint1
-            (8,0)   1.0     ; right_joint2
-            (9,0)   1.0     ; right_joint3
-            (10,0)  1.0     ; right_joint4
-            (11,0)  0.5     ; right_joint5
-            (12,0)  0.5     ; right_joint6
+            (0,0)   10.0    ; lift_joint
+            (1,1)   1.0     ; left_joint1
+            (2,2)   1.0     ; left_joint2
+            (3,3)   1.0     ; left_joint3
+            (4,4)   1.0     ; left_joint4
+            (5,5)   0.5     ; left_joint5
+            (6,6)   0.5     ; left_joint6
+            (7,7)   1.0     ; right_joint1
+            (8,8)   1.0     ; right_joint2
+            (9,9)   1.0     ; right_joint3
+            (10,10) 1.0     ; right_joint4
+            (11,11) 0.5     ; right_joint5
+            (12,12) 0.5     ; right_joint6
         }
     }
 }
@@ -271,7 +274,7 @@ bimanualCoupling
 
 ;=============================================================================
 ; Waist Lock（BODY_LOCK）— 锁 lift_joint 速度
-; 输入布局：[base(2) | lift(1) | left(6) | right(6)] → lift 索引 = 2
+; 输入布局：[base(3) | lift(1) | left(6) | right(6)] → lift 索引 = 3
 ;=============================================================================
 
 waistLock
@@ -322,7 +325,7 @@ jointPositionLimits
 
 ;=============================================================================
 ; Joint Velocity Limits
-; 输入布局：[base(2) | lift(1) | left_arm(6) | right_arm(6)]
+; 输入布局：[base(3) | lift(1) | left_arm(6) | right_arm(6)]
 ;=============================================================================
 
 jointVelocityLimits
@@ -334,10 +337,11 @@ jointVelocityLimits
     {
         base
         {
-            wheelBasedMobileManipulator
+            omniWheelBasedMobileManipulator
             {
-                (0,0)  -0.3     ; 线速度下界 [m/s]
-                (1,0)  -0.3     ; 角速度下界 [rad/s]
+                (0,0)  -0.3     ; vx 下界 [m/s]
+                (1,0)  -0.3     ; vy 下界 [m/s]
+                (2,0)  -0.3     ; omega 下界 [rad/s]
             }
         }
 
@@ -363,10 +367,11 @@ jointVelocityLimits
     {
         base
         {
-            wheelBasedMobileManipulator
+            omniWheelBasedMobileManipulator
             {
-                (0,0)   0.3     ; 线速度上界 [m/s]
-                (1,0)   0.3     ; 角速度上界 [rad/s]
+                (0,0)   0.3     ; vx 上界 [m/s]
+                (1,0)   0.3     ; vy 上界 [m/s]
+                (2,0)   0.3     ; omega 上界 [rad/s]
             }
         }
 

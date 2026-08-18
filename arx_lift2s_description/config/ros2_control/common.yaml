@@ -10,7 +10,9 @@
 #     - MOVEJ 升降：/ocs2_wbc_controller/waist_lifting*（同样 single_joint）
 #     - 真机升降 soft_p/hybrid（默认 hybrid）；双臂仅 full_control MIX
 #     - Isaac（hardware:=isaac）：URDF + isaac.yaml 仅 position IF（无 vel/effort）
-#     - 底盘 SE(2) 已开启；默认躯干自由（HM_DUAL_BODY_FREE）；无 world→base TF 时 WBC 自动锁底盘
+#     - 底盘全向 SE(2)：task.info manipulatorModelType=4（vx,vy,omega）
+#     - 默认躯干自由（HM_DUAL_BODY_FREE）；有 world→base TF 时 WBC 发 /cmd_vel
+#     - 手柄/VR 单独控底盘：先 BASE_LOCK，避免和 WBC 抢 /cmd_vel
 #
 # Split planning MUST use arx_acone URDF/task (no lift in tree).
 # Pinocchio oMf is always in the model root; on acone root≡arm_base, so
@@ -107,8 +109,8 @@ ocs2_wbc_controller:
     info_file_name: task
     left_ee_frame: left_gripper_center
     right_ee_frame: right_gripper_center
-    # 退出 OCS2 / activate：躯干自由（BODY_FREE）+ 双臂独立（底盘可动）
-    # 无定位 TF 时 WBC 仍会强制 baseLocked；有 TF 后再 BASE_UNLOCK
+    # 退出 OCS2 / activate：躯干自由（BODY_FREE）+ 双臂独立（底盘可动，WBC 可发 /cmd_vel）
+    # 无定位 TF 时 WBC 仍强制 baseLocked。手柄/VR 单独开底盘前发 BASE_LOCK。
     fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
     # HI 在 activate 校准期已持续发 world→base_link；加长探测，避免 WBC 发 /tf_static identity 占位
     world_frame: world

@@ -7,6 +7,8 @@
 	<xacro:arg name="lift_motor_mode" default="hybrid"/>
 	<!-- Lift HI：可选订阅 /cmd_vel → setChassisCmd（默认开；若与 WBC 底盘规划抢指令可显式关） -->
 	<xacro:arg name="enable_chassis_cmd_vel" default="true"/>
+	<!-- 1=车体速度(/cmd_vel，demo/遥控默认)；3=单轮速度保持（手转轮测 0x702） -->
+	<xacro:arg name="chassis_mode" default="1"/>
 	<!-- 底盘：IMU/轮速 + 轮速逆解/IMU yaw 里程计；开 TF 后 WBC 不再发 identity 占位 -->
 	<xacro:arg name="enable_chassis_feedback" default="true"/>
 	<xacro:arg name="enable_chassis_odom" default="true"/>
@@ -90,6 +92,7 @@
 				<param name="enable_chassis_cmd_vel">$(arg enable_chassis_cmd_vel)</param>
 				<param name="chassis_cmd_vel_topic">/cmd_vel</param>
 				<param name="chassis_cmd_timeout">0.3</param>
+				<param name="chassis_mode">$(arg chassis_mode)</param>
 				<!-- LIFTS SDK 未初始化 max_vel；供 setChassisCmd 量化：
 				     CAN ≈ (v/max_vel)*±660。同 cmd_vel 下 max 越小 → 比例越大 → 越“快”；
 				     同时 v 会被 clamp 到 ±max。单位与 Twist 一致（m/s、rad/s）。 -->
