@@ -99,8 +99,6 @@ ocs2_wbc_controller:
     mpc_frequency: 100
     robot_name: arx_lift
     info_file_name: task
-    left_ee_frame: left_gripper_center
-    right_ee_frame: right_gripper_center
     fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
 
     # [lift | left 1–6 | right 1–6 | head 1–2]（与 Pinocchio / task.info 一致）

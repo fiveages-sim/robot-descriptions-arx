@@ -97,8 +97,6 @@ ocs2_wbc_controller:
     mpc_frequency: 50
     robot_name: arx_x7s
     info_file_name: task
-    left_ee_frame: left_eef
-    right_ee_frame: right_eef
     fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
 
     # 须与 Pinocchio 序一致（头在 Body xacro 里、臂之前）

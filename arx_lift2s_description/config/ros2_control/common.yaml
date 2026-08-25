@@ -105,8 +105,6 @@ ocs2_wbc_controller:
     mpc_frequency: 100
     robot_name: arx_lift2s
     info_file_name: task
-    left_ee_frame: left_gripper_center
-    right_ee_frame: right_gripper_center
     # 退出 OCS2 / activate：躯干自由（BODY_FREE）+ 双臂独立（底盘可动）
     # 无定位 TF 时 WBC 仍会强制 baseLocked；有 TF 后再 BASE_UNLOCK
     fsm_default_humanoid_mode: HM_DUAL_BODY_FREE
